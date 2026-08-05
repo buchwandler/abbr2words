@@ -1,4 +1,4 @@
-"""Spanish abbreviation expansion for kokorog2p.
+"""Spanish abbreviation expansion for abbr2words.
 
 This module provides Spanish-specific abbreviation expansion,
 including titles, days, months, streets, and common abbreviations.

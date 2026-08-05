@@ -1,4 +1,4 @@
-"""Czech abbreviation expansion for kokorog2p.
+"""Czech abbreviation expansion for abbr2words.
 
 This module provides Czech-specific abbreviation expansion,
 including titles, days, months, streets, and common abbreviations.

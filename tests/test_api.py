@@ -12,7 +12,7 @@ def reset_shared_registries() -> None:
 
 
 def test_version() -> None:
-    assert fallback_version == "0.1.0"
+    assert fallback_version == "0.2.0"
     assert __version__
 
 
@@ -34,6 +34,16 @@ def test_locale_alias() -> None:
 def test_german_context_for_fr() -> None:
     assert abbr2words("Fr. Klein", lang="de") == "Frau Klein"
     assert abbr2words("am Fr.", lang="de") == "am Freitag"
+
+
+def test_context_mode_is_respected_independent_of_call_order() -> None:
+    assert abbr2words("Fr. Klein", lang="de", context=True) == "Frau Klein"
+    assert abbr2words("Fr. Klein", lang="de", context=False) == "Freitag Klein"
+
+    reset_expanders("de")
+
+    assert abbr2words("Fr. Klein", lang="de", context=False) == "Freitag Klein"
+    assert abbr2words("Fr. Klein", lang="de", context=True) == "Frau Klein"
 
 
 def test_english_guard_does_not_expand_sentence_final_in() -> None:

@@ -1,4 +1,4 @@
-"""Italian abbreviation expansion for kokorog2p.
+"""Italian abbreviation expansion for abbr2words.
 
 This module provides Italian-specific abbreviation expansion,
 including titles, days, months, streets, and common abbreviations.

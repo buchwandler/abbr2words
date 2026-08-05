@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 from importlib import import_module
+from re import Pattern
 from typing import Final
 
-from .core import AbbreviationEntry, AbbreviationExpander
+from .core import AbbreviationContext, AbbreviationEntry, AbbreviationExpander
 
 _LANGUAGE_CLASSES: Final[dict[str, tuple[str, str]]] = {
     "cs": ("abbr2words.languages.cs", "CzechAbbreviationExpander"),
@@ -30,6 +31,8 @@ _ALIASES: Final[dict[str, str]] = {
     "ita": "it",
     "por": "pt",
 }
+
+_SHARED_EXPANDERS: dict[tuple[str, bool], AbbreviationExpander] = {}
 
 
 def normalize_language(lang: str) -> str:
@@ -74,17 +77,23 @@ def get_shared_expander(
     *,
     context: bool = True,
 ) -> AbbreviationExpander:
-    """Return the shared language-module singleton used by consumers."""
+    """Return the shared registry for a language and context mode."""
     code = normalize_language(lang)
-    module_name, _ = _LANGUAGE_CLASSES[code]
-    module = import_module(module_name)
-    return module.get_expander(enable_context_detection=context)
+    key = (code, context)
+    if key not in _SHARED_EXPANDERS:
+        _SHARED_EXPANDERS[key] = _expander_class(code)(enable_context_detection=context)
+    return _SHARED_EXPANDERS[key]
 
 
 def reset_expanders(lang: str | None = None) -> None:
     """Reset one or all shared language registries."""
     languages = (normalize_language(lang),) if lang is not None else supported_languages()
     for code in languages:
+        for key in tuple(_SHARED_EXPANDERS):
+            if key[0] == code:
+                del _SHARED_EXPANDERS[key]
+
+        # Preserve cleanup for callers importing language modules directly.
         module_name, _ = _LANGUAGE_CLASSES[code]
         import_module(module_name).reset_expander()
 
@@ -125,13 +134,27 @@ class Expander:
 
     __call__ = expand
 
-    def add(self, abbreviation: str, expansion: str, **kwargs: object) -> None:
+    def add(
+        self,
+        abbreviation: str,
+        expansion: str,
+        *,
+        context_expansions: dict[AbbreviationContext, str] | None = None,
+        case_sensitive: bool = False,
+        description: str = "",
+        only_if_preceded_by: str | Pattern[str] | None = None,
+        only_if_followed_by: str | Pattern[str] | None = None,
+    ) -> None:
         """Add or replace an abbreviation in this instance."""
         self._impl.add_abbreviation(
             AbbreviationEntry(
                 abbreviation=abbreviation,
                 expansion=expansion,
-                **kwargs,
+                context_expansions=context_expansions,
+                case_sensitive=case_sensitive,
+                description=description,
+                only_if_preceded_by=only_if_preceded_by,
+                only_if_followed_by=only_if_followed_by,
             )
         )
 

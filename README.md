@@ -1,10 +1,14 @@
+[![PyPI - Version](https://img.shields.io/pypi/v/abbr2words)](https://pypi.org/project/abbr2words/)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/abbr2words)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/abbr2words)
+
 # abbr2words
 
 Multilingual, context-aware abbreviation expansion for text normalization and speech.
 
-This MVP was extracted from the abbreviation framework and language registries in
-`kokorog2p`. It has no runtime dependencies and uses a flat package layout (no
-`src/` directory).
+This standalone package was extracted from the abbreviation framework and language
+registries in `kokorog2p`. It has no runtime dependencies and uses a flat package
+layout (no `src/` directory).
 
 ## Supported languages
 
@@ -22,7 +26,7 @@ to their base-language registry.
 ## Installation
 
 ```bash
-python -m pip install .
+python -m pip install abbr2words
 ```
 
 For development:
@@ -78,14 +82,14 @@ normalizer when broader text normalization is required.
 ## Versioning
 
 The package version is derived from Git tags by `setuptools-scm`. Use tags in the
-form `v0.1.0`, `v0.2.0`, and so on; the corresponding package version is generated
-automatically during builds. A checkout without tags falls back to `0.1.0`.
+form `v0.2.0`, `v0.3.0`, and so on; the corresponding package version is generated
+automatically during builds. A checkout without tags falls back to `0.2.0`.
 
 For a release, commit the changes, create an annotated tag, and build from that
 tag:
 
 ```bash
-git tag -a v0.1.0 -m "Release 0.1.0"
+git tag -a v0.2.0 -m "Release 0.2.0"
 uv build
 ```
 

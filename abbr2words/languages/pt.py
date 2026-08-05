@@ -1,4 +1,4 @@
-"""Portuguese abbreviation expansion for kokorog2p.
+"""Portuguese abbreviation expansion for abbr2words.
 
 This module provides Portuguese-specific abbreviation expansion,
 including titles, days, months, streets, and common abbreviations.

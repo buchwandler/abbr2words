@@ -114,7 +114,7 @@ def abbreviation_guards_match(
 class ContextDetector:
     """Detects context for abbreviations based on surrounding text."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize context detector with pattern matchers."""
         # Patterns for detecting place names (street, avenue, etc.)
         # Match addresses like "123 Main", "100 N. Main", "50 North Elm"
@@ -251,7 +251,7 @@ class AbbreviationExpander(ABC):
     def __init__(
         self,
         enable_context_detection: bool = True,
-    ):
+    ) -> None:
         """Initialize the abbreviation expander.
 
         Args:

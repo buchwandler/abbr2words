@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import warnings
-
 import pytest
 
 from abbr2words import Expander, abbr2words, get_expander, get_shared_expander, reset_expanders
@@ -61,11 +59,24 @@ def test_reset_removes_shared_custom_entries() -> None:
     assert get_shared_expander("en").has_abbreviation("Dr.")
 
 
-def test_context_mode_change_preserves_singleton_warning_semantics() -> None:
-    get_shared_expander("en", context=True)
-    with warnings.catch_warnings(record=True) as caught:
-        warnings.simplefilter("always")
-        same = get_shared_expander("en", context=False)
+def test_shared_registries_are_separate_per_context_mode() -> None:
+    contextual = get_shared_expander("en", context=True)
+    plain = get_shared_expander("en", context=False)
 
-    assert same.enable_context_detection is True
-    assert any("already initialized" in str(item.message) for item in caught)
+    assert contextual is not plain
+    assert contextual.enable_context_detection is True
+    assert plain.enable_context_detection is False
+
+
+def test_context_mode_cache_is_reset_for_each_mode() -> None:
+    contextual = get_shared_expander("en", context=True)
+    plain = get_shared_expander("en", context=False)
+    contextual.add_custom_abbreviation("Ctx.", "Contextual")
+    plain.add_custom_abbreviation("Plain.", "Plain")
+
+    reset_expanders("en")
+
+    assert get_shared_expander("en", context=True) is not contextual
+    assert get_shared_expander("en", context=False) is not plain
+    assert not get_shared_expander("en", context=True).has_abbreviation("Ctx.")
+    assert not get_shared_expander("en", context=False).has_abbreviation("Plain.")
