@@ -1,6 +1,9 @@
 """Multilingual, context-aware abbreviation expansion."""
 
-from .__about__ import __version__
+try:
+    from ._version import version as __version__
+except ImportError:
+    from .__about__ import __version__
 from .api import (
     Expander,
     abbr2words,

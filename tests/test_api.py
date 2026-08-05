@@ -3,6 +3,7 @@ from __future__ import annotations
 import pytest
 
 from abbr2words import Expander, __version__, abbr2words, reset_expanders, supported_languages
+from abbr2words.__about__ import __version__ as fallback_version
 
 
 @pytest.fixture(autouse=True)
@@ -11,7 +12,8 @@ def reset_shared_registries() -> None:
 
 
 def test_version() -> None:
-    assert __version__ == "0.2.0"
+    assert fallback_version == "0.1.0"
+    assert __version__
 
 
 def test_supported_languages() -> None:

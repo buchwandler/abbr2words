@@ -59,6 +59,9 @@ expander.add("KI", "Künstliche Intelligenz", case_sensitive=True)
 print(expander("KI hilft."))
 ```
 
+Consumers that need the shared language registry can use `get_shared_expander()` and
+`reset_expanders()`. `Expander` and `get_expander()` remain isolated mutable registries.
+
 ## Command line
 
 ```bash
@@ -74,9 +77,17 @@ normalizer when broader text normalization is required.
 
 ## Versioning
 
-The project version is declared dynamically in `pyproject.toml` and read by
-Setuptools from `abbr2words/__about__.py`. Change only `__version__` there when
-preparing a release.
+The package version is derived from Git tags by `setuptools-scm`. Use tags in the
+form `v0.1.0`, `v0.2.0`, and so on; the corresponding package version is generated
+automatically during builds. A checkout without tags falls back to `0.1.0`.
+
+For a release, commit the changes, create an annotated tag, and build from that
+tag:
+
+```bash
+git tag -a v0.1.0 -m "Release 0.1.0"
+uv build
+```
 
 ## License
 

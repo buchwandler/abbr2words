@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=69"]
+requires = ["setuptools>=69", "setuptools-scm[toml]>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -50,8 +50,9 @@ include = ["abbr2words*"]
 [tool.setuptools.package-data]
 abbr2words = ["py.typed"]
 
-[tool.setuptools.dynamic]
-version = { attr = "abbr2words.__about__.__version__" }
+[tool.setuptools_scm]
+write_to = "abbr2words/_version.py"
+fallback_version = "0.1.0"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -71,3 +72,6 @@ ignore = ["E501"]
 
 [tool.ruff.lint.per-file-ignores]
 "abbr2words/languages/*.py" = ["E501"]
+
+[tool.ruff.format]
+exclude = ["abbr2words/languages/*.py"]

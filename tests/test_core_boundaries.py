@@ -29,4 +29,3 @@ def test_dotted_abbreviations_accept_non_word_delimiters(
 @pytest.mark.parametrize("lang", ["en", "de"])
 def test_dotted_abbreviations_reject_attached_words(lang: str) -> None:
     assert abbr2words("Dr.foo", lang=lang) == "Dr.foo"
-

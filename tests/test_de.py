@@ -33,4 +33,3 @@ def test_minimum_and_minute_are_distinct_case_sensitive_entries() -> None:
 )
 def test_german_minimum_and_minute_expansion(source: str, expected: str) -> None:
     assert abbr2words(source, lang="de") == expected
-

@@ -69,4 +69,3 @@ def test_context_mode_change_preserves_singleton_warning_semantics() -> None:
 
     assert same.enable_context_detection is True
     assert any("already initialized" in str(item.message) for item in caught)
-

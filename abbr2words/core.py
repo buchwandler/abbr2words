@@ -135,9 +135,7 @@ class ContextDetector:
             re.IGNORECASE,
         )
 
-    def detect_context(
-        self, abbreviation: str, before: str, after: str
-    ) -> AbbreviationContext:
+    def detect_context(self, abbreviation: str, before: str, after: str) -> AbbreviationContext:
         """Detect the context of an abbreviation.
 
         Args:
@@ -213,15 +211,11 @@ class ContextDetector:
             # Pattern: "[number] [optional direction] [street name]"
             # Examples: "123 Main", "456 N. Oak", "10 Park"
             proximity_limit = 30
-            recent_text = (
-                before[-proximity_limit:] if len(before) > proximity_limit else before
-            )
+            recent_text = before[-proximity_limit:] if len(before) > proximity_limit else before
 
             # Special case: Ordinal numbers directly before St. = Street
             # "5th St." "42nd St." "3rd St."
-            ordinal_street_pattern = re.compile(
-                r"\d+(?:st|nd|rd|th)\s*$", re.IGNORECASE
-            )
+            ordinal_street_pattern = re.compile(r"\d+(?:st|nd|rd|th)\s*$", re.IGNORECASE)
             if ordinal_street_pattern.search(recent_text):
                 return AbbreviationContext.PLACE
 
@@ -321,9 +315,7 @@ class AbbreviationExpander(ABC):
             )
         )
 
-    def remove_abbreviation(
-        self, abbreviation: str, case_sensitive: bool = False
-    ) -> bool:
+    def remove_abbreviation(self, abbreviation: str, case_sensitive: bool = False) -> bool:
         """Remove an abbreviation entry.
 
         Args:
