@@ -1,18 +1,35 @@
 """Multilingual, context-aware abbreviation expansion."""
 
 from .__about__ import __version__
-from .api import Expander, abbr2words, expand, get_expander, normalize_language, supported_languages
-from .core import AbbreviationContext, AbbreviationEntry, AbbreviationExpander
+from .api import (
+    Expander,
+    abbr2words,
+    expand,
+    get_expander,
+    get_shared_expander,
+    normalize_language,
+    reset_expanders,
+    supported_languages,
+)
+from .core import (
+    AbbreviationContext,
+    AbbreviationEntry,
+    AbbreviationExpander,
+    abbreviation_guards_match,
+)
 
 __all__ = [
     "AbbreviationContext",
     "AbbreviationEntry",
     "AbbreviationExpander",
+    "abbreviation_guards_match",
     "Expander",
     "__version__",
     "abbr2words",
     "expand",
     "get_expander",
+    "get_shared_expander",
     "normalize_language",
+    "reset_expanders",
     "supported_languages",
 ]

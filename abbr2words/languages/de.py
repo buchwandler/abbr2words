@@ -368,6 +368,7 @@ class GermanAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="min.",
                 expansion="minimal",
+                case_sensitive=True,
                 description="Minimum",
             )
         )
@@ -418,6 +419,7 @@ class GermanAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="Min.",
                 expansion="Minute",
+                case_sensitive=True,
                 description="Minute",
             )
         )

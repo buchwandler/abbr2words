@@ -284,6 +284,43 @@ class AbbreviationExpander(ABC):
         key = entry.abbreviation if entry.case_sensitive else entry.abbreviation.lower()
         self.entries[key] = entry
 
+    def add_custom_abbreviation(
+        self,
+        abbreviation: str,
+        expansion: str | dict[str, str],
+        description: str = "",
+        case_sensitive: bool = False,
+    ) -> None:
+        """Add or replace an entry using string context names."""
+        context_expansions = None
+        default_expansion = expansion
+        if isinstance(expansion, dict):
+            context_expansions = {}
+            for key, value in expansion.items():
+                try:
+                    context = AbbreviationContext(key.lower())
+                except ValueError:
+                    if key.lower() == AbbreviationContext.DEFAULT.value:
+                        default_expansion = value
+                        continue
+                    raise ValueError(
+                        f"Unknown context '{key}'. Valid contexts are: "
+                        "default, title, place, time, academic, religious"
+                    ) from None
+                context_expansions[context] = value
+            if AbbreviationContext.DEFAULT.value not in {key.lower() for key in expansion}:
+                default_expansion = next(iter(expansion.values()))
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation=abbreviation,
+                expansion=str(default_expansion),
+                context_expansions=context_expansions,
+                case_sensitive=case_sensitive,
+                description=description,
+            )
+        )
+
     def remove_abbreviation(
         self, abbreviation: str, case_sensitive: bool = False
     ) -> bool:
@@ -363,8 +400,10 @@ class AbbreviationExpander(ABC):
         # For abbrevs with '.', match at word end or before punctuation
         abbrev = re.escape(entry.abbreviation)
         if entry.abbreviation.endswith("."):
-            # Match abbreviation followed by space, punctuation, or end of string
-            pattern = rf"\b{abbrev}(?=\s|[,;:!?]|$)"
+            # Reject only a following word character. This permits closers,
+            # quotes, dashes, and other non-word delimiters while avoiding
+            # false positives such as ``Dr.foo``.
+            pattern = rf"\b{abbrev}(?!\w)"
         else:
             # Standard word boundary matching
             pattern = rf"\b{abbrev}\b"

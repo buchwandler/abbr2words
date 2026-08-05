@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from functools import lru_cache
 from importlib import import_module
 from typing import Final
 
@@ -60,12 +59,6 @@ def _expander_class(lang: str) -> type[AbbreviationExpander]:
     return cls
 
 
-@lru_cache(maxsize=16)
-def _cached_expander(lang: str, context: bool) -> AbbreviationExpander:
-    cls = _expander_class(lang)
-    return cls(enable_context_detection=context)
-
-
 def get_expander(
     lang: str = "en",
     *,
@@ -74,6 +67,26 @@ def get_expander(
     """Return a new, independently mutable language expander."""
     cls = _expander_class(lang)
     return cls(enable_context_detection=context)
+
+
+def get_shared_expander(
+    lang: str = "en",
+    *,
+    context: bool = True,
+) -> AbbreviationExpander:
+    """Return the shared language-module singleton used by consumers."""
+    code = normalize_language(lang)
+    module_name, _ = _LANGUAGE_CLASSES[code]
+    module = import_module(module_name)
+    return module.get_expander(enable_context_detection=context)
+
+
+def reset_expanders(lang: str | None = None) -> None:
+    """Reset one or all shared language registries."""
+    languages = (normalize_language(lang),) if lang is not None else supported_languages()
+    for code in languages:
+        module_name, _ = _LANGUAGE_CLASSES[code]
+        import_module(module_name).reset_expander()
 
 
 def abbr2words(
@@ -90,7 +103,7 @@ def abbr2words(
     if not isinstance(text, str):
         raise TypeError("text must be a string")
     code = normalize_language(lang)
-    return _cached_expander(code, context).expand(text)
+    return get_shared_expander(code, context=context).expand(text)
 
 
 expand = abbr2words
