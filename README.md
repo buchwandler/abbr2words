@@ -1,6 +1,7 @@
 [![PyPI - Version](https://img.shields.io/pypi/v/abbr2words)](https://pypi.org/project/abbr2words/)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/abbr2words)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/abbr2words)
+[![codecov](https://codecov.io/github/buchwandler/abbr2words/graph/badge.svg?token=VaXeMMGZbh)](https://codecov.io/github/buchwandler/abbr2words)
 
 # abbr2words
 
