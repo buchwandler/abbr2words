@@ -15,8 +15,10 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install packages
       run: |
-        pip install pytest
-        pip install -e .
+        python -m pip install pytest build
+        python -m pip install -e .
+    - name: Build distributions
+      run: python -m build
     - name: Run tests
       if: runner.os != 'Windows'
       run: python -m pytest
