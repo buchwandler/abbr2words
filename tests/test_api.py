@@ -1,0 +1,55 @@
+from __future__ import annotations
+
+import pytest
+
+from abbr2words import Expander, __version__, abbr2words, supported_languages
+
+
+def test_version() -> None:
+    assert __version__ == "0.1.0"
+
+
+def test_supported_languages() -> None:
+    assert supported_languages() == ("cs", "de", "en", "es", "fr", "it", "pt")
+
+
+def test_german_expansion() -> None:
+    assert (
+        abbr2words("Prof. Klein kommt ggf. für ca. 1 Min.", lang="de")
+        == "Professor Klein kommt gegebenenfalls für zirka 1 Minute"
+    )
+
+
+def test_locale_alias() -> None:
+    assert abbr2words("Prof. Klein", lang="de-DE") == "Professor Klein"
+
+
+def test_german_context_for_fr() -> None:
+    assert abbr2words("Fr. Klein", lang="de") == "Frau Klein"
+    assert abbr2words("am Fr.", lang="de") == "am Freitag"
+
+
+def test_english_guard_does_not_expand_sentence_final_in() -> None:
+    assert abbr2words("They wandered around in.", lang="en") == "They wandered around in."
+    assert abbr2words("The board is 10 in. wide.", lang="en") == "The board is 10 inch wide."
+
+
+def test_isolated_custom_expander() -> None:
+    expander = Expander("de")
+    expander.add("KI", "Künstliche Intelligenz", case_sensitive=True)
+    assert expander("KI hilft.") == "Künstliche Intelligenz hilft."
+    assert abbr2words("KI hilft.", lang="de") == "KI hilft."
+
+
+def test_context_can_be_disabled() -> None:
+    assert abbr2words("Fr. Klein", lang="de", context=False) == "Freitag Klein"
+
+
+def test_invalid_language() -> None:
+    with pytest.raises(ValueError, match="Unsupported language"):
+        abbr2words("Dr. Test", lang="xx")
+
+
+def test_non_string_rejected() -> None:
+    with pytest.raises(TypeError, match="text must be a string"):
+        abbr2words(123, lang="de")  # type: ignore[arg-type]
