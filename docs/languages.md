@@ -2,14 +2,14 @@
 
 The bundled base-language registries are:
 
-| Code | Language |
-| --- | --- |
-| `cs` | Czech |
-| `de` | German |
-| `en` | English |
-| `es` | Spanish |
-| `fr` | French |
-| `it` | Italian |
+| Code | Language   |
+| ---- | ---------- |
+| `cs` | Czech      |
+| `de` | German     |
+| `en` | English    |
+| `es` | Spanish    |
+| `fr` | French     |
+| `it` | Italian    |
 | `pt` | Portuguese |
 
 Language input is normalized by trimming whitespace, lowercasing, accepting both
