@@ -406,6 +406,13 @@ class AbbreviationExpander(ABC):
         def replacer(match: re.Match) -> str:
             start, end = match.span()
 
+            # A dotted abbreviation embedded after another period is usually a
+            # fragment of a longer initialism (for example ``B.S.`` in
+            # ``A.B.S.``). Leave it intact unless the complete longer entry
+            # was matched during the longest-first pass.
+            if start > 0 and text[start - 1] == "." and "." in entry.abbreviation:
+                return match.group(0)
+
             if not abbreviation_guards_match(entry, text, start, end):
                 return match.group(0)
 

@@ -12,5 +12,6 @@ customization
 cli
 languages
 api
+examples
 release-notes
 ```

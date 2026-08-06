@@ -22,6 +22,19 @@ pytest
 
 The development extra includes the test, build, lint, and type-checking tools.
 
+## Examples
+
+Install the optional full-text demonstration dependency from a checkout or
+alongside the package:
+
+```console
+python -m pip install "abbr2words[examples]"
+```
+
+This keeps `num2words` out of the core runtime installation. The abbreviation-only
+examples work without it; full speech-text normalization uses it for numbers and
+the example-local date, time, currency, temperature, and unit rules.
+
 ## Documentation
 
 Documentation dependencies are separate from the runtime package:

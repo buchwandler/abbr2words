@@ -8,7 +8,7 @@ from abbr2words import get_shared_expander, reset_expanders, supported_languages
 EXPECTED_DECLARATIONS = {
     "cs": 66,
     "de": 61,
-    "en": 155,
+    "en": 163,
     "es": 73,
     "fr": 58,
     "it": 85,
@@ -17,14 +17,14 @@ EXPECTED_DECLARATIONS = {
 EXPECTED_EFFECTIVE = {
     "cs": 65,
     "de": 60,
-    "en": 155,
+    "en": 163,
     "es": 72,
     "fr": 57,
     "it": 84,
     "pt": 72,
 }
 REQUIRED_ALL_LANGUAGE_EFFECTIVE_HASH = (
-    "6b08e05bac87afd6fe8e5d729c2bd56655837c6569b6605f1466b02f5c90d348"
+    "94c18aa22c7d2b26dae30e0cda6a5aedce6bc8ccc25396b5af16d8ddd43458c0"
 )
 SNAPSHOT = json.loads(
     (Path(__file__).parent / "data" / "registry_snapshot.json").read_text(encoding="utf-8")
@@ -35,9 +35,9 @@ def test_effective_registry_counts_match_migration_contract() -> None:
     actual = {lang: len(get_shared_expander(lang).entries) for lang in supported_languages()}
     assert actual == EXPECTED_EFFECTIVE
     assert actual == SNAPSHOT["effective_counts"]
-    assert sum(actual.values()) == 565
+    assert sum(actual.values()) == 573
     assert SNAPSHOT["declarations"] == EXPECTED_DECLARATIONS
-    assert sum(SNAPSHOT["declarations"].values()) == 571
+    assert sum(SNAPSHOT["declarations"].values()) == 579
 
 
 def test_every_effective_registry_field_matches_snapshot() -> None:
@@ -98,9 +98,9 @@ def test_registry_metadata_counts_match_contract() -> None:
         for entry in get_shared_expander(lang).entries.values()
     ]
     assert sum(bool(entry.context_expansions) for entry in entries) == 3
-    assert sum(entry.case_sensitive for entry in entries) == 5
+    assert sum(entry.case_sensitive for entry in entries) == 6
     assert (
-        sum(bool(entry.only_if_preceded_by or entry.only_if_followed_by) for entry in entries) == 27
+        sum(bool(entry.only_if_preceded_by or entry.only_if_followed_by) for entry in entries) == 32
     )
 
 

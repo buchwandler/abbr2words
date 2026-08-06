@@ -5,14 +5,14 @@ import pytest
 from abbr2words import AbbreviationEntry, abbreviation_guards_match, get_shared_expander
 
 
-def test_guarded_inventory_contains_all_27_entries() -> None:
+def test_guarded_inventory_contains_all_32_entries() -> None:
     guarded = [
         entry
         for lang in ("cs", "de", "en", "es", "fr", "it", "pt")
         for entry in get_shared_expander(lang).entries.values()
         if entry.only_if_preceded_by or entry.only_if_followed_by
     ]
-    assert len(guarded) == 27
+    assert len(guarded) == 32
 
 
 @pytest.mark.parametrize(

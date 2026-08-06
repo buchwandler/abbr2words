@@ -80,6 +80,22 @@ printf 'Prof. Klein kommt ggf.' | abbr2words --lang de
 dates, times, currencies, or measurements. Combine it with `num2words` or another
 normalizer when broader text normalization is required.
 
+## Examples
+
+The repository includes runnable examples for abbreviation-only expansion and
+for composing `abbr2words` with `num2words`:
+
+```console
+python -m pip install "abbr2words[examples]"
+python examples/abbreviations.py
+python examples/full_text_demo.py --sample german
+```
+
+`abbr2words` itself expands abbreviations only. The optional examples show how
+to combine it with `num2words` for broader speech-text normalization. The
+full-text demo is example code, not part of the stable public API. See
+[`examples/README.md`](examples/README.md) for the complete command reference.
+
 ## Versioning
 
 The package version is derived from Git tags by `setuptools-scm`. Use tags in the

@@ -13,6 +13,7 @@ from abbr2words.core import (
 )
 
 _NUMBER_AFTER_REFERENCE = r"[ \t]+\d"
+_DIRECTION_LEFT_CONTEXT = r"(?:^|[\s,;(])$"
 _NUMBER_BEFORE_UNIT = (
     r"(?:^|[^\w.])"
     r"(?:(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?|\.\d+)"
@@ -901,6 +902,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
                 abbreviation="N.",
                 expansion="North",
                 description="North",
+                only_if_preceded_by=_DIRECTION_LEFT_CONTEXT,
             )
         )
 
@@ -909,6 +911,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
                 abbreviation="S.",
                 expansion="South",
                 description="South",
+                only_if_preceded_by=_DIRECTION_LEFT_CONTEXT,
             )
         )
 
@@ -917,6 +920,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
                 abbreviation="E.",
                 expansion="East",
                 description="East",
+                only_if_preceded_by=_DIRECTION_LEFT_CONTEXT,
             )
         )
 
@@ -925,6 +929,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
                 abbreviation="W.",
                 expansion="West",
                 description="West",
+                only_if_preceded_by=_DIRECTION_LEFT_CONTEXT,
             )
         )
 
@@ -1232,7 +1237,73 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="c.",
                 expansion="circa",
-                description="Circa (approximately)",
+                case_sensitive=True,
+                description="Circa (approximately; lower-case spelling)",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="I.D.",
+                expansion="identification",
+                description="Identification",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="ASAP",
+                expansion="as soon as possible",
+                description="As soon as possible",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="yrs.",
+                expansion="years",
+                description="Years after a numeric token",
+                only_if_preceded_by=_NUMBER_BEFORE_UNIT,
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="MIT",
+                expansion="Massachusetts Institute of Technology",
+                description="Massachusetts Institute of Technology",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="CEO",
+                expansion="chief executive officer",
+                description="Chief executive officer",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="Q&A",
+                expansion="questions and answers",
+                description="Questions and answers",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="R.S.V.P.",
+                expansion="respond",
+                description="Contextual speech rendering of RSVP",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="P.S.",
+                expansion="postscript",
+                description="Postscript",
             )
         )
 

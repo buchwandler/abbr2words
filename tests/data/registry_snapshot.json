@@ -2,7 +2,7 @@
   "declarations": {
     "cs": 66,
     "de": 61,
-    "en": 155,
+    "en": 163,
     "es": 73,
     "fr": 58,
     "it": 85,
@@ -11,13 +11,13 @@
   "effective_counts": {
     "cs": 65,
     "de": 60,
-    "en": 155,
+    "en": 163,
     "es": 72,
     "fr": 57,
     "it": 84,
     "pt": 72
   },
-  "required_all_language_effective_hash": "6b08e05bac87afd6fe8e5d729c2bd56655837c6569b6605f1466b02f5c90d348",
+  "required_all_language_effective_hash": "94c18aa22c7d2b26dae30e0cda6a5aedce6bc8ccc25396b5af16d8ddd43458c0",
   "entries": [
     {
       "language": "cs",
@@ -1454,6 +1454,17 @@
     },
     {
       "language": "en",
+      "key": "asap",
+      "abbreviation": "ASAP",
+      "expansion": "as soon as possible",
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "As soon as possible",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en",
       "key": "assn.",
       "abbreviation": "assn.",
       "expansion": "association",
@@ -1579,8 +1590,8 @@
       "abbreviation": "c.",
       "expansion": "circa",
       "context_expansions": null,
-      "case_sensitive": false,
-      "description": "Circa (approximately)",
+      "case_sensitive": true,
+      "description": "Circa (approximately; lower-case spelling)",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
     },
@@ -1625,6 +1636,17 @@
       "context_expansions": null,
       "case_sensitive": false,
       "description": "Common Era",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en",
+      "key": "ceo",
+      "abbreviation": "CEO",
+      "expansion": "chief executive officer",
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Chief executive officer",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
     },
@@ -1826,7 +1848,7 @@
       "context_expansions": null,
       "case_sensitive": false,
       "description": "East",
-      "only_if_preceded_by": null,
+      "only_if_preceded_by": "(?:^|[\\s,;(])$",
       "only_if_followed_by": null
     },
     {
@@ -2036,6 +2058,17 @@
       "case_sensitive": false,
       "description": "Hours",
       "only_if_preceded_by": "(?:^|[^\\w.])(?:(?:\\d{1,3}(?:,\\d{3})+|\\d+)(?:\\.\\d+)?|\\.\\d+)[ \\t]*\\Z",
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en",
+      "key": "i.d.",
+      "abbreviation": "I.D.",
+      "expansion": "identification",
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Identification",
+      "only_if_preceded_by": null,
       "only_if_followed_by": null
     },
     {
@@ -2359,6 +2392,17 @@
     },
     {
       "language": "en",
+      "key": "mit",
+      "abbreviation": "MIT",
+      "expansion": "Massachusetts Institute of Technology",
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Massachusetts Institute of Technology",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en",
       "key": "mm",
       "abbreviation": "mm",
       "expansion": "millimeter",
@@ -2464,7 +2508,7 @@
       "context_expansions": null,
       "case_sensitive": false,
       "description": "North",
-      "only_if_preceded_by": null,
+      "only_if_preceded_by": "(?:^|[\\s,;(])$",
       "only_if_followed_by": null
     },
     {
@@ -2574,6 +2618,17 @@
       "context_expansions": null,
       "case_sensitive": false,
       "description": "Post Meridiem (afternoon/evening)",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en",
+      "key": "p.s.",
+      "abbreviation": "P.S.",
+      "expansion": "postscript",
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Postscript",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
     },
@@ -2689,6 +2744,17 @@
     },
     {
       "language": "en",
+      "key": "q&a",
+      "abbreviation": "Q&A",
+      "expansion": "questions and answers",
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Questions and answers",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en",
       "key": "qt.",
       "abbreviation": "qt.",
       "expansion": "quart",
@@ -2706,6 +2772,17 @@
       "context_expansions": null,
       "case_sensitive": false,
       "description": "Registered Nurse",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en",
+      "key": "r.s.v.p.",
+      "abbreviation": "R.S.V.P.",
+      "expansion": "respond",
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Contextual speech rendering of RSVP",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
     },
@@ -2750,7 +2827,7 @@
       "context_expansions": null,
       "case_sensitive": false,
       "description": "South",
-      "only_if_preceded_by": null,
+      "only_if_preceded_by": "(?:^|[\\s,;(])$",
       "only_if_followed_by": null
     },
     {
@@ -3083,7 +3160,7 @@
       "context_expansions": null,
       "case_sensitive": false,
       "description": "West",
-      "only_if_preceded_by": null,
+      "only_if_preceded_by": "(?:^|[\\s,;(])$",
       "only_if_followed_by": null
     },
     {
@@ -3105,6 +3182,17 @@
       "context_expansions": null,
       "case_sensitive": false,
       "description": "Yard",
+      "only_if_preceded_by": "(?:^|[^\\w.])(?:(?:\\d{1,3}(?:,\\d{3})+|\\d+)(?:\\.\\d+)?|\\.\\d+)[ \\t]*\\Z",
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en",
+      "key": "yrs.",
+      "abbreviation": "yrs.",
+      "expansion": "years",
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Years after a numeric token",
       "only_if_preceded_by": "(?:^|[^\\w.])(?:(?:\\d{1,3}(?:,\\d{3})+|\\d+)(?:\\.\\d+)?|\\.\\d+)[ \\t]*\\Z",
       "only_if_followed_by": null
     },

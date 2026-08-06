@@ -43,3 +43,8 @@ def test_sdist_contains_source_docs_tests_and_legal_files() -> None:
     assert any(name.endswith("/docs/conf.py") for name in names)
     assert any(name.endswith("/docs/requirements.txt") for name in names)
     assert any(name.endswith("/tests/test_api.py") for name in names)
+    assert any(name.endswith("/examples/abbreviations.py") for name in names)
+    assert any(name.endswith("/examples/german.py") for name in names)
+    assert any(name.endswith("/examples/full_text_demo.py") for name in names)
+    assert any(name.endswith("/examples/speech_numbers.py") for name in names)
+    assert any(name.endswith("/examples/README.md") for name in names)
