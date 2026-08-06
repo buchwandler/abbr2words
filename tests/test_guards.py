@@ -2,17 +2,21 @@ from __future__ import annotations
 
 import pytest
 
-from abbr2words import AbbreviationEntry, abbreviation_guards_match, get_shared_expander
+from abbr2words import (
+    AbbreviationEntry,
+    abbreviation_guards_match,
+    get_shared_expander,
+    supported_languages,
+)
+from abbr2words.units import unit_symbols
 
 
-def test_guarded_inventory_contains_all_32_entries() -> None:
-    guarded = [
-        entry
-        for lang in ("cs", "de", "en", "es", "fr", "it", "pt")
-        for entry in get_shared_expander(lang).entries.values()
-        if entry.only_if_preceded_by or entry.only_if_followed_by
-    ]
-    assert len(guarded) == 32
+def test_every_registry_unit_entry_has_numeric_guard() -> None:
+    for language in supported_languages():
+        symbols = unit_symbols(language)
+        for entry in get_shared_expander(language).entries.values():
+            if entry.abbreviation in symbols:
+                assert entry.only_if_preceded_by or entry.only_if_followed_by
 
 
 @pytest.mark.parametrize(

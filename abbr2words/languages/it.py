@@ -19,6 +19,7 @@ _expander_context_detection: bool | None = None
 
 
 class ItalianAbbreviationExpander(AbbreviationExpander):
+    UNIT_LANGUAGE = "it"
     """Expand common Italian abbreviations to full words."""
 
     def _initialize_abbreviations(self) -> None:

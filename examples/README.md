@@ -78,8 +78,7 @@ python examples/full_text_demo.py --all
 python examples/full_text_demo.py --all --stage abbr
 ```
 
-The default sample is English and the default stage is `both`. Use `--stage
-abbr`, `--stage full`, or `--stage both`; add `--compact` when only the selected
+The default sample is English and the default stage is `both`. Use `--stage abbr`, `--stage full`, or `--stage both`; add `--compact` when only the selected
 result is wanted.
 
 ## Use your own text

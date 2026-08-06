@@ -27,7 +27,7 @@ def test_minimum_and_minute_are_distinct_case_sensitive_entries() -> None:
     ("source", "expected"),
     [
         ("min. 5 Zeichen", "minimal 5 Zeichen"),
-        ("Min. Beispiel", "Minute Beispiel"),
+        ("Min. Beispiel", "Min. Beispiel"),
         ("MIN. warten", "MIN. warten"),
     ],
 )

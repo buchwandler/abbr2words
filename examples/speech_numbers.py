@@ -9,9 +9,10 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 from decimal import Decimal, InvalidOperation
-from typing import Callable, Match
+from re import Match
 
 from abbr2words import abbr2words, normalize_language
+from abbr2words.units import unit_symbols
 
 
 class MissingNum2WordsError(RuntimeError):
@@ -47,40 +48,274 @@ _DOT_ORDINAL_RE = re.compile(r"(?P<value>\d+)\.(?=\s+[A-ZÄÖÜa-zäöü])")
 
 _MONTHS = {
     "en": {
-        "jan": "January", "january": "January", "feb": "February", "february": "February",
-        "mar": "March", "march": "March", "apr": "April", "april": "April",
-        "may": "May", "jun": "June", "june": "June", "jul": "July", "july": "July",
-        "aug": "August", "august": "August", "sep": "September", "sept": "September",
-        "september": "September", "oct": "October", "october": "October",
-        "nov": "November", "november": "November", "dec": "December", "december": "December",
+        "jan": "January",
+        "january": "January",
+        "feb": "February",
+        "february": "February",
+        "mar": "March",
+        "march": "March",
+        "apr": "April",
+        "april": "April",
+        "may": "May",
+        "jun": "June",
+        "june": "June",
+        "jul": "July",
+        "july": "July",
+        "aug": "August",
+        "august": "August",
+        "sep": "September",
+        "sept": "September",
+        "september": "September",
+        "oct": "October",
+        "october": "October",
+        "nov": "November",
+        "november": "November",
+        "dec": "December",
+        "december": "December",
     },
-    "de": {"1": "Januar", "2": "Februar", "3": "März", "4": "April", "5": "Mai", "6": "Juni", "7": "Juli", "8": "August", "9": "September", "10": "Oktober", "11": "November", "12": "Dezember"},
-    "cs": {"1": "ledna", "2": "února", "3": "března", "4": "dubna", "5": "května", "6": "června", "7": "července", "8": "srpna", "9": "září", "10": "října", "11": "listopadu", "12": "prosince"},
-    "es": {"1": "enero", "2": "febrero", "3": "marzo", "4": "abril", "5": "mayo", "6": "junio", "7": "julio", "8": "agosto", "9": "septiembre", "10": "octubre", "11": "noviembre", "12": "diciembre"},
-    "fr": {"1": "janvier", "2": "février", "3": "mars", "4": "avril", "5": "mai", "6": "juin", "7": "juillet", "8": "août", "9": "septembre", "10": "octobre", "11": "novembre", "12": "décembre"},
-    "it": {"1": "gennaio", "2": "febbraio", "3": "marzo", "4": "aprile", "5": "maggio", "6": "giugno", "7": "luglio", "8": "agosto", "9": "settembre", "10": "ottobre", "11": "novembre", "12": "dicembre"},
-    "pt": {"1": "janeiro", "2": "fevereiro", "3": "março", "4": "abril", "5": "maio", "6": "junho", "7": "julho", "8": "agosto", "9": "setembro", "10": "outubro", "11": "novembro", "12": "dezembro"},
+    "de": {
+        "1": "Januar",
+        "2": "Februar",
+        "3": "März",
+        "4": "April",
+        "5": "Mai",
+        "6": "Juni",
+        "7": "Juli",
+        "8": "August",
+        "9": "September",
+        "10": "Oktober",
+        "11": "November",
+        "12": "Dezember",
+    },
+    "cs": {
+        "1": "ledna",
+        "2": "února",
+        "3": "března",
+        "4": "dubna",
+        "5": "května",
+        "6": "června",
+        "7": "července",
+        "8": "srpna",
+        "9": "září",
+        "10": "října",
+        "11": "listopadu",
+        "12": "prosince",
+    },
+    "es": {
+        "1": "enero",
+        "2": "febrero",
+        "3": "marzo",
+        "4": "abril",
+        "5": "mayo",
+        "6": "junio",
+        "7": "julio",
+        "8": "agosto",
+        "9": "septiembre",
+        "10": "octubre",
+        "11": "noviembre",
+        "12": "diciembre",
+    },
+    "fr": {
+        "1": "janvier",
+        "2": "février",
+        "3": "mars",
+        "4": "avril",
+        "5": "mai",
+        "6": "juin",
+        "7": "juillet",
+        "8": "août",
+        "9": "septembre",
+        "10": "octobre",
+        "11": "novembre",
+        "12": "décembre",
+    },
+    "it": {
+        "1": "gennaio",
+        "2": "febbraio",
+        "3": "marzo",
+        "4": "aprile",
+        "5": "maggio",
+        "6": "giugno",
+        "7": "luglio",
+        "8": "agosto",
+        "9": "settembre",
+        "10": "ottobre",
+        "11": "novembre",
+        "12": "dicembre",
+    },
+    "pt": {
+        "1": "janeiro",
+        "2": "fevereiro",
+        "3": "março",
+        "4": "abril",
+        "5": "maio",
+        "6": "junho",
+        "7": "julho",
+        "8": "agosto",
+        "9": "setembro",
+        "10": "outubro",
+        "11": "novembro",
+        "12": "dezembro",
+    },
 }
 
 _TEMPERATURE_UNITS = {
-    "en": {"F": ("degree Fahrenheit", "degrees Fahrenheit"), "C": ("degree Celsius", "degrees Celsius")},
+    "en": {
+        "F": ("degree Fahrenheit", "degrees Fahrenheit"),
+        "C": ("degree Celsius", "degrees Celsius"),
+    },
     "de": {"F": ("Grad Fahrenheit", "Grad Fahrenheit"), "C": ("Grad Celsius", "Grad Celsius")},
-    "cs": {"F": ("stupeň Fahrenheita", "stupňů Fahrenheita"), "C": ("stupeň Celsia", "stupňů Celsia")},
-    "es": {"F": ("grado Fahrenheit", "grados Fahrenheit"), "C": ("grado Celsius", "grados Celsius")},
-    "fr": {"F": ("degré Fahrenheit", "degrés Fahrenheit"), "C": ("degré Celsius", "degrés Celsius")},
+    "cs": {
+        "F": ("stupeň Fahrenheita", "stupňů Fahrenheita"),
+        "C": ("stupeň Celsia", "stupňů Celsia"),
+    },
+    "es": {
+        "F": ("grado Fahrenheit", "grados Fahrenheit"),
+        "C": ("grado Celsius", "grados Celsius"),
+    },
+    "fr": {
+        "F": ("degré Fahrenheit", "degrés Fahrenheit"),
+        "C": ("degré Celsius", "degrés Celsius"),
+    },
     "it": {"F": ("grado Fahrenheit", "gradi Fahrenheit"), "C": ("grado Celsius", "gradi Celsius")},
     "pt": {"F": ("grau Fahrenheit", "graus Fahrenheit"), "C": ("grau Celsius", "graus Celsius")},
 }
 
 _UNITS = {
-    "en": {"lbs.": ("pound", "pounds"), "lb.": ("pound", "pounds"), "ft.": ("foot", "feet"), "in.": ("inch", "inches"), "kg": ("kilogram", "kilograms"), "g": ("gram", "grams"), "mg": ("milligram", "milligrams"), "km": ("kilometer", "kilometers"), "m": ("meter", "meters"), "cm": ("centimeter", "centimeters"), "mm": ("millimeter", "millimeters"), "l": ("liter", "liters"), "ml": ("milliliter", "milliliters"), "h": ("hour", "hours"), "min": ("minute", "minutes"), "min.": ("minute", "minutes"), "sec": ("second", "seconds"), "sec.": ("second", "seconds")},
-    "de": {"kg": ("Kilogramm", "Kilogramm"), "g": ("Gramm", "Gramm"), "mg": ("Milligramm", "Milligramm"), "km": ("Kilometer", "Kilometer"), "m": ("Meter", "Meter"), "cm": ("Zentimeter", "Zentimeter"), "mm": ("Millimeter", "Millimeter"), "l": ("Liter", "Liter"), "ltr.": ("Liter", "Liter"), "ml": ("Milliliter", "Milliliter"), "h": ("Stunde", "Stunden"), "min": ("Minute", "Minuten"), "min.": ("Minute", "Minuten"), "Min.": ("Minute", "Minuten"), "sec": ("Sekunde", "Sekunden"), "sec.": ("Sekunde", "Sekunden")},
-    "cs": {"kg": ("kilogram", "kilogramy"), "g": ("gram", "gramy"), "km": ("kilometr", "kilometry"), "m": ("metr", "metry"), "cm": ("centimetr", "centimetry"), "mm": ("milimetr", "milimetry"), "l": ("litr", "litry"), "ml": ("mililitr", "mililitry"), "h": ("hodina", "hodiny"), "min": ("minuta", "minuty"), "min.": ("minuta", "minuty"), "sec": ("sekunda", "sekundy"), "sec.": ("sekunda", "sekundy")},
-    "es": {"kg": ("kilogramo", "kilogramos"), "g": ("gramo", "gramos"), "km": ("kilómetro", "kilómetros"), "m": ("metro", "metros"), "cm": ("centímetro", "centímetros"), "mm": ("milímetro", "milímetros"), "l": ("litro", "litros"), "ml": ("mililitro", "mililitros"), "h": ("hora", "horas"), "min": ("minuto", "minutos"), "min.": ("minuto", "minutos"), "sec": ("segundo", "segundos"), "sec.": ("segundo", "segundos")},
-    "fr": {"kg": ("kilogramme", "kilogrammes"), "g": ("gramme", "grammes"), "km": ("kilomètre", "kilomètres"), "m": ("mètre", "mètres"), "cm": ("centimètre", "centimètres"), "mm": ("millimètre", "millimètres"), "l": ("litre", "litres"), "ml": ("millilitre", "millilitres"), "h": ("heure", "heures"), "min": ("minute", "minutes"), "min.": ("minute", "minutes"), "sec": ("seconde", "secondes"), "sec.": ("seconde", "secondes")},
-    "it": {"kg": ("chilogrammo", "chilogrammi"), "g": ("grammo", "grammi"), "km": ("chilometro", "chilometri"), "m": ("metro", "metri"), "cm": ("centimetro", "centimetri"), "mm": ("millimetro", "millimetri"), "l": ("litro", "litri"), "ml": ("millilitro", "millilitri"), "h": ("ora", "ore"), "min": ("minuto", "minuti"), "min.": ("minuto", "minuti"), "sec": ("secondo", "secondi"), "sec.": ("secondo", "secondi")},
-    "pt": {"kg": ("quilograma", "quilogramas"), "g": ("grama", "gramas"), "km": ("quilómetro", "quilómetros"), "m": ("metro", "metros"), "cm": ("centímetro", "centímetros"), "mm": ("milímetro", "milímetros"), "l": ("litro", "litros"), "ml": ("mililitro", "mililitros"), "h": ("hora", "horas"), "min": ("minuto", "minutos"), "min.": ("minuto", "minutos"), "sec": ("segundo", "segundos"), "sec.": ("segundo", "segundos")},
+    "en": {
+        "yrs.": ("year", "years"),
+        "lbs.": ("pound", "pounds"),
+        "lb.": ("pound", "pounds"),
+        "ft.": ("foot", "feet"),
+        "in.": ("inch", "inches"),
+        "kg": ("kilogram", "kilograms"),
+        "g": ("gram", "grams"),
+        "mg": ("milligram", "milligrams"),
+        "km": ("kilometer", "kilometers"),
+        "m": ("meter", "meters"),
+        "cm": ("centimeter", "centimeters"),
+        "mm": ("millimeter", "millimeters"),
+        "l": ("liter", "liters"),
+        "ml": ("milliliter", "milliliters"),
+        "h": ("hour", "hours"),
+        "min": ("minute", "minutes"),
+        "min.": ("minute", "minutes"),
+        "sec": ("second", "seconds"),
+        "sec.": ("second", "seconds"),
+    },
+    "de": {
+        "kg": ("Kilogramm", "Kilogramm"),
+        "g": ("Gramm", "Gramm"),
+        "mg": ("Milligramm", "Milligramm"),
+        "km": ("Kilometer", "Kilometer"),
+        "m": ("Meter", "Meter"),
+        "cm": ("Zentimeter", "Zentimeter"),
+        "mm": ("Millimeter", "Millimeter"),
+        "l": ("Liter", "Liter"),
+        "ltr.": ("Liter", "Liter"),
+        "ml": ("Milliliter", "Milliliter"),
+        "h": ("Stunde", "Stunden"),
+        "min": ("Minute", "Minuten"),
+        "min.": ("Minute", "Minuten"),
+        "Min.": ("Minute", "Minuten"),
+        "sec": ("Sekunde", "Sekunden"),
+        "sec.": ("Sekunde", "Sekunden"),
+    },
+    "cs": {
+        "kg": ("kilogram", "kilogramy"),
+        "g": ("gram", "gramy"),
+        "km": ("kilometr", "kilometry"),
+        "m": ("metr", "metry"),
+        "cm": ("centimetr", "centimetry"),
+        "mm": ("milimetr", "milimetry"),
+        "l": ("litr", "litry"),
+        "ml": ("mililitr", "mililitry"),
+        "h": ("hodina", "hodiny"),
+        "min": ("minuta", "minuty"),
+        "min.": ("minuta", "minuty"),
+        "sec": ("sekunda", "sekundy"),
+        "sec.": ("sekunda", "sekundy"),
+    },
+    "es": {
+        "kg": ("kilogramo", "kilogramos"),
+        "g": ("gramo", "gramos"),
+        "km": ("kilómetro", "kilómetros"),
+        "m": ("metro", "metros"),
+        "cm": ("centímetro", "centímetros"),
+        "mm": ("milímetro", "milímetros"),
+        "l": ("litro", "litros"),
+        "ml": ("mililitro", "mililitros"),
+        "h": ("hora", "horas"),
+        "min": ("minuto", "minutos"),
+        "min.": ("minuto", "minutos"),
+        "sec": ("segundo", "segundos"),
+        "sec.": ("segundo", "segundos"),
+    },
+    "fr": {
+        "kg": ("kilogramme", "kilogrammes"),
+        "g": ("gramme", "grammes"),
+        "km": ("kilomètre", "kilomètres"),
+        "m": ("mètre", "mètres"),
+        "cm": ("centimètre", "centimètres"),
+        "mm": ("millimètre", "millimètres"),
+        "l": ("litre", "litres"),
+        "ml": ("millilitre", "millilitres"),
+        "h": ("heure", "heures"),
+        "min": ("minute", "minutes"),
+        "min.": ("minute", "minutes"),
+        "sec": ("seconde", "secondes"),
+        "sec.": ("seconde", "secondes"),
+    },
+    "it": {
+        "kg": ("chilogrammo", "chilogrammi"),
+        "g": ("grammo", "grammi"),
+        "km": ("chilometro", "chilometri"),
+        "m": ("metro", "metri"),
+        "cm": ("centimetro", "centimetri"),
+        "mm": ("millimetro", "millimetri"),
+        "l": ("litro", "litri"),
+        "ml": ("millilitro", "millilitri"),
+        "h": ("ora", "ore"),
+        "min": ("minuto", "minuti"),
+        "min.": ("minuto", "minuti"),
+        "sec": ("secondo", "secondi"),
+        "sec.": ("secondo", "secondi"),
+    },
+    "pt": {
+        "kg": ("quilograma", "quilogramas"),
+        "g": ("grama", "gramas"),
+        "km": ("quilómetro", "quilómetros"),
+        "m": ("metro", "metros"),
+        "cm": ("centímetro", "centímetros"),
+        "mm": ("milímetro", "milímetros"),
+        "l": ("litro", "litros"),
+        "ml": ("mililitro", "mililitros"),
+        "h": ("hora", "horas"),
+        "min": ("minuto", "minutos"),
+        "min.": ("minuto", "minutos"),
+        "sec": ("segundo", "segundos"),
+        "sec.": ("segundo", "segundos"),
+    },
 }
+
+# The example retains plural forms separately, but every symbol it consumes is
+# either in the stable reviewed inventory or explicitly documented here as an
+# example-only compatibility alias.
+_APPROVED_EXAMPLE_ONLY_ALIASES = {
+    "de": frozenset({"ltr.", "min.", "sec", "sec."}),
+    "cs": frozenset({"sec", "sec."}),
+    "es": frozenset({"sec", "sec."}),
+    "fr": frozenset({"min.", "sec", "sec."}),
+    "pt": frozenset({"sec", "sec."}),
+}
+for _language, _forms in _UNITS.items():
+    _uncovered = (
+        set(_forms)
+        - set(unit_symbols(_language))
+        - _APPROVED_EXAMPLE_ONLY_ALIASES.get(_language, frozenset())
+    )
+    if _uncovered:
+        raise RuntimeError(f"Example unit inventory drift for {_language}: {sorted(_uncovered)}")
 
 
 @dataclass(frozen=True)
@@ -114,7 +349,11 @@ def _parse_decimal(token: str, *, lang: str) -> Decimal:
         value = value.replace(thousands_separator, "").replace(decimal_separator, ".")
     elif "," in value:
         parts = value.split(",")
-        value = value.replace(",", ".") if len(parts[-1]) != 3 or lang in {"de", "es", "fr", "it", "pt"} else value.replace(",", "")
+        value = (
+            value.replace(",", ".")
+            if len(parts[-1]) != 3 or lang in {"de", "es", "fr", "it", "pt"}
+            else value.replace(",", "")
+        )
     elif value.count(".") > 1:
         value = value.replace(".", "")
     return Decimal(value)
@@ -134,7 +373,9 @@ def _replace_currency(text: str, *, lang: str) -> str:
         code = match.group("symbol") or match.group("code") or "EUR"
         currency = "USD" if code == "$" else "EUR" if code == "€" else code.upper()
         try:
-            return _num2words(_parse_decimal(token, lang=lang), lang=lang, to="currency", currency=currency)
+            return _num2words(
+                _parse_decimal(token, lang=lang), lang=lang, to="currency", currency=currency
+            )
         except (InvalidOperation, NotImplementedError, TypeError, ValueError):
             return match.group(0)
 
@@ -166,7 +407,9 @@ def _date_text(date: ParsedDate, *, lang: str) -> str:
 
 def _replace_dates(text: str, *, lang: str) -> str:
     def numeric(re_match: Match[str]) -> str:
-        date = ParsedDate(int(re_match.group("day")), int(re_match.group("month")), int(re_match.group("year")))
+        date = ParsedDate(
+            int(re_match.group("day")), int(re_match.group("month")), int(re_match.group("year"))
+        )
         try:
             return _date_text(date, lang=lang)
         except (NotImplementedError, TypeError, ValueError):
@@ -182,7 +425,11 @@ def _replace_dates(text: str, *, lang: str) -> str:
             return re_match.group(0)
         try:
             day = int(re_match.group("day"))
-            return f"{month_lookup[month_name]} {_spell_ordinal(day, lang=lang)}" if lang == "en" else f"{_spell_cardinal(day, lang=lang)} {month_lookup[month_name]}"
+            return (
+                f"{month_lookup[month_name]} {_spell_ordinal(day, lang=lang)}"
+                if lang == "en"
+                else f"{_spell_cardinal(day, lang=lang)} {month_lookup[month_name]}"
+            )
         except (NotImplementedError, TypeError, ValueError):
             return re_match.group(0)
 
@@ -210,11 +457,13 @@ def _replace_times(text: str, *, lang: str) -> str:
 def _replace_units(text: str, *, lang: str) -> str:
     units = _UNITS[lang]
     alternatives = sorted(units, key=len, reverse=True)
-    pattern = re.compile(rf"(?P<value>{_NUMBER})[ \t]*(?P<unit>{'|'.join(map(re.escape, alternatives))})(?!\w)", re.IGNORECASE)
+    pattern = re.compile(
+        rf"(?P<value>{_NUMBER})[ \t\u00a0\u202f]*(?P<unit>{'|'.join(map(re.escape, alternatives))})(?!\w)"
+    )
 
     def replace(match: Match[str]) -> str:
         unit_key = match.group("unit")
-        forms = units.get(unit_key) or units.get(unit_key.lower())
+        forms = units.get(unit_key)
         if forms is None:
             return match.group(0)
         try:
@@ -268,6 +517,7 @@ def _protect_spans(text: str) -> tuple[str, dict[str, str]]:
 
     patterns = (_PLACEHOLDER_RE, _EMAIL_RE, _URL_RE, _VERSION_RE, _ALPHANUMERIC_RE)
     for pattern in patterns:
+
         def protect(match: Match[str]) -> str:
             token = placeholder(len(protected))
             protected[token] = match.group(0)

@@ -13,6 +13,7 @@ from abbr2words.core import (
 
 
 class FrenchAbbreviationExpander(AbbreviationExpander):
+    UNIT_LANGUAGE = "fr"
     """Expands French abbreviations with context awareness."""
 
     def _initialize_abbreviations(self) -> None:

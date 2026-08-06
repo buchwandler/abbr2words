@@ -22,6 +22,7 @@ _NUMBER_BEFORE_UNIT = (
 
 
 class EnglishAbbreviationExpander(AbbreviationExpander):
+    UNIT_LANGUAGE = "en"
     """Expands English abbreviations with context awareness."""
 
     def add_custom_abbreviation(

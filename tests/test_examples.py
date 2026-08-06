@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 
+from abbr2words.units import unit_symbols
 from examples.full_text_demo import (
     CZECH_TEXT,
     FRENCH_TEXT,
@@ -16,9 +17,23 @@ from examples.full_text_demo import (
     abbreviation_only,
     normalize_for_speech,
 )
-from examples.speech_numbers import normalize_numbers_for_speech
+from examples.speech_numbers import (
+    _APPROVED_EXAMPLE_ONLY_ALIASES,
+    _UNITS,
+    normalize_numbers_for_speech,
+)
 
 ROOT = Path(__file__).parents[1]
+
+
+def test_example_unit_symbols_have_canonical_parity() -> None:
+    for language, forms in _UNITS.items():
+        uncovered = (
+            set(forms)
+            - set(unit_symbols(language))
+            - _APPROVED_EXAMPLE_ONLY_ALIASES.get(language, frozenset())
+        )
+        assert not uncovered
 
 
 def run_example(*args: str) -> subprocess.CompletedProcess[str]:
@@ -57,7 +72,11 @@ def test_german_full_text_properties() -> None:
     ("text", "lang", "needles"),
     [
         ("1 Min. 2 Min. 45 Min.", "de", ("Minute", "Minuten")),
-        ("1 lb. 5 lbs. 1 ft. 10 ft. 1 in. 3 in.", "en", ("pound", "pounds", "foot", "feet", "inch", "inches")),
+        (
+            "1 lb. 5 lbs. 1 ft. 10 ft. 1 in. 3 in.",
+            "en",
+            ("pound", "pounds", "foot", "feet", "inch", "inches"),
+        ),
         ("98°F 37°C", "en", ("degrees Fahrenheit", "degrees Celsius")),
         ("15th 1st", "en", ("fifteenth", "first")),
         ("3:00 p.m. 9:30 a.m.", "en", ("three P M", "nine thirty A M")),
@@ -124,7 +143,7 @@ def test_unified_cli_stages_and_all_samples() -> None:
     )
     assert abbreviation.returncode == 0
     assert "=== Source ===" not in abbreviation.stdout
-    assert "37°C." in abbreviation.stdout
+    assert "37 degree Celsius." in abbreviation.stdout
 
     full = run_example(
         "examples/full_text_demo.py", "--sample", "german", "--stage", "full", "--compact"

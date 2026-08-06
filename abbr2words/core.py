@@ -14,6 +14,8 @@ from dataclasses import dataclass
 from enum import Enum
 from re import Pattern
 
+from .units import NUMBER_BEFORE_UNIT, expand_units, unit_entries, unit_symbols
+
 
 class AbbreviationContext(Enum):
     """Context types for disambiguating abbreviations."""
@@ -258,6 +260,9 @@ class AbbreviationExpander(ABC):
             enable_context_detection: Whether to use context-aware expansion
         """
         self.entries: dict[str, AbbreviationEntry] = {}
+        language = getattr(self, "UNIT_LANGUAGE", "en")
+        self.unit_entries = unit_entries(language)
+        self._unit_symbols = unit_symbols(language)
         self.enable_context_detection = enable_context_detection
         self.context_detector = ContextDetector() if enable_context_detection else None
         self._initialize_abbreviations()
@@ -275,6 +280,9 @@ class AbbreviationExpander(ABC):
         Args:
             entry: The abbreviation entry to add
         """
+        if entry.abbreviation in self._unit_symbols:
+            entry.case_sensitive = True
+            entry.only_if_preceded_by = entry.only_if_preceded_by or NUMBER_BEFORE_UNIT
         key = entry.abbreviation if entry.case_sensitive else entry.abbreviation.lower()
         self.entries[key] = entry
 
@@ -368,12 +376,16 @@ class AbbreviationExpander(ABC):
         Returns:
             Text with abbreviations expanded
         """
+        text = expand_units(text, getattr(self, "UNIT_LANGUAGE", "en"))
+
         # Process abbreviations in order of length (longest first)
         # This prevents "Ph.D." from being processed as "Ph." + "D."
         sorted_abbrevs = sorted(self.entries.keys(), key=lambda x: len(x), reverse=True)
 
         for abbrev_key in sorted_abbrevs:
             entry = self.entries[abbrev_key]
+            if entry.abbreviation in self._unit_symbols:
+                continue
             text = self._expand_single(text, entry)
 
         return text

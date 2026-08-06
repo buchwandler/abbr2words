@@ -26,7 +26,9 @@ TEXT = (
 def main() -> int:
     """Run the German example CLI."""
     parser = argparse.ArgumentParser(description="Show German abbreviation and speech stages.")
-    parser.add_argument("--full", action="store_true", help="also run optional numeric normalization")
+    parser.add_argument(
+        "--full", action="store_true", help="also run optional numeric normalization"
+    )
     parser.add_argument("--no-context", action="store_true")
     args = parser.parse_args()
     print("=== Source ===")

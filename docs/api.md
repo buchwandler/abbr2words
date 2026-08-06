@@ -37,6 +37,19 @@
 :special-members: __call__
 ```
 
+## Guarded unit symbols
+
+The stable API expands a reviewed set of unit symbols only when a numeric value
+precedes the complete unit expression. Numeric forms such as `500 g`, `500g`,
+`1.5 kg`, `1,5 kg`, and `5 km/h` are supported; standalone symbols and attached
+words remain unchanged. This is symbol expansion, not number spelling, unit
+conversion, or universal UCUM parsing.
+
+```python
+abbr2words("500 g", lang="en")  # "500 gram"
+abbr2words("section g", lang="en")  # "section g"
+```
+
 ## Core types
 
 ```{autoclass} abbr2words.AbbreviationEntry

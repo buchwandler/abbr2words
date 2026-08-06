@@ -14,6 +14,7 @@ from abbr2words.core import (
 
 
 class GermanAbbreviationExpander(AbbreviationExpander):
+    UNIT_LANGUAGE = "de"
     """Expands German abbreviations with context awareness."""
 
     def _initialize_abbreviations(self) -> None:

@@ -19,6 +19,7 @@ _expander_context_detection: bool | None = None
 
 
 class SpanishAbbreviationExpander(AbbreviationExpander):
+    UNIT_LANGUAGE = "es"
     """Expand common Spanish abbreviations to full words."""
 
     def _initialize_abbreviations(self) -> None:

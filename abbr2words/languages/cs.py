@@ -19,6 +19,7 @@ _expander_context_detection: bool | None = None
 
 
 class CzechAbbreviationExpander(AbbreviationExpander):
+    UNIT_LANGUAGE = "cs"
     """Expand common Czech abbreviations to full words."""
 
     def _initialize_abbreviations(self) -> None:

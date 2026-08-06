@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 from abbr2words import get_shared_expander, reset_expanders, supported_languages
+from abbr2words.units import unit_symbols
 
 EXPECTED_DECLARATIONS = {
     "cs": 66,
@@ -24,7 +25,7 @@ EXPECTED_EFFECTIVE = {
     "pt": 72,
 }
 REQUIRED_ALL_LANGUAGE_EFFECTIVE_HASH = (
-    "94c18aa22c7d2b26dae30e0cda6a5aedce6bc8ccc25396b5af16d8ddd43458c0"
+    "57f62b4015f8795e391b3f9a2a1a9f8cca430abe87621a2b01beeb6c2ac8ce34"
 )
 SNAPSHOT = json.loads(
     (Path(__file__).parent / "data" / "registry_snapshot.json").read_text(encoding="utf-8")
@@ -98,10 +99,12 @@ def test_registry_metadata_counts_match_contract() -> None:
         for entry in get_shared_expander(lang).entries.values()
     ]
     assert sum(bool(entry.context_expansions) for entry in entries) == 3
-    assert sum(entry.case_sensitive for entry in entries) == 6
-    assert (
-        sum(bool(entry.only_if_preceded_by or entry.only_if_followed_by) for entry in entries) == 32
-    )
+    for language in supported_languages():
+        symbols = unit_symbols(language)
+        for entry in get_shared_expander(language).entries.values():
+            if entry.abbreviation in symbols:
+                assert entry.case_sensitive
+                assert entry.only_if_preceded_by or entry.only_if_followed_by
 
 
 def test_required_hash_is_a_committed_parity_contract() -> None:

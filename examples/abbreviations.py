@@ -7,7 +7,6 @@ import argparse
 
 from abbr2words import abbr2words
 
-
 TEXT = """
 Good morning! Let me introduce you to some people.
 

@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import argparse
-from collections.abc import Iterable
 
 from abbr2words import abbr2words, normalize_language
 
@@ -20,25 +19,19 @@ except ModuleNotFoundError:
     from speech_numbers import normalize_for_speech as _normalize_for_speech
 
 
-CZECH_TEXT = (
-    "Ing. Novák přijde v po. v 9 hod. na ul. Dlouhé, "
-    "čp. 12, a přinese 3 kg vzorků."
-)
+CZECH_TEXT = "Ing. Novák přijde v po. v 9 hod. na ul. Dlouhé, čp. 12, a přinese 3 kg vzorků."
 SPANISH_TEXT = (
     "La Dra. García llegará el lun. 15 de ene. a las 9 h "
     "a la Av. Central nº 12 con 3 kg de muestras."
 )
 FRENCH_TEXT = (
-    "Mme Dupont arrive lun. 15 janv. à 9 h, av. Victor Hugo, "
-    "n° 12, avec 3 kg de matériel."
+    "Mme Dupont arrive lun. 15 janv. à 9 h, av. Victor Hugo, n° 12, avec 3 kg de matériel."
 )
 ITALIAN_TEXT = (
-    "La Dott.ssa Rossi arriva lun. 15 gen. alle 9 h "
-    "in V. Roma n. 12 con 3 kg di campioni."
+    "La Dott.ssa Rossi arriva lun. 15 gen. alle 9 h in V. Roma n. 12 con 3 kg di campioni."
 )
 PORTUGUESE_TEXT = (
-    "A Dra. Silva chega 2ª, 15 jan. às 9 h na Av. Central "
-    "n.º 12 com 3 kg de amostras."
+    "A Dra. Silva chega 2ª, 15 jan. às 9 h na Av. Central n.º 12 com 3 kg de amostras."
 )
 
 SAMPLES = {
@@ -76,7 +69,9 @@ def _parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _selected(args: argparse.Namespace, parser: argparse.ArgumentParser) -> list[tuple[str, str, str]]:
+def _selected(
+    args: argparse.Namespace, parser: argparse.ArgumentParser
+) -> list[tuple[str, str, str]]:
     if args.text is not None:
         if not args.lang:
             parser.error("--lang is required with --text")

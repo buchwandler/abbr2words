@@ -9,7 +9,6 @@ from typing import Any
 
 from abbr2words import get_shared_expander, supported_languages
 
-
 DECLARATION_COUNTS = {
     "cs": 66,
     "de": 61,
@@ -67,7 +66,9 @@ def build_snapshot() -> dict[str, Any]:
 def main() -> int:
     """Write the snapshot consumed by the registry parity tests."""
     output = Path(__file__).parents[1] / "tests" / "data" / "registry_snapshot.json"
-    output.write_text(json.dumps(build_snapshot(), indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    output.write_text(
+        json.dumps(build_snapshot(), indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
     print(f"wrote {output}")
     return 0
 

@@ -1,5 +1,15 @@
 # Release notes
 
+## Unreleased
+
+- Added numeric-guarded expansion for a reviewed cross-language unit-symbol
+  inventory, including metric quantities, temperatures, compounds, and common
+  aliases.
+- Added collision and registry-parity tests so standalone symbols such as `m`,
+  `g`, and locale-specific time abbreviations remain unchanged.
+- Clarified that the stable API does not spell numbers or convert units; the
+  optional speech examples remain the layer that combines units with `num2words`.
+
 ## 0.2.0 — first standalone release
 
 This is the first standalone `abbr2words` release. The package extracts the

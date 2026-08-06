@@ -2,8 +2,9 @@
 
 The examples make two responsibilities visible:
 
-1. `abbr2words(text, lang=...)` expands abbreviations and deliberately leaves
-   ordinary numbers, dates, times, currencies, and measurements alone.
+1. `abbr2words(text, lang=...)` expands abbreviations and reviewed unit symbols
+   after numeric quantities, while leaving ordinary numbers, dates, times,
+   currencies, and unit conversion alone.
 2. `examples/speech_numbers.py` is optional demonstration glue that composes
    abbreviation expansion with `num2words` for the supplied speech-text cases.
 
@@ -60,6 +61,17 @@ identifiers such as `4B`, and existing protected-looking tokens. It then handles
 currencies, temperatures, dates, times, units, abbreviations, ordinals, and
 remaining numbers in that order. It uses `Decimal` for numeric input so currency
 cents are not lost.
+
+The stable API keeps the numeric value and expands only supported unit symbols:
+
+```python
+abbr2words("500 g", lang="en")  # "500 gram"
+abbr2words("section g", lang="en")  # "section g"
+```
+
+The unit inventory is explicit and reviewed; it is not complete UCUM or arbitrary
+scientific-expression parsing. The optional speech example may use `num2words`
+to render a phrase such as `500 g` as `five hundred grams`.
 
 The rules are intentionally limited demonstration code. They do not promise
 perfect grammatical inflection for every locale, arbitrary mathematical or phone

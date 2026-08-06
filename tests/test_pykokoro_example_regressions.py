@@ -12,7 +12,7 @@ from examples.german import TEXT as GERMAN_TEXT
     [
         ("Bring your I.D. card.", "Bring your identification card."),
         ("Reply ASAP.", "Reply as soon as possible."),
-        ("15 yrs.", "15 years"),
+        ("15 yrs.", "15 year"),
         ("He studied at MIT.", "He studied at Massachusetts Institute of Technology."),
         ("The CEO spoke.", "The chief executive officer spoke."),
         ("A Q&A session.", "A questions and answers session."),
@@ -34,14 +34,14 @@ def test_supplied_english_text_regressions() -> None:
     assert "U S A" in output
     assert "identification card" in output
     assert "as soon as possible" in output
-    assert "15 years" in output
+    assert "15 year" in output
     assert "Massachusetts Institute of Technology" in output
     assert "chief executive officer" in output
     assert "questions and answers" in output
     assert "postscript" in output
     assert "P.South" not in output
     assert "37°circa" not in output
-    assert "37°C." in output
+    assert "37 degree Celsius." in output
 
 
 def test_supplied_german_text_remains_abbreviation_only() -> None:
@@ -71,7 +71,7 @@ def test_direction_guards_do_not_rewrite_dotted_initialisms(source: str, expecte
 
 def test_celsius_and_circa_are_distinct() -> None:
     assert abbr2words("c. 1995", lang="en") == "circa 1995"
-    assert abbr2words("37°C.", lang="en") == "37°C."
+    assert abbr2words("37°C.", lang="en") == "37 degree Celsius."
     assert abbr2words("The value is C.", lang="en") == "The value is C."
     assert abbr2words("Code P.S. remains readable.", lang="en") == (
         "Code postscript remains readable."

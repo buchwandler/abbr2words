@@ -21,6 +21,7 @@ _expander_context_detection: bool | None = None
 
 
 class PortugueseAbbreviationExpander(AbbreviationExpander):
+    UNIT_LANGUAGE = "pt"
     """Expand common Portuguese abbreviations to full words."""
 
     def _initialize_abbreviations(self) -> None:

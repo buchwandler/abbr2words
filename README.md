@@ -76,9 +76,19 @@ printf 'Prof. Klein kommt ggf.' | abbr2words --lang de
 
 ## Scope
 
-`abbr2words` expands abbreviations only. It does not convert ordinary numbers,
-dates, times, currencies, or measurements. Combine it with `num2words` or another
-normalizer when broader text normalization is required.
+`abbr2words` expands known abbreviations and a reviewed inventory of unit symbols
+when a numeric quantity immediately precedes the complete unit expression. It
+preserves numeric values and does not spell ordinary numbers, parse dates,
+convert currencies, convert measurements, or perform unit conversion. Unit
+support is not universal UCUM support.
+
+```python
+abbr2words("500 g", lang="en")
+# "500 gram"
+
+abbr2words("section g", lang="en")
+# "section g"
+```
 
 ## Examples
 
@@ -92,8 +102,9 @@ python examples/full_text_demo.py --sample german
 ```
 
 `abbr2words` itself expands abbreviations only. The optional examples show how
-to combine it with `num2words` for broader speech-text normalization. The
-full-text demo is example code, not part of the stable public API. See
+to combine it with `num2words` for broader speech-text normalization, including
+output such as `500 g -> five hundred grams`. The full-text demo is example code,
+not part of the stable public API. See
 [`examples/README.md`](examples/README.md) for the complete command reference.
 
 ## Versioning
