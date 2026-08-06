@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import sys
 
 from abbr2words import abbr2words
 
@@ -25,6 +26,10 @@ TEXT = (
 
 def main() -> int:
     """Run the German example CLI."""
+    # Keep redirected CLI output portable across terminals and platforms.
+    reconfigure = getattr(sys.stdout, "reconfigure", None)
+    if reconfigure is not None:
+        reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser(description="Show German abbreviation and speech stages.")
     parser.add_argument(
         "--full", action="store_true", help="also run optional numeric normalization"
