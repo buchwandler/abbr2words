@@ -156,6 +156,7 @@ def test_unified_cli_stages_and_all_samples() -> None:
     assert all_samples.returncode == 0
     for name in ("english", "german", "czech", "spanish", "french", "italian", "portuguese"):
         assert name in all_samples.stdout
+    assert "Novák" in all_samples.stdout
     assert all_samples.stderr == ""
 
 

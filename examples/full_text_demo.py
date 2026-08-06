@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import sys
 
 from abbr2words import abbr2words, normalize_language
 
@@ -101,6 +102,12 @@ def _render(name: str, text: str, lang: str, args: argparse.Namespace) -> str:
 
 def main(argv: list[str] | None = None) -> int:
     """Run the unified demonstration CLI."""
+    # The bundled samples include characters outside Windows' default CP1252
+    # encoding (for example, Czech ``ř``).  Keep CLI output portable across
+    # terminals and redirected subprocesses.
+    reconfigure = getattr(sys.stdout, "reconfigure", None)
+    if reconfigure is not None:
+        reconfigure(encoding="utf-8")
     parser = _parser()
     args = parser.parse_args(argv)
     selected = _selected(args, parser)
