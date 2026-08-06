@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Iterator
 from dataclasses import dataclass
+
+from ._replacements import Replacement, apply_replacements
 
 NUMBER_BEFORE_UNIT = (
     r"(?:^|[^\w.])"
@@ -347,8 +350,8 @@ def unit_symbols(language: str) -> frozenset[str]:
     return frozenset(symbol for entry in unit_entries(language) for symbol in entry.symbols)
 
 
-def expand_units(text: str, language: str) -> str:
-    """Expand a complete reviewed unit expression after a numeric quantity."""
+def iter_unit_replacements(text: str, language: str) -> Iterator[Replacement]:
+    """Yield reviewed unit replacements using offsets from the original text."""
 
     # Grouped digits, decimal point/comma, signed values, and simple ranges.
     number = r"[+\-−]?(?:\d{1,3}(?:[ \u00a0\u202f]\d{3})+|\d+)(?:[.,]\d+)?"
@@ -361,9 +364,20 @@ def expand_units(text: str, language: str) -> str:
         rf"(?P<unit>{'|'.join(re.escape(symbol) for symbol, _ in alternatives)})(?!\w)"
     )
     by_symbol = {symbol: entry for symbol, entry in alternatives}
-    return pattern.sub(
-        lambda match: f"{match.group('value')} {by_symbol[match.group('unit')].expansion}", text
-    )
+    for match in pattern.finditer(text):
+        entry = by_symbol[match.group("unit")]
+        yield Replacement(
+            start=match.start(),
+            end=match.end(),
+            text=f"{match.group('value')} {entry.expansion}",
+            priority=200,
+            source=f"unit:{language}:{match.group('unit')}",
+        )
+
+
+def expand_units(text: str, language: str) -> str:
+    """Expand a complete reviewed unit expression after a numeric quantity."""
+    return apply_replacements(text, tuple(iter_unit_replacements(text, language)))
 
 
 __all__ = [
@@ -371,6 +385,7 @@ __all__ = [
     "UNIT_ENTRIES",
     "UnitEntry",
     "expand_units",
+    "iter_unit_replacements",
     "unit_entries",
     "unit_symbols",
 ]

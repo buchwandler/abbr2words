@@ -4,6 +4,7 @@ try:
     from ._version import version as __version__
 except ImportError:
     from .__about__ import __version__
+from .annotations import TokenAnnotation
 from .api import (
     Expander,
     abbr2words,
@@ -25,6 +26,7 @@ __all__ = [
     "AbbreviationContext",
     "AbbreviationEntry",
     "AbbreviationExpander",
+    "TokenAnnotation",
     "abbreviation_guards_match",
     "Expander",
     "__version__",

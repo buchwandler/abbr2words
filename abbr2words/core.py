@@ -10,11 +10,14 @@ This module provides the infrastructure for expanding abbreviations during text 
 
 import re
 from abc import ABC, abstractmethod
+from collections.abc import Collection, Iterable, Iterator, Sequence
 from dataclasses import dataclass
 from enum import Enum
 from re import Pattern
 
-from .units import NUMBER_BEFORE_UNIT, expand_units, unit_entries, unit_symbols
+from ._replacements import Replacement, apply_replacements, resolve_replacements
+from .annotations import AnnotationIndex, TokenAnnotation, normalize_annotations
+from .units import NUMBER_BEFORE_UNIT, iter_unit_replacements, unit_entries, unit_symbols
 
 
 class AbbreviationContext(Enum):
@@ -52,6 +55,12 @@ class AbbreviationEntry:
     description: str = ""
     only_if_preceded_by: str | Pattern[str] | None = None
     only_if_followed_by: str | Pattern[str] | None = None
+    only_if_pos: frozenset[str] | None = None
+    not_if_pos: frozenset[str] | None = None
+
+    def __post_init__(self) -> None:
+        self.only_if_pos = _normalize_pos_constraints(self.only_if_pos)
+        self.not_if_pos = _normalize_pos_constraints(self.not_if_pos)
 
     def get_expansion(self, context: AbbreviationContext | None = None) -> str:
         """Get the appropriate expansion for the given context.
@@ -67,6 +76,21 @@ class AbbreviationEntry:
         return self.expansion
 
 
+def _normalize_pos_constraints(
+    labels: Collection[str] | None,
+) -> frozenset[str] | None:
+    if labels is None:
+        return None
+    normalized: set[str] = set()
+    for label in labels:
+        if not isinstance(label, str):
+            raise ValueError(f"POS constraint labels must be strings, got {type(label).__name__}")
+        value = label.strip().upper()
+        if value:
+            normalized.add(value)
+    return frozenset(normalized)
+
+
 def abbreviation_guards_match(
     entry: AbbreviationEntry,
     text: str,
@@ -74,6 +98,7 @@ def abbreviation_guards_match(
     end: int,
     *,
     preceding_window: int = 80,
+    annotations: AnnotationIndex | Sequence[TokenAnnotation] | None = None,
 ) -> bool:
     """Return whether an abbreviation entry's context guards match.
 
@@ -108,6 +133,26 @@ def abbreviation_guards_match(
         if isinstance(pattern, str):
             pattern = re.compile(pattern)
         if not pattern.match(text, end):
+            return False
+
+    if annotations is not None and (entry.only_if_pos or entry.not_if_pos):
+        index = (
+            annotations
+            if isinstance(annotations, AnnotationIndex)
+            else AnnotationIndex(annotations)
+        )
+        lexical_pos = tuple(
+            annotation.pos
+            for annotation in index.overlapping(start, end)
+            if annotation.pos and annotation.pos not in {"PUNCT", "SPACE"}
+        )
+        if entry.not_if_pos and any(pos in entry.not_if_pos for pos in lexical_pos):
+            return False
+        if (
+            entry.only_if_pos
+            and lexical_pos
+            and not any(pos in entry.only_if_pos for pos in lexical_pos)
+        ):
             return False
 
     return True
@@ -292,6 +337,10 @@ class AbbreviationExpander(ABC):
         expansion: str | dict[str, str],
         description: str = "",
         case_sensitive: bool = False,
+        only_if_preceded_by: str | Pattern[str] | None = None,
+        only_if_followed_by: str | Pattern[str] | None = None,
+        only_if_pos: Collection[str] | None = None,
+        not_if_pos: Collection[str] | None = None,
     ) -> None:
         """Add or replace an entry using string context names."""
         context_expansions = None
@@ -320,6 +369,10 @@ class AbbreviationExpander(ABC):
                 context_expansions=context_expansions,
                 case_sensitive=case_sensitive,
                 description=description,
+                only_if_preceded_by=only_if_preceded_by,
+                only_if_followed_by=only_if_followed_by,
+                only_if_pos=_normalize_pos_constraints(only_if_pos),
+                not_if_pos=_normalize_pos_constraints(not_if_pos),
             )
         )
 
@@ -367,7 +420,12 @@ class AbbreviationExpander(ABC):
         key = abbreviation if case_sensitive else abbreviation.lower()
         return self.entries.get(key)
 
-    def expand(self, text: str) -> str:
+    def expand(
+        self,
+        text: str,
+        *,
+        annotations: Iterable[TokenAnnotation] | None = None,
+    ) -> str:
         """Expand all abbreviations in the text.
 
         Args:
@@ -376,29 +434,37 @@ class AbbreviationExpander(ABC):
         Returns:
             Text with abbreviations expanded
         """
-        text = expand_units(text, getattr(self, "UNIT_LANGUAGE", "en"))
+        normalized_annotations = normalize_annotations(text, annotations)
+        annotation_index = (
+            AnnotationIndex(normalized_annotations) if annotations is not None else None
+        )
+        candidates: list[Replacement] = list(
+            iter_unit_replacements(text, getattr(self, "UNIT_LANGUAGE", "en"))
+        )
 
-        # Process abbreviations in order of length (longest first)
-        # This prevents "Ph.D." from being processed as "Ph." + "D."
-        sorted_abbrevs = sorted(self.entries.keys(), key=lambda x: len(x), reverse=True)
-
-        for abbrev_key in sorted_abbrevs:
-            entry = self.entries[abbrev_key]
+        # Process all abbreviations against the original source. The resolver
+        # preserves longest-first behavior while giving reviewed units priority.
+        for entry in self.entries.values():
             if entry.abbreviation in self._unit_symbols:
                 continue
-            text = self._expand_single(text, entry)
+            candidates.extend(self._iter_entry_replacements(text, entry, annotation_index))
 
-        return text
+        return apply_replacements(text, resolve_replacements(candidates))
 
-    def _expand_single(self, text: str, entry: AbbreviationEntry) -> str:
-        """Expand a single abbreviation in the text.
+    def _iter_entry_replacements(
+        self,
+        text: str,
+        entry: AbbreviationEntry,
+        annotation_index: AnnotationIndex | None,
+    ) -> Iterator[Replacement]:
+        """Yield abbreviation candidates using original source offsets.
 
         Args:
             text: Input text
             entry: The abbreviation entry to expand
 
         Returns:
-            Text with this abbreviation expanded
+            Replacement candidates for this abbreviation
         """
         # Build regex pattern with word boundaries
         # For abbrevs with '.', match at word end or before punctuation
@@ -414,8 +480,7 @@ class AbbreviationExpander(ABC):
 
         flags = 0 if entry.case_sensitive else re.IGNORECASE
 
-        # Use a replacement function to support context detection
-        def replacer(match: re.Match) -> str:
+        for match in re.finditer(pattern, text, flags=flags):
             start, end = match.span()
 
             # A dotted abbreviation embedded after another period is usually a
@@ -423,23 +488,33 @@ class AbbreviationExpander(ABC):
             # ``A.B.S.``). Leave it intact unless the complete longer entry
             # was matched during the longest-first pass.
             if start > 0 and text[start - 1] == "." and "." in entry.abbreviation:
-                return match.group(0)
+                continue
 
-            if not abbreviation_guards_match(entry, text, start, end):
-                return match.group(0)
+            if not abbreviation_guards_match(
+                entry,
+                text,
+                start,
+                end,
+                annotations=annotation_index,
+            ):
+                continue
 
             if not self.enable_context_detection or not self.context_detector:
-                return entry.expansion
+                expansion = entry.expansion
+            else:
+                # Get surrounding context from the original source.
+                before = text[:start].strip()
+                after = text[end:].strip()
+                context = self.context_detector.detect_context(match.group(), before, after)
+                expansion = entry.get_expansion(context)
 
-            # Get surrounding context
-            before = text[:start].strip()
-            after = text[end:].strip()
-
-            # Detect context and get appropriate expansion
-            context = self.context_detector.detect_context(match.group(), before, after)
-            return entry.get_expansion(context)
-
-        return re.sub(pattern, replacer, text, flags=flags)
+            yield Replacement(
+                start=start,
+                end=end,
+                text=expansion,
+                priority=100,
+                source=f"abbr:{entry.abbreviation}",
+            )
 
     def get_abbreviations_list(self) -> list[str]:
         """Get a list of all supported abbreviations.

@@ -52,9 +52,18 @@ abbr2words("section g", lang="en")  # "section g"
 
 ## Core types
 
+```{autoclass} abbr2words.TokenAnnotation
+:members:
+```
+
 ```{autoclass} abbr2words.AbbreviationEntry
 :members:
 ```
+
+`AbbreviationEntry.only_if_pos` and `not_if_pos` accept coarse POS labels such
+as `NOUN`, `PROPN`, and `ADP`. They are evaluated only when annotations are
+provided. `Expander.add()` exposes the same optional `only_if_pos` and
+`not_if_pos` keyword arguments.
 
 ```{autoclass} abbr2words.AbbreviationContext
 :members:

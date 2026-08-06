@@ -138,6 +138,15 @@ def test_german_cli_default_shows_abbreviation_stage() -> None:
     assert result.stderr == ""
 
 
+def test_german_cli_full_shows_abbreviations_plus_num2words_stage() -> None:
+    result = run_example("examples/german.py", "--full")
+    assert result.returncode == 0
+    assert "=== Abbreviations only ===" in result.stdout
+    assert "=== Abbreviations + num2words ===" in result.stdout
+    assert "=== Full speech text ===" in result.stdout
+    assert result.stderr == ""
+
+
 def test_unified_cli_stages_and_all_samples() -> None:
     abbreviation = run_example(
         "examples/full_text_demo.py", "--sample", "english", "--stage", "abbr", "--compact"

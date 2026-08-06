@@ -84,3 +84,19 @@ identifier. `abbr2words` remains the reusable abbreviation-only API.
 not installed by a plain `abbr2words` installation and is not a core runtime
 dependency. The example layer imports it only when full speech-text normalization
 is requested.
+
+## External POS annotations
+
+The spaCy integration example is intentionally separate from the package
+dependencies:
+
+```console
+python -m pip install spacy
+python -m spacy download en_core_web_sm
+python examples/spacy_pos.py
+```
+
+The example converts `token.idx`, token length, `token.pos_`, and `token.tag_`
+to `TokenAnnotation`. A trained spaCy pipeline is required for POS labels;
+tokenization alone does not produce them. `abbr2words` itself never imports
+spaCy.

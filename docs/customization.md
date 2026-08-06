@@ -24,6 +24,21 @@ expander.add("in.", "inch", only_if_preceded_by=r"\d\s*$")
 expander.add("KI", "Künstliche Intelligenz", case_sensitive=True)
 ```
 
+POS guards are optional and are evaluated only when source-aligned annotations
+are supplied:
+
+```python
+from abbr2words import Expander, TokenAnnotation
+
+expander = Expander("en")
+expander.add("Ref.", "Reference", only_if_pos={"NOUN", "PROPN"})
+assert expander.expand("Ref.", annotations=[TokenAnnotation(0, 4, "NOUN")]) == "Reference"
+```
+
+Structural guards and reviewed numeric unit matching run before POS guards. POS
+output is treated as an optional signal; missing labels do not veto an entry,
+and a general tagger cannot disable a valid numeric unit expression.
+
 ## Shared registries
 
 `get_shared_expander(...)` returns the process-wide registry used by

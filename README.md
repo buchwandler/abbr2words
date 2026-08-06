@@ -54,6 +54,14 @@ abbr2words("Fr. Klein", lang="de", context=False)
 # Freitag Klein
 ```
 
+## External linguistic annotations
+
+`abbr2words` remains dependency-free. Applications that already tokenize and
+tag text can pass provider-neutral `TokenAnnotation` objects with character
+offsets and optional POS labels. spaCy is not installed or imported by
+`abbr2words`; see the [external POS annotation guide](docs/pos-annotations.md)
+and `examples/spacy_pos.py`.
+
 Use an isolated mutable registry for project-specific entries:
 
 ```python
@@ -76,11 +84,10 @@ printf 'Prof. Klein kommt ggf.' | abbr2words --lang de
 
 ## Scope
 
-`abbr2words` expands known abbreviations and a reviewed inventory of unit symbols
-when a numeric quantity immediately precedes the complete unit expression. It
-preserves numeric values and does not spell ordinary numbers, parse dates,
-convert currencies, convert measurements, or perform unit conversion. Unit
-support is not universal UCUM support.
+`abbr2words` expands registered abbreviations and a reviewed set of unit symbols
+when they occur after numeric quantities. It preserves numeric values and does
+not spell ordinary numbers, dates, times, or currencies, and does not perform
+unit conversion. Unit support is not universal UCUM support.
 
 ```python
 abbr2words("500 g", lang="en")

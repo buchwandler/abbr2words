@@ -5,6 +5,8 @@ and their expansions, organized by category.
 """
 
 import warnings
+from collections.abc import Collection
+from re import Pattern
 
 from abbr2words.core import (
     AbbreviationContext,
@@ -31,6 +33,10 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
         expansion: str | dict[str, str],
         description: str = "",
         case_sensitive: bool = False,
+        only_if_preceded_by: str | Pattern[str] | None = None,
+        only_if_followed_by: str | Pattern[str] | None = None,
+        only_if_pos: Collection[str] | None = None,
+        not_if_pos: Collection[str] | None = None,
     ) -> None:
         """Add or update a custom abbreviation (user-friendly API).
 
@@ -95,6 +101,10 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
             context_expansions=context_expansions,
             case_sensitive=case_sensitive,
             description=description,
+            only_if_preceded_by=only_if_preceded_by,
+            only_if_followed_by=only_if_followed_by,
+            only_if_pos=frozenset(only_if_pos) if only_if_pos is not None else None,
+            not_if_pos=frozenset(not_if_pos) if not_if_pos is not None else None,
         )
         self.add_abbreviation(entry)
 

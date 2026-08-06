@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+from collections.abc import Collection, Iterable
 from importlib import import_module
 from re import Pattern
 from typing import Final
 
+from .annotations import TokenAnnotation
 from .core import AbbreviationContext, AbbreviationEntry, AbbreviationExpander
 
 _LANGUAGE_CLASSES: Final[dict[str, tuple[str, str]]] = {
@@ -103,6 +105,7 @@ def abbr2words(
     *,
     lang: str = "en",
     context: bool = True,
+    annotations: Iterable[TokenAnnotation] | None = None,
 ) -> str:
     """Expand known abbreviations in *text*.
 
@@ -112,7 +115,7 @@ def abbr2words(
     if not isinstance(text, str):
         raise TypeError("text must be a string")
     code = normalize_language(lang)
-    return get_shared_expander(code, context=context).expand(text)
+    return get_shared_expander(code, context=context).expand(text, annotations=annotations)
 
 
 expand = abbr2words
@@ -126,11 +129,16 @@ class Expander:
         self.context = context
         self._impl = get_expander(self.lang, context=context)
 
-    def expand(self, text: str) -> str:
+    def expand(
+        self,
+        text: str,
+        *,
+        annotations: Iterable[TokenAnnotation] | None = None,
+    ) -> str:
         """Expand abbreviations using this instance's registry."""
         if not isinstance(text, str):
             raise TypeError("text must be a string")
-        return self._impl.expand(text)
+        return self._impl.expand(text, annotations=annotations)
 
     __call__ = expand
 
@@ -144,6 +152,8 @@ class Expander:
         description: str = "",
         only_if_preceded_by: str | Pattern[str] | None = None,
         only_if_followed_by: str | Pattern[str] | None = None,
+        only_if_pos: Collection[str] | None = None,
+        not_if_pos: Collection[str] | None = None,
     ) -> None:
         """Add or replace an abbreviation in this instance."""
         self._impl.add_abbreviation(
@@ -155,6 +165,8 @@ class Expander:
                 description=description,
                 only_if_preceded_by=only_if_preceded_by,
                 only_if_followed_by=only_if_followed_by,
+                only_if_pos=frozenset(only_if_pos) if only_if_pos is not None else None,
+                not_if_pos=frozenset(not_if_pos) if not_if_pos is not None else None,
             )
         )
 

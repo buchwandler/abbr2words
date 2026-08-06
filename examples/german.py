@@ -9,9 +9,17 @@ import sys
 from abbr2words import abbr2words
 
 try:
-    from examples.speech_numbers import MissingNum2WordsError, normalize_for_speech
+    from examples.speech_numbers import (
+        MissingNum2WordsError,
+        normalize_for_speech,
+        normalize_numbers_for_speech,
+    )
 except ModuleNotFoundError:
-    from speech_numbers import MissingNum2WordsError, normalize_for_speech
+    from speech_numbers import (
+        MissingNum2WordsError,
+        normalize_for_speech,
+        normalize_numbers_for_speech,
+    )
 
 
 TEXT = (
@@ -39,12 +47,19 @@ def main() -> int:
     print("=== Source ===")
     print(TEXT)
     print("\n=== Abbreviations only ===")
-    print(abbr2words(TEXT, lang="de", context=not args.no_context))
+    abbreviations = abbr2words(TEXT, lang="de", context=not args.no_context)
+    print(abbreviations)
     if args.full:
         try:
+            abbreviations_with_num2words = normalize_numbers_for_speech(
+                abbreviations,
+                lang="de",
+            )
             full = normalize_for_speech(TEXT, lang="de", context=not args.no_context)
         except MissingNum2WordsError as exc:
             parser.error(str(exc))
+        print("\n=== Abbreviations + num2words ===")
+        print(abbreviations_with_num2words)
         print("\n=== Full speech text ===")
         print(full)
     return 0

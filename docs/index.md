@@ -9,6 +9,7 @@ Multilingual, context-aware abbreviation expansion for text normalization and sp
 installation
 quickstart
 customization
+pos-annotations
 cli
 languages
 api

@@ -116,3 +116,18 @@ continues to expand abbreviations only.
 `num2words` is optional and has its own LGPL license. The Apache-2.0 license of
 `abbr2words` is unchanged; installing the examples extra installs the separate
 third-party package for the demonstration layer.
+
+## External POS annotations
+
+`examples/spacy_pos.py` demonstrates converting spaCy tokens to
+`TokenAnnotation`. Install spaCy and its English pipeline separately when you
+want to run it:
+
+```console
+python -m pip install spacy
+python -m spacy download en_core_web_sm
+python examples/spacy_pos.py
+```
+
+The package never imports spaCy, and the normal `examples` extra remains limited
+to `num2words`.
