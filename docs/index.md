@@ -13,5 +13,5 @@ cli
 languages
 api
 examples
-release-notes
+changelog
 ```
