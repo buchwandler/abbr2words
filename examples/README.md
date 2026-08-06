@@ -56,8 +56,9 @@ python examples/german.py --full
 python examples/german.py --no-context
 ```
 
-The unified demo supports the exact English and German texts and additional Czech,
-Spanish, French, Italian, and Portuguese samples:
+The unified demo presents the same dinner scenario in all seven supported
+languages. The standalone `abbreviations.py` script retains the separate
+supplied English abbreviation sample:
 
 ```console
 python examples/full_text_demo.py --sample english
@@ -69,6 +70,10 @@ python examples/full_text_demo.py --sample italian
 python examples/full_text_demo.py --sample portuguese
 python examples/full_text_demo.py --all
 ```
+
+Every translated source includes a date, time, numeric units, a title, durations,
+and a currency amount. The samples preserve semantic parity while using each
+locale's reviewed registry spellings.
 
 ## Run all languages
 

@@ -5,14 +5,8 @@ and their expansions, organized by category.
 """
 
 import warnings
-from collections.abc import Collection
-from re import Pattern
 
-from abbr2words.core import (
-    AbbreviationContext,
-    AbbreviationEntry,
-    AbbreviationExpander,
-)
+from abbr2words.core import AbbreviationContext, AbbreviationEntry, AbbreviationExpander
 
 _NUMBER_AFTER_REFERENCE = r"[ \t]+\d"
 _DIRECTION_LEFT_CONTEXT = r"(?:^|[\s,;(])$"
@@ -26,87 +20,6 @@ _NUMBER_BEFORE_UNIT = (
 class EnglishAbbreviationExpander(AbbreviationExpander):
     UNIT_LANGUAGE = "en"
     """Expands English abbreviations with context awareness."""
-
-    def add_custom_abbreviation(
-        self,
-        abbreviation: str,
-        expansion: str | dict[str, str],
-        description: str = "",
-        case_sensitive: bool = False,
-        only_if_preceded_by: str | Pattern[str] | None = None,
-        only_if_followed_by: str | Pattern[str] | None = None,
-        only_if_pos: Collection[str] | None = None,
-        not_if_pos: Collection[str] | None = None,
-    ) -> None:
-        """Add or update a custom abbreviation (user-friendly API).
-
-        This provides a convenient way to add custom abbreviations
-        or override existing ones without constructing entries.
-
-        Args:
-            abbreviation: The abbreviation string (e.g., "Dr.", "Tech.")
-            expansion: Either a simple string expansion or a dict mapping context
-                names to expansions. For dict, use context names like:
-                "default", "title", "place", "time", "academic", "religious"
-            description: Optional description of the abbreviation
-            case_sensitive: Whether matching should be case-sensitive
-
-        Examples:
-            >>> expander = get_expander()
-            >>> # Simple expansion
-            >>> expander.add_custom_abbreviation("Tech.", "Technology")
-            >>> # Context-aware expansion
-            >>> expander.add_custom_abbreviation(
-            ...     "Dr.",
-            ...     {"default": "Drive", "title": "Doctor"},
-            ...     "Doctor or Drive (context-dependent)"
-            ... )
-        """
-        # Handle dict-based context expansions
-        context_expansions = None
-        default_expansion = expansion
-
-        if isinstance(expansion, dict):
-            # Convert string keys to AbbreviationContext enums
-            context_expansions = {}
-            for key, value in expansion.items():
-                key_lower = key.lower()
-                if key_lower == "default":
-                    default_expansion = value
-                elif key_lower == "title":
-                    context_expansions[AbbreviationContext.TITLE] = value
-                elif key_lower == "place":
-                    context_expansions[AbbreviationContext.PLACE] = value
-                elif key_lower == "time":
-                    context_expansions[AbbreviationContext.TIME] = value
-                elif key_lower == "academic":
-                    context_expansions[AbbreviationContext.ACADEMIC] = value
-                elif key_lower == "religious":
-                    context_expansions[AbbreviationContext.RELIGIOUS] = value
-                else:
-                    raise ValueError(
-                        f"Unknown context '{key}'. Valid contexts are: "
-                        "default, title, place, time, academic, religious"
-                    )
-
-            # Ensure we have a default expansion
-            if "default" not in expansion:
-                # Use the first available expansion as default
-                default_expansion = next(iter(expansion.values()))
-
-        # Create and add the entry
-        entry = AbbreviationEntry(
-            abbreviation=abbreviation,
-            expansion=str(default_expansion),
-            context_expansions=context_expansions,
-            case_sensitive=case_sensitive,
-            description=description,
-            only_if_preceded_by=only_if_preceded_by,
-            only_if_followed_by=only_if_followed_by,
-            only_if_pos=frozenset(only_if_pos) if only_if_pos is not None else None,
-            not_if_pos=frozenset(not_if_pos) if not_if_pos is not None else None,
-        )
-        self.add_abbreviation(entry)
 
     def _initialize_abbreviations(self) -> None:
         """Initialize comprehensive English abbreviation list."""

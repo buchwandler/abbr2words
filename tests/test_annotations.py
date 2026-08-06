@@ -1,12 +1,14 @@
 from __future__ import annotations
 
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
 import pytest
 
-from abbr2words import Expander, TokenAnnotation, abbr2words
+from abbr2words import Expander, TokenAnnotation, abbr2words, abbreviation_guards_match
 from abbr2words.annotations import AnnotationIndex, normalize_annotations
+from abbr2words.core import AbbreviationEntry
 
 
 def test_annotations_are_optional() -> None:
@@ -73,6 +75,56 @@ def test_pos_allow_and_deny_guards_are_opt_in() -> None:
     expander.add("Code.", "Code", not_if_pos={"PROPN"})
     assert expander.expand("Code.", annotations=[TokenAnnotation(0, 5, "PROPN")]) == "Code."
     assert expander.expand("Code.", annotations=[TokenAnnotation(0, 5, "NOUN")]) == "Code"
+
+
+def test_single_string_pos_constraint_is_one_normalized_label() -> None:
+    expander = Expander("en")
+    expander.add("ZZ.", "Zed", only_if_pos="noun")
+
+    entry = expander._impl.get_abbreviation("ZZ.")
+    assert entry is not None
+    assert entry.only_if_pos == frozenset({"NOUN"})
+    assert expander.expand("ZZ.", annotations=[TokenAnnotation(0, 3, "NOUN")]) == "Zed"
+
+    expander.add("YY.", "Why", not_if_pos="adp")
+    denied = [TokenAnnotation(0, 3, "ADP")]
+    allowed = [TokenAnnotation(0, 3, "NOUN")]
+    assert expander.expand("YY.", annotations=denied) == "YY."
+    assert expander.expand("YY.", annotations=allowed) == "Why"
+
+
+def test_public_guard_helper_normalizes_annotations() -> None:
+    entry = AbbreviationEntry("Ref.", "Reference", only_if_pos="NOUN")
+    assert abbreviation_guards_match(
+        entry,
+        "Ref.",
+        0,
+        4,
+        annotations=[TokenAnnotation(0, 4, " noun ")],
+    )
+
+
+def test_public_guard_helper_validates_annotations_like_expansion() -> None:
+    entry = AbbreviationEntry("Ref.", "Reference", only_if_pos="NOUN")
+    with pytest.raises(ValueError, match="annotation 0"):
+        abbreviation_guards_match(
+            entry,
+            "Ref.",
+            0,
+            4,
+            annotations=[TokenAnnotation(-1, 4, "NOUN")],
+        )
+    with pytest.raises(ValueError, match="overlap"):
+        abbreviation_guards_match(
+            entry,
+            "Ref.",
+            0,
+            4,
+            annotations=[
+                TokenAnnotation(0, 3, "NOUN"),
+                TokenAnnotation(2, 4, "NOUN"),
+            ],
+        )
 
 
 def test_punctuation_and_missing_pos_do_not_veto_allow_guard() -> None:
@@ -164,12 +216,11 @@ def test_spacy_example_import_is_lazy() -> None:
     import examples.spacy_pos as example
 
     tokens = [FakeToken("Ref.", 0, "NOUN", "NN")]
-    annotations = tuple(
-        TokenAnnotation(token.idx, token.idx + len(token), token.pos_, token.tag_)
-        for token in tokens
-    )
+    annotations = example.to_token_annotations(tokens)
     assert abbr2words("Ref.", annotations=annotations) == "reference"
     assert example.main is not None
+    if "spacy" not in sys.modules:
+        assert "spacy" not in sys.modules
 
 
 def test_package_has_no_spacy_dependency_or_import() -> None:

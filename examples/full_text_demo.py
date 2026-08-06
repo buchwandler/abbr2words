@@ -5,45 +5,30 @@ from __future__ import annotations
 
 import argparse
 import sys
+from importlib import import_module
+from typing import Any, cast
 
 from abbr2words import abbr2words, normalize_language
 
-try:
-    from examples.abbreviations import TEXT as ENGLISH_TEXT
-    from examples.german import TEXT as GERMAN_TEXT
-    from examples.speech_numbers import MissingNum2WordsError
-    from examples.speech_numbers import normalize_for_speech as _normalize_for_speech
-except ModuleNotFoundError:
-    from abbreviations import TEXT as ENGLISH_TEXT
-    from german import TEXT as GERMAN_TEXT
-    from speech_numbers import MissingNum2WordsError
-    from speech_numbers import normalize_for_speech as _normalize_for_speech
+_module_prefix = "examples" if __package__ else ""
+_scenario = cast(
+    Any, import_module(f"{_module_prefix + '.' if _module_prefix else ''}multilingual_scenario")
+)
+_speech_numbers = cast(
+    Any,
+    import_module(f"{_module_prefix + '.' if _module_prefix else ''}speech_numbers"),
+)
+MissingNum2WordsError = _speech_numbers.MissingNum2WordsError
+_normalize_for_speech = _speech_numbers.normalize_for_speech
 
-
-CZECH_TEXT = "Ing. Novák přijde v po. v 9 hod. na ul. Dlouhé, čp. 12, a přinese 3 kg vzorků."
-SPANISH_TEXT = (
-    "La Dra. García llegará el lun. 15 de ene. a las 9 h "
-    "a la Av. Central nº 12 con 3 kg de muestras."
-)
-FRENCH_TEXT = (
-    "Mme Dupont arrive lun. 15 janv. à 9 h, av. Victor Hugo, n° 12, avec 3 kg de matériel."
-)
-ITALIAN_TEXT = (
-    "La Dott.ssa Rossi arriva lun. 15 gen. alle 9 h in V. Roma n. 12 con 3 kg di campioni."
-)
-PORTUGUESE_TEXT = (
-    "A Dra. Silva chega 2ª, 15 jan. às 9 h na Av. Central n.º 12 com 3 kg de amostras."
-)
-
-SAMPLES = {
-    "german": ("de", GERMAN_TEXT),
-    "english": ("en-us", ENGLISH_TEXT),
-    "czech": ("cs", CZECH_TEXT),
-    "spanish": ("es", SPANISH_TEXT),
-    "french": ("fr", FRENCH_TEXT),
-    "italian": ("it", ITALIAN_TEXT),
-    "portuguese": ("pt", PORTUGUESE_TEXT),
-}
+CZECH_TEXT = _scenario.CZECH_TEXT
+ENGLISH_TEXT = _scenario.ENGLISH_TEXT
+FRENCH_TEXT = _scenario.FRENCH_TEXT
+GERMAN_TEXT = _scenario.GERMAN_TEXT
+ITALIAN_TEXT = _scenario.ITALIAN_TEXT
+PORTUGUESE_TEXT = _scenario.PORTUGUESE_TEXT
+SAMPLES = _scenario.SAMPLES
+SPANISH_TEXT = _scenario.SPANISH_TEXT
 
 
 def abbreviation_only(text: str, *, lang: str, context: bool = True) -> str:

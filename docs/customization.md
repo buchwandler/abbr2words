@@ -31,8 +31,15 @@ are supplied:
 from abbr2words import Expander, TokenAnnotation
 
 expander = Expander("en")
-expander.add("Ref.", "Reference", only_if_pos={"NOUN", "PROPN"})
+expander.add("Ref.", "Reference", only_if_pos="NOUN")
 assert expander.expand("Ref.", annotations=[TokenAnnotation(0, 4, "NOUN")]) == "Reference"
+```
+
+Pass a collection when several labels are accepted. A deny constraint wins if
+both sets match:
+
+```python
+expander.add("Code.", "Code", only_if_pos={"NOUN", "PROPN"}, not_if_pos="PROPN")
 ```
 
 Structural guards and reviewed numeric unit matching run before POS guards. POS

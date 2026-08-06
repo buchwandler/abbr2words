@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-from collections.abc import Collection, Iterable
+from collections.abc import Iterable
 from importlib import import_module
 from re import Pattern
 from typing import Final
 
 from .annotations import TokenAnnotation
-from .core import AbbreviationContext, AbbreviationEntry, AbbreviationExpander
+from .core import AbbreviationContext, AbbreviationEntry, AbbreviationExpander, PosConstraints
 
 _LANGUAGE_CLASSES: Final[dict[str, tuple[str, str]]] = {
     "cs": ("abbr2words.languages.cs", "CzechAbbreviationExpander"),
@@ -110,7 +110,10 @@ def abbr2words(
     """Expand known abbreviations in *text*.
 
     The function expands abbreviations only. It intentionally does not normalize
-    dates, times, numbers, currencies, or general punctuation.
+    dates, times, numbers, currencies, or general punctuation. Optional
+    annotations must use character offsets in the original source; POS guards
+    fail open when usable lexical evidence is missing, and numeric units remain
+    authoritative over generic POS predictions.
     """
     if not isinstance(text, str):
         raise TypeError("text must be a string")
@@ -135,7 +138,12 @@ class Expander:
         *,
         annotations: Iterable[TokenAnnotation] | None = None,
     ) -> str:
-        """Expand abbreviations using this instance's registry."""
+        """Expand abbreviations using this instance's registry.
+
+        ``annotations`` are source-aligned to the original text. Only coarse
+        ``pos`` labels participate in guards; fine-grained ``tag`` values are
+        retained as metadata.
+        """
         if not isinstance(text, str):
             raise TypeError("text must be a string")
         return self._impl.expand(text, annotations=annotations)
@@ -152,10 +160,14 @@ class Expander:
         description: str = "",
         only_if_preceded_by: str | Pattern[str] | None = None,
         only_if_followed_by: str | Pattern[str] | None = None,
-        only_if_pos: Collection[str] | None = None,
-        not_if_pos: Collection[str] | None = None,
+        only_if_pos: PosConstraints = None,
+        not_if_pos: PosConstraints = None,
     ) -> None:
-        """Add or replace an abbreviation in this instance."""
+        """Add or replace an abbreviation, optionally constrained by POS.
+
+        A string is one POS label; collections support multiple labels. Deny
+        constraints take precedence over allow constraints.
+        """
         self._impl.add_abbreviation(
             AbbreviationEntry(
                 abbreviation=abbreviation,
@@ -165,8 +177,8 @@ class Expander:
                 description=description,
                 only_if_preceded_by=only_if_preceded_by,
                 only_if_followed_by=only_if_followed_by,
-                only_if_pos=frozenset(only_if_pos) if only_if_pos is not None else None,
-                not_if_pos=frozenset(not_if_pos) if not_if_pos is not None else None,
+                only_if_pos=only_if_pos,
+                not_if_pos=not_if_pos,
             )
         )
 

@@ -2,7 +2,14 @@ from __future__ import annotations
 
 import pytest
 
-from abbr2words import Expander, abbr2words, get_expander, get_shared_expander, reset_expanders
+from abbr2words import (
+    Expander,
+    TokenAnnotation,
+    abbr2words,
+    get_expander,
+    get_shared_expander,
+    reset_expanders,
+)
 
 
 @pytest.fixture(autouse=True)
@@ -28,6 +35,25 @@ def test_shared_context_customization_accepts_string_contexts() -> None:
 
     assert shared.get_abbreviation("Ex.").get_expansion() == "Example"
     assert shared.get_abbreviation("Ex.").context_expansions
+
+
+def test_english_custom_add_matches_base_context_and_guard_behavior() -> None:
+    expander = get_expander("en")
+    expander.add_custom_abbreviation(
+        "Ref.",
+        {"default": "Reference", "title": "Referee"},
+        only_if_followed_by=r"\s+\w",
+        only_if_pos="NOUN",
+        not_if_pos={"PROPN"},
+    )
+
+    assert (
+        expander.expand("Ref. text", annotations=[TokenAnnotation(0, 4, "NOUN")])
+        == "Reference text"
+    )
+    assert expander.expand("Ref. text", annotations=[TokenAnnotation(0, 4, "PROPN")]) == "Ref. text"
+    assert expander.expand("Ref. text", annotations=[TokenAnnotation(0, 4, "VERB")]) == "Ref. text"
+    assert expander.expand("Ref.-8", annotations=[TokenAnnotation(0, 4, "NOUN")]) == "Ref.-8"
 
 
 def test_isolated_expanders_do_not_leak_into_shared_registry() -> None:

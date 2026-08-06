@@ -5,31 +5,27 @@ from __future__ import annotations
 
 import argparse
 import sys
+from importlib import import_module
+from typing import Any, cast
 
 from abbr2words import abbr2words
 
-try:
-    from examples.speech_numbers import (
-        MissingNum2WordsError,
-        normalize_for_speech,
-        normalize_numbers_for_speech,
-    )
-except ModuleNotFoundError:
-    from speech_numbers import (
-        MissingNum2WordsError,
-        normalize_for_speech,
-        normalize_numbers_for_speech,
-    )
-
-
-TEXT = (
-    "Zum 14.05.2026 um 18:20 Uhr ist das Abendessen geplant. "
-    "Für den Auflauf brauchen wir 1,5 kg Kartoffeln, 500 g Quark, "
-    "2 Eier, 1 ltr. Milch und ggf. 3 cm mehr Backpapier. "
-    'Prof. Klein sagt: "Bitte stelle die Form auf die 2. Schiene, '
-    "backe alles für 45 Min. und lass es danach 1 Min. oder auch "
-    '2 Min. ruhen." Die Kosten liegen bei ca. 12,80 EUR zzgl. Pfand.'
+_module_prefix = "examples" if __package__ else ""
+_scenario = cast(
+    Any, import_module(f"{_module_prefix + '.' if _module_prefix else ''}multilingual_scenario")
 )
+GERMAN_TEXT = _scenario.GERMAN_TEXT
+
+_speech_numbers = cast(
+    Any,
+    import_module(f"{_module_prefix + '.' if _module_prefix else ''}speech_numbers"),
+)
+MissingNum2WordsError = _speech_numbers.MissingNum2WordsError
+normalize_for_speech = _speech_numbers.normalize_for_speech
+normalize_numbers_for_speech = _speech_numbers.normalize_numbers_for_speech
+
+
+TEXT = GERMAN_TEXT
 
 
 def main() -> int:

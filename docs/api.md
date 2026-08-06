@@ -6,6 +6,12 @@
 
 ```
 
+`abbr2words(..., annotations=...)` accepts an iterable of source-aligned
+`TokenAnnotation` objects. Their offsets refer to the original input text;
+labels are normalized and overlapping or invalid spans raise `ValueError`.
+Missing lexical POS evidence fails open, and numeric unit guards remain
+authoritative.
+
 ```{autofunction} abbr2words.expand
 
 ```
@@ -72,3 +78,8 @@ provided. `Expander.add()` exposes the same optional `only_if_pos` and
 ```{autoclass} abbr2words.AbbreviationExpander
 :members:
 ```
+
+The public `abbr2words.core.abbreviation_guards_match()` helper accepts either
+an `AnnotationIndex` or an annotation iterable. Iterable input is normalized
+and validated the same way as expansion. It evaluates coarse `pos` only;
+provider-specific `tag` values are retained but not matched.

@@ -10,10 +10,11 @@ This module provides the infrastructure for expanding abbreviations during text 
 
 import re
 from abc import ABC, abstractmethod
-from collections.abc import Collection, Iterable, Iterator, Sequence
+from collections.abc import Collection, Iterable, Iterator
 from dataclasses import dataclass
 from enum import Enum
 from re import Pattern
+from typing import TypeAlias
 
 from ._replacements import Replacement, apply_replacements, resolve_replacements
 from .annotations import AnnotationIndex, TokenAnnotation, normalize_annotations
@@ -31,6 +32,9 @@ class AbbreviationContext(Enum):
     RELIGIOUS = "religious"  # Religious context (St. Peter)
 
 
+PosConstraints: TypeAlias = str | Collection[str] | None
+
+
 @dataclass
 class AbbreviationEntry:
     """A single abbreviation with its expansion(s).
@@ -46,6 +50,11 @@ class AbbreviationEntry:
         only_if_followed_by: Optional regex that must match the text immediately
             after the abbreviation match (typically anchored with ^ or using
             match()).
+        only_if_pos: Optional coarse POS label or labels. POS evidence is
+            evaluated only when usable source-aligned annotations are present.
+        not_if_pos: Optional coarse POS label or labels that veto a match when
+            they overlap the abbreviation. This guard takes precedence over
+            ``only_if_pos``.
     """
 
     abbreviation: str
@@ -55,8 +64,8 @@ class AbbreviationEntry:
     description: str = ""
     only_if_preceded_by: str | Pattern[str] | None = None
     only_if_followed_by: str | Pattern[str] | None = None
-    only_if_pos: frozenset[str] | None = None
-    not_if_pos: frozenset[str] | None = None
+    only_if_pos: PosConstraints = None
+    not_if_pos: PosConstraints = None
 
     def __post_init__(self) -> None:
         self.only_if_pos = _normalize_pos_constraints(self.only_if_pos)
@@ -77,10 +86,12 @@ class AbbreviationEntry:
 
 
 def _normalize_pos_constraints(
-    labels: Collection[str] | None,
+    labels: PosConstraints,
 ) -> frozenset[str] | None:
     if labels is None:
         return None
+    if isinstance(labels, str):
+        labels = (labels,)
     normalized: set[str] = set()
     for label in labels:
         if not isinstance(label, str):
@@ -98,13 +109,14 @@ def abbreviation_guards_match(
     end: int,
     *,
     preceding_window: int = 80,
-    annotations: AnnotationIndex | Sequence[TokenAnnotation] | None = None,
+    annotations: AnnotationIndex | Iterable[TokenAnnotation] | None = None,
 ) -> bool:
-    """Return whether an abbreviation entry's context guards match.
+    """Return whether an abbreviation entry's configured guards match.
 
-    The same helper is used by abbreviation expansion and token merging. This
-    prevents tokenization from reassembling a guarded abbreviation after the
-    normalizer deliberately left it unchanged.
+    Sequence annotations are validated and normalized against the original
+    source text before POS guards are evaluated. Structural and numeric-unit
+    guards are authoritative; POS deny guards take precedence over POS allow
+    guards, and missing lexical POS evidence fails open.
 
     Args:
         entry: Abbreviation definition whose guards should be checked.
@@ -112,6 +124,8 @@ def abbreviation_guards_match(
         start: Candidate start offset in ``text``.
         end: Candidate end offset in ``text``.
         preceding_window: Maximum number of preceding characters to inspect.
+        annotations: Optional source-aligned annotations. Only coarse ``pos``
+            labels are evaluated; ``tag`` is retained as provider metadata.
 
     Returns:
         ``True`` when every configured guard matches. Unguarded entries always
@@ -139,7 +153,7 @@ def abbreviation_guards_match(
         index = (
             annotations
             if isinstance(annotations, AnnotationIndex)
-            else AnnotationIndex(annotations)
+            else AnnotationIndex(normalize_annotations(text, annotations))
         )
         lexical_pos = tuple(
             annotation.pos
@@ -339,11 +353,16 @@ class AbbreviationExpander(ABC):
         case_sensitive: bool = False,
         only_if_preceded_by: str | Pattern[str] | None = None,
         only_if_followed_by: str | Pattern[str] | None = None,
-        only_if_pos: Collection[str] | None = None,
-        not_if_pos: Collection[str] | None = None,
+        only_if_pos: PosConstraints = None,
+        not_if_pos: PosConstraints = None,
     ) -> None:
-        """Add or replace an entry using string context names."""
-        context_expansions = None
+        """Add or replace an entry using string context names and POS guards.
+
+        A single POS string is treated as one label, while a collection can
+        express several accepted or denied labels. Labels are normalized by
+        :class:`AbbreviationEntry`.
+        """
+        context_expansions: dict[AbbreviationContext, str] | None = None
         default_expansion = expansion
         if isinstance(expansion, dict):
             context_expansions = {}
@@ -358,6 +377,9 @@ class AbbreviationExpander(ABC):
                         f"Unknown context '{key}'. Valid contexts are: "
                         "default, title, place, time, academic, religious"
                     ) from None
+                if context is AbbreviationContext.DEFAULT:
+                    default_expansion = value
+                    continue
                 context_expansions[context] = value
             if AbbreviationContext.DEFAULT.value not in {key.lower() for key in expansion}:
                 default_expansion = next(iter(expansion.values()))
@@ -371,8 +393,8 @@ class AbbreviationExpander(ABC):
                 description=description,
                 only_if_preceded_by=only_if_preceded_by,
                 only_if_followed_by=only_if_followed_by,
-                only_if_pos=_normalize_pos_constraints(only_if_pos),
-                not_if_pos=_normalize_pos_constraints(not_if_pos),
+                only_if_pos=only_if_pos,
+                not_if_pos=not_if_pos,
             )
         )
 
@@ -430,6 +452,9 @@ class AbbreviationExpander(ABC):
 
         Args:
             text: Input text containing abbreviations
+            annotations: Optional provider-neutral annotations aligned to the
+                original source offsets. Incomplete lexical POS evidence does
+                not suppress a structurally valid match.
 
         Returns:
             Text with abbreviations expanded

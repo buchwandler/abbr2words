@@ -61,6 +61,9 @@ tag text can pass provider-neutral `TokenAnnotation` objects with character
 offsets and optional POS labels. spaCy is not installed or imported by
 `abbr2words`; see the [external POS annotation guide](docs/pos-annotations.md)
 and `examples/spacy_pos.py`.
+Bundled registries do not currently require POS labels; annotations are used by
+custom entries configured with POS guards. The provider-specific `tag` value is
+retained as metadata but is not currently evaluated.
 
 Use an isolated mutable registry for project-specific entries:
 

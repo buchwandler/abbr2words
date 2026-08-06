@@ -9,6 +9,7 @@ import pytest
 from abbr2words.units import unit_symbols
 from examples.full_text_demo import (
     CZECH_TEXT,
+    ENGLISH_TEXT,
     FRENCH_TEXT,
     GERMAN_TEXT,
     ITALIAN_TEXT,
@@ -67,6 +68,78 @@ def test_german_full_text_properties() -> None:
     assert "14.05.2026" not in output
     assert "18:20" not in output
     assert "__ABBR" not in output
+
+
+@pytest.mark.parametrize(
+    ("name", "lang", "source", "needles"),
+    [
+        (
+            "german",
+            "de",
+            GERMAN_TEXT,
+            ("Professor Klein", "gegebenenfalls", "Liter", "Minute", "zirka", "zuzüglich"),
+        ),
+        (
+            "english",
+            "en",
+            ENGLISH_TEXT,
+            ("Professor Klein", "kilogram", "liter", "minute", "approximately"),
+        ),
+        ("czech", "cs", CZECH_TEXT, ("Profesor Klein", "kilogram", "litr", "minuta")),
+        (
+            "spanish",
+            "es",
+            SPANISH_TEXT,
+            ("Profesor Klein", "kilogramo", "litro", "minuto", "aproximadamente"),
+        ),
+        (
+            "french",
+            "fr",
+            FRENCH_TEXT,
+            ("professeur Klein", "kilogramme", "litre", "minute", "environ"),
+        ),
+        (
+            "italian",
+            "it",
+            ITALIAN_TEXT,
+            ("Professor Klein", "chilogrammo", "litro", "minuto", "circa"),
+        ),
+        (
+            "portuguese",
+            "pt",
+            PORTUGUESE_TEXT,
+            ("Professor Klein", "quilograma", "litro", "minuto", "aproximadamente"),
+        ),
+    ],
+)
+def test_translated_scenario_abbreviation_stage(
+    name: str,
+    lang: str,
+    source: str,
+    needles: tuple[str, ...],
+) -> None:
+    output = abbreviation_only(source, lang=lang)
+    assert output != source, name
+    for needle in needles:
+        assert needle in output
+
+
+def test_scenario_uses_stable_unit_symbols() -> None:
+    assert "ltr." not in GERMAN_TEXT
+    for source in (
+        GERMAN_TEXT,
+        ENGLISH_TEXT,
+        CZECH_TEXT,
+        SPANISH_TEXT,
+        FRENCH_TEXT,
+        ITALIAN_TEXT,
+        PORTUGUESE_TEXT,
+    ):
+        assert " kg" in source
+        assert " g" in source
+        assert " l" in source or " L" in source
+        assert " cm" in source
+    assert " min." not in FRENCH_TEXT
 
 
 @pytest.mark.parametrize(
@@ -153,7 +226,9 @@ def test_unified_cli_stages_and_all_samples() -> None:
     )
     assert abbreviation.returncode == 0
     assert "=== Source ===" not in abbreviation.stdout
-    assert "37 degree Celsius." in abbreviation.stdout
+    assert "Professor Klein" in abbreviation.stdout
+    assert "1 liter" in abbreviation.stdout
+    assert "approximately" in abbreviation.stdout
 
     full = run_example(
         "examples/full_text_demo.py", "--sample", "german", "--stage", "full", "--compact"
@@ -166,7 +241,7 @@ def test_unified_cli_stages_and_all_samples() -> None:
     assert all_samples.returncode == 0
     for name in ("english", "german", "czech", "spanish", "french", "italian", "portuguese"):
         assert name in all_samples.stdout
-    assert "Novák" in all_samples.stdout
+    assert "Položte formu" in all_samples.stdout
     assert all_samples.stderr == ""
 
 

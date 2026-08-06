@@ -2,7 +2,35 @@
 
 from __future__ import annotations
 
-from abbr2words import TokenAnnotation, abbr2words
+from collections.abc import Iterable
+from typing import Protocol, cast
+
+from abbr2words import Expander, TokenAnnotation, abbr2words
+
+
+class SpacyTokenLike(Protocol):
+    """The small spaCy token surface needed by the adapter."""
+
+    idx: int
+    pos_: str
+    tag_: str
+
+    def __len__(self) -> int: ...
+
+
+def to_token_annotations(
+    tokens: Iterable[SpacyTokenLike],
+) -> tuple[TokenAnnotation, ...]:
+    """Convert provider tokens to source-aligned annotations."""
+    return tuple(
+        TokenAnnotation(
+            start=token.idx,
+            end=token.idx + len(token),
+            pos=token.pos_ or None,
+            tag=token.tag_ or None,
+        )
+        for token in tokens
+    )
 
 
 def main() -> int:
@@ -22,17 +50,25 @@ def main() -> int:
 
     text = "They wandered around in. The board is 10 in. wide."
     doc = nlp(text)
-    annotations = tuple(
-        TokenAnnotation(
-            start=token.idx,
-            end=token.idx + len(token),
-            pos=token.pos_ or None,
-            tag=token.tag_ or None,
-        )
-        for token in doc
-    )
+    annotations = to_token_annotations(cast(Iterable[SpacyTokenLike], doc))
 
+    print("=== Token annotations ===")
+    for token, annotation in zip(doc, annotations, strict=True):
+        print(
+            f"{token.text!r} [{annotation.start}:{annotation.end}] "
+            f"pos={annotation.pos or '-'} tag={annotation.tag or '-'}"
+        )
+
+    print("=== Structural guards and unit precedence ===")
     print(abbr2words(text, lang="en", annotations=annotations))
+
+    custom_text = "Ref. was filed."
+    custom_doc = nlp(custom_text)
+    custom_annotations = to_token_annotations(cast(Iterable[SpacyTokenLike], custom_doc))
+    custom = Expander("en")
+    custom.add("Ref.", "Reference", only_if_pos="NOUN", not_if_pos="PROPN")
+    print("=== Custom POS-guarded entry ===")
+    print(custom.expand(custom_text, annotations=custom_annotations))
     return 0
 
 

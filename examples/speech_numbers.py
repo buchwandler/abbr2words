@@ -329,7 +329,7 @@ class ParsedDate:
 
 def _num2words(value: Decimal | int, *, lang: str, **kwargs: str) -> str:
     try:
-        from num2words import num2words
+        from num2words import num2words  # type: ignore[import-untyped]
     except ImportError as exc:
         raise MissingNum2WordsError(
             'Full-text normalization requires the examples extra: python -m pip install "abbr2words[examples]"'

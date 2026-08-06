@@ -10,3 +10,7 @@
   expansion.
 - Added no runtime dependency; spaCy remains separately installed and used only
   by the integration example.
+- Added a tested spaCy token adapter example without adding spaCy to runtime or
+  example dependencies.
+- Clarified that POS guards currently apply to configured custom entries;
+  bundled registries remain structurally guarded.
