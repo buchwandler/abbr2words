@@ -12,14 +12,14 @@ status: accepted
 audience: null
 scopes: []
 source_refs:
-- git:df86c96c966f8147cc1cf8e69b8657db809f3cb1
+  - git:df86c96c966f8147cc1cf8e69b8657db809f3cb1
 paths:
-- abbr2words/core.py
-- abbr2words/languages/en.py
+  - abbr2words/core.py
+  - abbr2words/languages/en.py
 issues: []
 prs: []
 sources:
-- git:df86c96c966f8147cc1cf8e69b8657db809f3cb1
+  - git:df86c96c966f8147cc1cf8e69b8657db809f3cb1
 contributors: []
 breaking: false
 internal: false

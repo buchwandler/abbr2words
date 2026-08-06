@@ -12,20 +12,20 @@ status: accepted
 audience: null
 scopes: []
 source_refs:
-- git:e0e756912a66a51e2a3e4afcf7329365df462c1b
+  - git:e0e756912a66a51e2a3e4afcf7329365df462c1b
 paths:
-- abbr2words/units.py
-- abbr2words/languages/cs.py
-- abbr2words/languages/de.py
-- abbr2words/languages/en.py
-- abbr2words/languages/es.py
-- abbr2words/languages/fr.py
-- abbr2words/languages/it.py
-- abbr2words/languages/pt.py
+  - abbr2words/units.py
+  - abbr2words/languages/cs.py
+  - abbr2words/languages/de.py
+  - abbr2words/languages/en.py
+  - abbr2words/languages/es.py
+  - abbr2words/languages/fr.py
+  - abbr2words/languages/it.py
+  - abbr2words/languages/pt.py
 issues: []
 prs: []
 sources:
-- git:e0e756912a66a51e2a3e4afcf7329365df462c1b
+  - git:e0e756912a66a51e2a3e4afcf7329365df462c1b
 contributors: []
 breaking: false
 internal: false

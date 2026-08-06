@@ -12,14 +12,14 @@ status: accepted
 audience: null
 scopes: []
 source_refs:
-- git:2d5c8afdb0da9a948eb934ca48ad35a6f2bc2b93
+  - git:2d5c8afdb0da9a948eb934ca48ad35a6f2bc2b93
 paths:
-- docs/api.md
-- docs/languages.md
+  - docs/api.md
+  - docs/languages.md
 issues: []
 prs: []
 sources:
-- git:2d5c8afdb0da9a948eb934ca48ad35a6f2bc2b93
+  - git:2d5c8afdb0da9a948eb934ca48ad35a6f2bc2b93
 contributors: []
 breaking: false
 internal: true

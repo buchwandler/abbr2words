@@ -12,18 +12,18 @@ status: accepted
 audience: null
 scopes: []
 source_refs:
-- git:d84ec700bbb94347fcae82cfeadece4d82978927
+  - git:d84ec700bbb94347fcae82cfeadece4d82978927
 paths:
-- abbr2words/annotations.py
-- abbr2words/core.py
-- abbr2words/languages/en.py
-- docs/pos-annotations.md
-- examples/spacy_pos.py
-- tests/test_annotations.py
+  - abbr2words/annotations.py
+  - abbr2words/core.py
+  - abbr2words/languages/en.py
+  - docs/pos-annotations.md
+  - examples/spacy_pos.py
+  - tests/test_annotations.py
 issues: []
 prs: []
 sources:
-- git:d84ec700bbb94347fcae82cfeadece4d82978927
+  - git:d84ec700bbb94347fcae82cfeadece4d82978927
 contributors: []
 breaking: false
 internal: false
