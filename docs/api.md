@@ -12,6 +12,16 @@ labels are normalized and overlapping or invalid spans raise `ValueError`.
 Missing lexical POS evidence fails open, and numeric unit guards remain
 authoritative.
 
+Abbreviation boundaries use symmetric Unicode word-character lookarounds:
+registered spellings may start or end with punctuation, but cannot attach to a
+surrounding `\w` character. Optional `protected_spans=[(start, end), ...]`
+prevents replacements in caller-owned ranges such as URLs, markup, or code.
+
+For source-aligned diagnostics, use `Expander.expand_with_trace(...)`. It
+returns an `ExpansionResult` containing expanded text and deterministic,
+non-overlapping `ExpansionMatch` records. Existing convenience calls continue
+to return strings.
+
 The bundled language registry includes `cs`, `de`, `en`, `es`, `fr`, `it`, `nl`,
 `pl`, `pt`, `ru`, `sv`, and `tr`. Turkish unit symbols followed by straight or
 curly apostrophe suffixes are intentionally not expanded until suffix
@@ -55,6 +65,12 @@ precedes the complete unit expression. Numeric forms such as `500 g`, `500g`,
 `1.5 kg`, `1,5 kg`, and `5 km/h` are supported; standalone symbols and attached
 words remain unchanged. This is symbol expansion, not number spelling, unit
 conversion, or universal UCUM parsing.
+
+The matcher is maximal and fail-closed: larger unsupported expressions such as
+`5 km / h`, `1 m^2`, and `2kg-rated` remain unchanged instead of being
+partially rewritten. Reviewed aliases include both `µg` and `μg`; unrelated
+source characters are not Unicode-normalized. Unit metadata controls case
+sensitivity and whether a numeric value is required.
 
 ```python
 abbr2words("500 g", lang="en")  # "500 gram"

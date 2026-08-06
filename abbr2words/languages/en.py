@@ -1017,6 +1017,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="EST",
                 expansion="E S T",
+                case_sensitive=True,
                 description="Eastern Standard Time",
             )
         )
@@ -1025,6 +1026,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="EDT",
                 expansion="E D T",
+                case_sensitive=True,
                 description="Eastern Daylight Time",
             )
         )
@@ -1033,6 +1035,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="CST",
                 expansion="C S T",
+                case_sensitive=True,
                 description="Central Standard Time",
             )
         )
@@ -1041,6 +1044,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="CDT",
                 expansion="C D T",
+                case_sensitive=True,
                 description="Central Daylight Time",
             )
         )
@@ -1049,6 +1053,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="MST",
                 expansion="M S T",
+                case_sensitive=True,
                 description="Mountain Standard Time",
             )
         )
@@ -1057,6 +1062,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="MDT",
                 expansion="M D T",
+                case_sensitive=True,
                 description="Mountain Daylight Time",
             )
         )
@@ -1065,6 +1071,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="PST",
                 expansion="P S T",
+                case_sensitive=True,
                 description="Pacific Standard Time",
             )
         )
@@ -1073,6 +1080,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="PDT",
                 expansion="P D T",
+                case_sensitive=True,
                 description="Pacific Daylight Time",
             )
         )
@@ -1081,6 +1089,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="GMT",
                 expansion="G M T",
+                case_sensitive=True,
                 description="Greenwich Mean Time",
             )
         )
@@ -1089,6 +1098,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="UTC",
                 expansion="U T C",
+                case_sensitive=True,
                 description="Coordinated Universal Time",
             )
         )
@@ -1101,6 +1111,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="BCE",
                 expansion="B C E",
+                case_sensitive=True,
                 description="Before Common Era",
             )
         )
@@ -1109,6 +1120,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="CE",
                 expansion="C E",
+                case_sensitive=True,
                 description="Common Era",
             )
         )
@@ -1178,6 +1190,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="ASAP",
                 expansion="as soon as possible",
+                case_sensitive=True,
                 description="As soon as possible",
             )
         )
@@ -1195,6 +1208,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="MIT",
                 expansion="Massachusetts Institute of Technology",
+                case_sensitive=True,
                 description="Massachusetts Institute of Technology",
             )
         )
@@ -1203,6 +1217,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="CEO",
                 expansion="chief executive officer",
+                case_sensitive=True,
                 description="Chief executive officer",
             )
         )
@@ -1211,6 +1226,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="Q&A",
                 expansion="questions and answers",
+                case_sensitive=True,
                 description="Questions and answers",
             )
         )

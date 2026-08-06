@@ -24,6 +24,17 @@ expander.add("in.", "inch", only_if_preceded_by=r"\d\s*$")
 expander.add("KI", "Künstliche Intelligenz", case_sensitive=True)
 ```
 
+Registration is validated immediately. Abbreviations and expansions must be
+non-empty strings; context keys and values, POS labels, booleans, and guard
+patterns have stable type/value checks. Guard regexes are compiled once and
+are trusted application configuration; do not pass arbitrary untrusted regex
+text because the standard-library engine has no portable timeout.
+
+Boundaries use `(?<!\w)` and `(?!\w)`. Exact case-sensitive custom entries
+outrank bundled exact entries and case-insensitive fallbacks, so conflicts do
+not depend on registration order. A preceding guard must end immediately before
+the abbreviation after horizontal whitespace is removed.
+
 POS guards are optional and are evaluated only when source-aligned annotations
 are supplied:
 
@@ -67,3 +78,21 @@ reset_expanders("de")
 `reset_expanders("de")` limits cleanup to one language. Shared state is local to
 the current process and is not a synchronization mechanism between threads or
 processes; applications should coordinate concurrent mutation themselves.
+
+Shared lookup and reset are atomic, while expansion observes a complete
+registry snapshot. Applications should still avoid mutating a shared registry
+while a long expansion is running.
+
+## Unit customization
+
+Units are a separate reviewed inventory, not ordinary abbreviation entries.
+Use the instance-local unit methods when an application needs an override:
+
+```python
+expander.set_unit("kg", "custom kilogram")
+expander.remove_unit("kg")
+```
+
+Calling `add("kg", ...)` or abbreviation removal for a known unit raises a
+clear error rather than silently changing a registry that expansion ignores.
+Unit overrides do not leak between isolated expanders.

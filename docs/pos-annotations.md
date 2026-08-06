@@ -29,6 +29,12 @@ characters belong to each label. Missing annotations or missing POS labels
 preserve the normal structural behavior: POS guards refine a decision only when
 usable lexical POS evidence is present, so incomplete evidence fails open.
 
+Context profiles may use neighboring annotations as high-confidence evidence
+for language-specific decisions. All annotation and replacement offsets remain
+relative to the original, unexpanded source. `protected_spans` can be supplied
+alongside annotations; invalid or overlapping protected ranges raise an error
+and protected ranges take precedence over candidates.
+
 ## What POS changes today
 
 POS constraints are opt-in and currently affect custom entries only. No bundled

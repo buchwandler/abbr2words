@@ -5,10 +5,18 @@ from __future__ import annotations
 from collections.abc import Iterable
 from importlib import import_module
 from re import Pattern
+from threading import RLock
 from typing import Final
 
 from .annotations import TokenAnnotation
-from .core import AbbreviationContext, AbbreviationEntry, AbbreviationExpander, PosConstraints
+from .core import (
+    AbbreviationContext,
+    AbbreviationEntry,
+    AbbreviationExpander,
+    ExpansionResult,
+    PosConstraints,
+    ProtectedSpan,
+)
 
 _LANGUAGE_CLASSES: Final[dict[str, tuple[str, str]]] = {
     "cs": ("abbr2words.languages.cs", "CzechAbbreviationExpander"),
@@ -46,6 +54,7 @@ _ALIASES: Final[dict[str, str]] = {
 }
 
 _SHARED_EXPANDERS: dict[tuple[str, bool], AbbreviationExpander] = {}
+_SHARED_LOCK = RLock()
 
 
 def normalize_language(lang: str) -> str:
@@ -93,22 +102,24 @@ def get_shared_expander(
     """Return the shared registry for a language and context mode."""
     code = normalize_language(lang)
     key = (code, context)
-    if key not in _SHARED_EXPANDERS:
-        _SHARED_EXPANDERS[key] = _expander_class(code)(enable_context_detection=context)
-    return _SHARED_EXPANDERS[key]
+    with _SHARED_LOCK:
+        if key not in _SHARED_EXPANDERS:
+            _SHARED_EXPANDERS[key] = _expander_class(code)(enable_context_detection=context)
+        return _SHARED_EXPANDERS[key]
 
 
 def reset_expanders(lang: str | None = None) -> None:
     """Reset one or all shared language registries."""
     languages = (normalize_language(lang),) if lang is not None else supported_languages()
-    for code in languages:
-        for key in tuple(_SHARED_EXPANDERS):
-            if key[0] == code:
-                del _SHARED_EXPANDERS[key]
+    with _SHARED_LOCK:
+        for code in languages:
+            for key in tuple(_SHARED_EXPANDERS):
+                if key[0] == code:
+                    del _SHARED_EXPANDERS[key]
 
-        # Preserve cleanup for callers importing language modules directly.
-        module_name, _ = _LANGUAGE_CLASSES[code]
-        import_module(module_name).reset_expander()
+            # Preserve cleanup for callers importing language modules directly.
+            module_name, _ = _LANGUAGE_CLASSES[code]
+            import_module(module_name).reset_expander()
 
 
 def abbr2words(
@@ -117,6 +128,8 @@ def abbr2words(
     lang: str = "en",
     context: bool = True,
     annotations: Iterable[TokenAnnotation] | None = None,
+    protected_spans: Iterable[ProtectedSpan | tuple[int, int] | tuple[int, int, str | None]]
+    | None = None,
 ) -> str:
     """Expand known abbreviations in *text*.
 
@@ -129,7 +142,9 @@ def abbr2words(
     if not isinstance(text, str):
         raise TypeError("text must be a string")
     code = normalize_language(lang)
-    return get_shared_expander(code, context=context).expand(text, annotations=annotations)
+    return get_shared_expander(code, context=context).expand(
+        text, annotations=annotations, protected_spans=protected_spans
+    )
 
 
 expand = abbr2words
@@ -148,6 +163,8 @@ class Expander:
         text: str,
         *,
         annotations: Iterable[TokenAnnotation] | None = None,
+        protected_spans: Iterable[ProtectedSpan | tuple[int, int] | tuple[int, int, str | None]]
+        | None = None,
     ) -> str:
         """Expand abbreviations using this instance's registry.
 
@@ -157,14 +174,29 @@ class Expander:
         """
         if not isinstance(text, str):
             raise TypeError("text must be a string")
-        return self._impl.expand(text, annotations=annotations)
+        return self._impl.expand(text, annotations=annotations, protected_spans=protected_spans)
+
+    def expand_with_trace(
+        self,
+        text: str,
+        *,
+        annotations: Iterable[TokenAnnotation] | None = None,
+        protected_spans: Iterable[ProtectedSpan | tuple[int, int] | tuple[int, int, str | None]]
+        | None = None,
+    ) -> ExpansionResult:
+        """Expand abbreviations and return source-aligned accepted matches."""
+        if not isinstance(text, str):
+            raise TypeError("text must be a string")
+        return self._impl.expand_with_trace(
+            text, annotations=annotations, protected_spans=protected_spans
+        )
 
     __call__ = expand
 
     def add(
         self,
         abbreviation: str,
-        expansion: str,
+        expansion: str | dict[str, str],
         *,
         context_expansions: dict[AbbreviationContext, str] | None = None,
         case_sensitive: bool = False,
@@ -179,6 +211,22 @@ class Expander:
         A string is one POS label; collections support multiple labels. Deny
         constraints take precedence over allow constraints.
         """
+        if isinstance(expansion, dict):
+            if context_expansions is not None:
+                raise ValueError(
+                    "provide context expansions either in expansion or context_expansions"
+                )
+            self._impl.add_custom_abbreviation(
+                abbreviation,
+                expansion,
+                description=description,
+                case_sensitive=case_sensitive,
+                only_if_preceded_by=only_if_preceded_by,
+                only_if_followed_by=only_if_followed_by,
+                only_if_pos=only_if_pos,
+                not_if_pos=not_if_pos,
+            )
+            return
         self._impl.add_abbreviation(
             AbbreviationEntry(
                 abbreviation=abbreviation,
@@ -190,8 +238,52 @@ class Expander:
                 only_if_followed_by=only_if_followed_by,
                 only_if_pos=only_if_pos,
                 not_if_pos=not_if_pos,
+                origin="custom",
             )
         )
+
+    def add_custom_abbreviation(
+        self,
+        abbreviation: str,
+        expansion: str | dict[str, str],
+        description: str = "",
+        case_sensitive: bool = False,
+        only_if_preceded_by: str | Pattern[str] | None = None,
+        only_if_followed_by: str | Pattern[str] | None = None,
+        only_if_pos: PosConstraints = None,
+        not_if_pos: PosConstraints = None,
+    ) -> None:
+        """Register an entry using string-named context expansions."""
+        self._impl.add_custom_abbreviation(
+            abbreviation,
+            expansion,
+            description=description,
+            case_sensitive=case_sensitive,
+            only_if_preceded_by=only_if_preceded_by,
+            only_if_followed_by=only_if_followed_by,
+            only_if_pos=only_if_pos,
+            not_if_pos=not_if_pos,
+        )
+
+    def set_unit(
+        self,
+        symbol: str,
+        expansion: str,
+        *,
+        case_sensitive: bool = True,
+        description: str = "Custom unit",
+    ) -> None:
+        """Override a reviewed unit for this isolated expander."""
+        self._impl.set_unit(
+            symbol, expansion, case_sensitive=case_sensitive, description=description
+        )
+
+    def remove_unit(self, symbol: str) -> bool:
+        """Suppress a reviewed unit for this isolated expander."""
+        return self._impl.remove_unit(symbol)
+
+    def has_unit(self, symbol: str) -> bool:
+        return self._impl.has_unit(symbol)
 
     def remove(self, abbreviation: str, *, case_sensitive: bool = False) -> bool:
         """Remove an abbreviation from this instance."""

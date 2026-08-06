@@ -38,8 +38,15 @@ examples include `str.` in Czech, `mar.` in Spanish and Italian, `n°` in French
 and `seg.` in Portuguese. German `Fr.` has an explicit title-context override,
 but its default expansion remains `Freitag`.
 
-The context detector is shared across languages and is currently mostly oriented
-around English address, name, saint, and time signals. The package is therefore
-context-aware for supported entries, not a comprehensive multilingual semantic
-disambiguator. Applications should review ambiguous domain-specific entries
-before relying on an expansion as authoritative.
+Context policy is language-specific and uses bounded local windows. English
+profiles distinguish street suffixes, saints, titles, and addresses; the German
+profile distinguishes `Fr. Müller` (`Frau`) from `Am Fr.` (`Freitag`). Name
+evidence uses Unicode cased characters and supports accents, apostrophes,
+hyphens, and quoted names. Uncased scripts remain conservative without an
+annotation signal. Context-aware output is still not a comprehensive semantic
+disambiguator, so applications should review domain-specific entries.
+
+Uppercase undotted initialisms such as English time zones, `BCE`, `CE`, and
+`MIT` are case-sensitive. This prevents ordinary lowercase words from being
+rewritten; reviewed title-case and lexical abbreviations retain their own
+registry policy.

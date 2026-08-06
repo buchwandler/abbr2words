@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from bisect import bisect_left
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 
@@ -15,6 +16,9 @@ class Replacement:
     text: str
     priority: int
     source: str
+    kind: str = "abbreviation"
+    entry_id: str = ""
+    context: object | None = None
 
 
 def resolve_replacements(candidates: Iterable[Replacement]) -> tuple[Replacement, ...]:
@@ -29,10 +33,15 @@ def resolve_replacements(candidates: Iterable[Replacement]) -> tuple[Replacement
         ),
     )
     selected: list[Replacement] = []
+    starts: list[int] = []
     for candidate in ordered:
-        if any(candidate.start < item.end and item.start < candidate.end for item in selected):
+        index = bisect_left(starts, candidate.start)
+        if index and selected[index - 1].end > candidate.start:
             continue
-        selected.append(candidate)
+        if index < len(selected) and candidate.end > selected[index].start:
+            continue
+        starts.insert(index, candidate.start)
+        selected.insert(index, candidate)
     return tuple(sorted(selected, key=lambda item: (item.start, item.end, item.source)))
 
 

@@ -27,7 +27,7 @@
     "sv": 30,
     "tr": 15
   },
-  "required_all_language_effective_hash": "ad32867b70343de5cade48f0e2a36fe276a3294148061b418ec7350e872a5cc8",
+  "required_all_language_effective_hash": "d8abc1d365df9109cee91bcddafafe9206e251a56129818f78437c6d977dfcca",
   "entries": [
     {
       "language": "cs",
@@ -1409,6 +1409,182 @@
     },
     {
       "language": "en",
+      "key": "ASAP",
+      "abbreviation": "ASAP",
+      "expansion": "as soon as possible",
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "As soon as possible",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en",
+      "key": "BCE",
+      "abbreviation": "BCE",
+      "expansion": "B C E",
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Before Common Era",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en",
+      "key": "CDT",
+      "abbreviation": "CDT",
+      "expansion": "C D T",
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Central Daylight Time",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en",
+      "key": "CE",
+      "abbreviation": "CE",
+      "expansion": "C E",
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Common Era",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en",
+      "key": "CEO",
+      "abbreviation": "CEO",
+      "expansion": "chief executive officer",
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Chief executive officer",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en",
+      "key": "CST",
+      "abbreviation": "CST",
+      "expansion": "C S T",
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Central Standard Time",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en",
+      "key": "EDT",
+      "abbreviation": "EDT",
+      "expansion": "E D T",
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Eastern Daylight Time",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en",
+      "key": "EST",
+      "abbreviation": "EST",
+      "expansion": "E S T",
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Eastern Standard Time",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en",
+      "key": "GMT",
+      "abbreviation": "GMT",
+      "expansion": "G M T",
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Greenwich Mean Time",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en",
+      "key": "MDT",
+      "abbreviation": "MDT",
+      "expansion": "M D T",
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Mountain Daylight Time",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en",
+      "key": "MIT",
+      "abbreviation": "MIT",
+      "expansion": "Massachusetts Institute of Technology",
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Massachusetts Institute of Technology",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en",
+      "key": "MST",
+      "abbreviation": "MST",
+      "expansion": "M S T",
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Mountain Standard Time",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en",
+      "key": "PDT",
+      "abbreviation": "PDT",
+      "expansion": "P D T",
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Pacific Daylight Time",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en",
+      "key": "PST",
+      "abbreviation": "PST",
+      "expansion": "P S T",
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Pacific Standard Time",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en",
+      "key": "Q&A",
+      "abbreviation": "Q&A",
+      "expansion": "questions and answers",
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Questions and answers",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en",
+      "key": "UTC",
+      "abbreviation": "UTC",
+      "expansion": "U T C",
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Coordinated Universal Time",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en",
       "key": "a.d.",
       "abbreviation": "A.D.",
       "expansion": "A D",
@@ -1459,17 +1635,6 @@
       "context_expansions": null,
       "case_sensitive": false,
       "description": "Apartment",
-      "only_if_preceded_by": null,
-      "only_if_followed_by": null
-    },
-    {
-      "language": "en",
-      "key": "asap",
-      "abbreviation": "ASAP",
-      "expansion": "as soon as possible",
-      "context_expansions": null,
-      "case_sensitive": false,
-      "description": "As soon as possible",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
     },
@@ -1563,17 +1728,6 @@
     },
     {
       "language": "en",
-      "key": "bce",
-      "abbreviation": "BCE",
-      "expansion": "B C E",
-      "context_expansions": null,
-      "case_sensitive": false,
-      "description": "Before Common Era",
-      "only_if_preceded_by": null,
-      "only_if_followed_by": null
-    },
-    {
-      "language": "en",
       "key": "bldg.",
       "abbreviation": "Bldg.",
       "expansion": "Building",
@@ -1624,39 +1778,6 @@
       "context_expansions": null,
       "case_sensitive": false,
       "description": "Captain",
-      "only_if_preceded_by": null,
-      "only_if_followed_by": null
-    },
-    {
-      "language": "en",
-      "key": "cdt",
-      "abbreviation": "CDT",
-      "expansion": "C D T",
-      "context_expansions": null,
-      "case_sensitive": false,
-      "description": "Central Daylight Time",
-      "only_if_preceded_by": null,
-      "only_if_followed_by": null
-    },
-    {
-      "language": "en",
-      "key": "ce",
-      "abbreviation": "CE",
-      "expansion": "C E",
-      "context_expansions": null,
-      "case_sensitive": false,
-      "description": "Common Era",
-      "only_if_preceded_by": null,
-      "only_if_followed_by": null
-    },
-    {
-      "language": "en",
-      "key": "ceo",
-      "abbreviation": "CEO",
-      "expansion": "chief executive officer",
-      "context_expansions": null,
-      "case_sensitive": false,
-      "description": "Chief executive officer",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
     },
@@ -1745,17 +1866,6 @@
       "context_expansions": null,
       "case_sensitive": false,
       "description": "Corporal",
-      "only_if_preceded_by": null,
-      "only_if_followed_by": null
-    },
-    {
-      "language": "en",
-      "key": "cst",
-      "abbreviation": "CST",
-      "expansion": "C S T",
-      "context_expansions": null,
-      "case_sensitive": false,
-      "description": "Central Standard Time",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
     },
@@ -1874,34 +1984,12 @@
     },
     {
       "language": "en",
-      "key": "edt",
-      "abbreviation": "EDT",
-      "expansion": "E D T",
-      "context_expansions": null,
-      "case_sensitive": false,
-      "description": "Eastern Daylight Time",
-      "only_if_preceded_by": null,
-      "only_if_followed_by": null
-    },
-    {
-      "language": "en",
       "key": "esq.",
       "abbreviation": "Esq.",
       "expansion": "Esquire",
       "context_expansions": null,
       "case_sensitive": false,
       "description": "Lawyer suffix",
-      "only_if_preceded_by": null,
-      "only_if_followed_by": null
-    },
-    {
-      "language": "en",
-      "key": "est",
-      "abbreviation": "EST",
-      "expansion": "E S T",
-      "context_expansions": null,
-      "case_sensitive": false,
-      "description": "Eastern Standard Time",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
     },
@@ -2012,17 +2100,6 @@
       "context_expansions": null,
       "case_sensitive": false,
       "description": "General",
-      "only_if_preceded_by": null,
-      "only_if_followed_by": null
-    },
-    {
-      "language": "en",
-      "key": "gmt",
-      "abbreviation": "GMT",
-      "expansion": "G M T",
-      "context_expansions": null,
-      "case_sensitive": false,
-      "description": "Greenwich Mean Time",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
     },
@@ -2347,17 +2424,6 @@
     },
     {
       "language": "en",
-      "key": "mdt",
-      "abbreviation": "MDT",
-      "expansion": "M D T",
-      "context_expansions": null,
-      "case_sensitive": false,
-      "description": "Mountain Daylight Time",
-      "only_if_preceded_by": null,
-      "only_if_followed_by": null
-    },
-    {
-      "language": "en",
       "key": "mg",
       "abbreviation": "mg",
       "expansion": "milligram",
@@ -2397,17 +2463,6 @@
       "context_expansions": null,
       "case_sensitive": false,
       "description": "Miscellaneous",
-      "only_if_preceded_by": null,
-      "only_if_followed_by": null
-    },
-    {
-      "language": "en",
-      "key": "mit",
-      "abbreviation": "MIT",
-      "expansion": "Massachusetts Institute of Technology",
-      "context_expansions": null,
-      "case_sensitive": false,
-      "description": "Massachusetts Institute of Technology",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
     },
@@ -2463,17 +2518,6 @@
       "context_expansions": null,
       "case_sensitive": false,
       "description": "Female honorific",
-      "only_if_preceded_by": null,
-      "only_if_followed_by": null
-    },
-    {
-      "language": "en",
-      "key": "mst",
-      "abbreviation": "MST",
-      "expansion": "M S T",
-      "context_expansions": null,
-      "case_sensitive": false,
-      "description": "Mountain Standard Time",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
     },
@@ -2644,17 +2688,6 @@
     },
     {
       "language": "en",
-      "key": "pdt",
-      "abbreviation": "PDT",
-      "expansion": "P D T",
-      "context_expansions": null,
-      "case_sensitive": false,
-      "description": "Pacific Daylight Time",
-      "only_if_preceded_by": null,
-      "only_if_followed_by": null
-    },
-    {
-      "language": "en",
       "key": "pg.",
       "abbreviation": "pg.",
       "expansion": "page",
@@ -2732,17 +2765,6 @@
     },
     {
       "language": "en",
-      "key": "pst",
-      "abbreviation": "PST",
-      "expansion": "P S T",
-      "context_expansions": null,
-      "case_sensitive": false,
-      "description": "Pacific Standard Time",
-      "only_if_preceded_by": null,
-      "only_if_followed_by": null
-    },
-    {
-      "language": "en",
       "key": "pt.",
       "abbreviation": "pt.",
       "expansion": "pint",
@@ -2750,17 +2772,6 @@
       "case_sensitive": true,
       "description": "Pint",
       "only_if_preceded_by": "(?:^|[^\\w.])(?:(?:\\d{1,3}(?:,\\d{3})+|\\d+)(?:\\.\\d+)?|\\.\\d+)[ \\t]*\\Z",
-      "only_if_followed_by": null
-    },
-    {
-      "language": "en",
-      "key": "q&a",
-      "abbreviation": "Q&A",
-      "expansion": "questions and answers",
-      "context_expansions": null,
-      "case_sensitive": false,
-      "description": "Questions and answers",
-      "only_if_preceded_by": null,
       "only_if_followed_by": null
     },
     {
@@ -3104,17 +3115,6 @@
       "context_expansions": null,
       "case_sensitive": false,
       "description": "United States of America",
-      "only_if_preceded_by": null,
-      "only_if_followed_by": null
-    },
-    {
-      "language": "en",
-      "key": "utc",
-      "abbreviation": "UTC",
-      "expansion": "U T C",
-      "context_expansions": null,
-      "case_sensitive": false,
-      "description": "Coordinated Universal Time",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
     },

@@ -30,6 +30,24 @@ class UnitEntry:
     canonical_id: str | None = None
     reject_following_apostrophe: bool = False
 
+    def __post_init__(self) -> None:
+        if not self.symbols or any(
+            not isinstance(symbol, str) or not symbol for symbol in self.symbols
+        ):
+            raise ValueError("unit symbols must contain non-empty strings")
+        if not isinstance(self.expansion, str):
+            raise TypeError("unit expansion must be a string")
+        if not self.expansion:
+            raise ValueError("unit expansion must not be empty")
+        if type(self.case_sensitive) is not bool:
+            raise TypeError("unit case_sensitive must be a bool")
+        if type(self.requires_numeric_value) is not bool:
+            raise TypeError("unit requires_numeric_value must be a bool")
+        if self.canonical_symbol is not None and self.canonical_symbol not in self.symbols:
+            raise ValueError("canonical_symbol must be one of symbols")
+        if self.canonical_id is not None and not self.canonical_id:
+            raise ValueError("canonical_id must not be empty")
+
 
 @dataclass(frozen=True)
 class _UnitDefinition:
@@ -76,7 +94,7 @@ _EN = (
     _entry("L", "liter", "Volume"),
     _entry("ml", "milliliter", "Volume"),
     _entry("l", "liter", "Volume"),
-    _entry(("µg", "ug"), "microgram", "Mass"),
+    _entry(("µg", "μg", "ug"), "microgram", "Mass"),
     _entry("mg", "milligram", "Mass"),
     _entry("g", "gram", "Mass"),
     _entry("kg", "kilogram", "Mass"),
@@ -115,7 +133,7 @@ _BASE_DEFINITIONS = (
     _UnitDefinition("length-kilometer", ("km",), "Length"),
     _UnitDefinition("volume-milliliter", ("ml", "mL"), "Volume"),
     _UnitDefinition("volume-liter", ("l", "L"), "Volume"),
-    _UnitDefinition("mass-microgram", ("µg", "ug"), "Mass"),
+    _UnitDefinition("mass-microgram", ("µg", "μg", "ug"), "Mass"),
     _UnitDefinition("mass-milligram", ("mg",), "Mass"),
     _UnitDefinition("mass-gram", ("g",), "Mass"),
     _UnitDefinition("mass-kilogram", ("kg",), "Mass"),
@@ -623,30 +641,139 @@ def unit_symbols(language: str) -> frozenset[str]:
     return frozenset(symbol for entry in unit_entries(language) for symbol in entry.symbols)
 
 
-def iter_unit_replacements(text: str, language: str) -> Iterator[Replacement]:
-    """Yield reviewed unit replacements using offsets from the original text."""
-
-    number = r"[+\-−]?(?:\d{1,3}(?:[ \u00a0\u202f]\d{3})+|\d+)(?:[.,]\d+)?"
-    value = rf"{number}(?:[–—-]{number})?"
-    spacing = r"[ \t\u00a0\u202f]*"
-    alternatives = [(symbol, entry) for entry in unit_entries(language) for symbol in entry.symbols]
-    alternatives.sort(key=lambda item: len(item[0]), reverse=True)
-    pattern = re.compile(
-        rf"(?<![\w.])(?P<value>{value}){spacing}"
-        rf"(?P<unit>{'|'.join(re.escape(symbol) for symbol, _ in alternatives)})(?!\w)"
+def validate_unit_registry(language: str) -> None:
+    """Validate inventory invariants for one localized reviewed unit registry."""
+    entries = unit_entries(language)
+    symbols: set[str] = set()
+    canonical_ids: set[str] = set()
+    for entry in entries:
+        for symbol in entry.symbols:
+            if symbol in symbols:
+                raise ValueError(f"duplicate unit symbol {symbol!r} in {language}")
+            symbols.add(symbol)
+        if entry.canonical_id is not None:
+            if entry.canonical_id in canonical_ids:
+                raise ValueError(
+                    f"duplicate canonical unit id {entry.canonical_id!r} in {language}"
+                )
+            canonical_ids.add(entry.canonical_id)
+            if entry.canonical_symbol not in entry.symbols:
+                raise ValueError(f"canonical symbol is not registered for {entry.canonical_id!r}")
+    expected = {definition.canonical_id for definition in _BASE_DEFINITIONS + _EXTENDED_DEFINITIONS}
+    localized = set(_LOCALIZED_UNIT_NAMES.get(language, {})) | set(
+        _LOCALIZED_EXTENDED_UNIT_NAMES.get(language, {})
     )
-    by_symbol = {symbol: entry for symbol, entry in alternatives}
-    for match in pattern.finditer(text):
-        entry = by_symbol[match.group("unit")]
-        if entry.reject_following_apostrophe and text[match.end() : match.end() + 1] in {"'", "’"}:
+    if language != "en" and localized != expected:
+        raise ValueError(f"localized unit IDs for {language} do not match the canonical inventory")
+
+
+_HSPACE = " \t\u00a0\u202f"
+_ATOM = r"[+\-−]?(?:(?:\d{1,3}(?:[ \u00a0\u202f]\d{3})+|\d+)(?:[.,]\d+)?|\.\d+)(?:[eE][+\-]?\d+)?"
+_VALUE = rf"(?:{_ATOM}(?:[–—-]{_ATOM})?|{_ATOM}{_HSPACE}*/{_HSPACE}*{_ATOM}(?:{_HSPACE}*[×x]{_HSPACE}*{_ATOM})*|{_ATOM}(?:{_HSPACE}*[×x]{_HSPACE}*{_ATOM})+)"
+_VALUE_PATTERN = re.compile(rf"(?<![\w./])(?P<value>{_VALUE})(?P<spacing>[{_HSPACE}]*)")
+_CONTINUATION = re.compile(rf"[{_HSPACE}]*([/^·⋅*×^])")
+
+
+def _unit_text_matches(text: str, offset: int, symbol: str, case_sensitive: bool) -> bool:
+    value = text[offset : offset + len(symbol)]
+    if case_sensitive:
+        return value == symbol
+    return value.casefold() == symbol.casefold()
+
+
+def _unit_continuation_is_unsupported(text: str, end: int) -> bool:
+    """Reject a shorter unit prefix when the source clearly continues it."""
+    continuation = text[end:]
+    if continuation[:1] in {"'", "’"}:
+        return False
+    if _CONTINUATION.match(continuation):
+        return True
+    if continuation.startswith("-") and len(continuation) > 1 and continuation[1].isalnum():
+        return True
+    if continuation.startswith(".") and len(continuation) > 1 and continuation[1].isalnum():
+        return True
+    return False
+
+
+def _unit_inventory(
+    language: str,
+    overrides: dict[str, UnitEntry] | None,
+    suppressed: set[str] | None,
+) -> tuple[tuple[str, UnitEntry], ...]:
+    entries = [
+        (symbol, entry)
+        for entry in unit_entries(language)
+        for symbol in entry.symbols
+        if suppressed is None or symbol not in suppressed
+    ]
+    if overrides:
+        entries = [item for item in entries if item[0] not in overrides]
+        entries.extend(overrides.items())
+    return tuple(sorted(entries, key=lambda item: (-len(item[0]), item[0])))
+
+
+def iter_unit_replacements(
+    text: str,
+    language: str,
+    overrides: dict[str, UnitEntry] | None = None,
+    suppressed: set[str] | None = None,
+) -> Iterator[Replacement]:
+    """Yield complete reviewed unit replacements using original offsets.
+
+    Numeric-looking prefixes are never expanded when a longer unsupported unit
+    expression follows them. This deliberately favors unchanged input over a
+    malformed hybrid such as ``5 kilometer / h``.
+    """
+    inventory = _unit_inventory(language, overrides, suppressed)
+    for value_match in _VALUE_PATTERN.finditer(text):
+        value = value_match.group("value")
+        unit_start = value_match.end()
+        candidates: list[tuple[str, UnitEntry]] = []
+        for symbol, entry in inventory:
+            if not entry.requires_numeric_value:
+                continue
+            if _unit_text_matches(text, unit_start, symbol, entry.case_sensitive):
+                candidates.append((symbol, entry))
+        if not candidates:
+            continue
+        symbol, entry = max(candidates, key=lambda item: len(item[0]))
+        end = unit_start + len(symbol)
+        if end < len(text) and (text[end].isalnum() or text[end] == "_"):
+            continue
+        if _unit_continuation_is_unsupported(text, end):
+            continue
+        if entry.reject_following_apostrophe and text[end : end + 1] in {"'", "’"}:
             continue
         yield Replacement(
-            start=match.start(),
-            end=match.end(),
-            text=f"{match.group('value')} {entry.expansion}",
-            priority=200,
-            source=f"unit:{language}:{match.group('unit')}",
+            start=value_match.start(),
+            end=end,
+            text=f"{value} {entry.expansion}",
+            priority=300,
+            source=f"unit:{language}:{symbol}",
+            kind="unit",
+            entry_id=f"unit:{language}:{entry.canonical_id or symbol}",
         )
+
+    # Honor metadata for future reviewed entries that intentionally do not
+    # require a numeric quantity. The current bundled inventory has none, but
+    # keeping this path prevents metadata and runtime policy from diverging.
+    for symbol, entry in inventory:
+        if entry.requires_numeric_value:
+            continue
+        pattern = re.compile(
+            rf"(?<!\w){re.escape(symbol)}(?!\w)",
+            0 if entry.case_sensitive else re.IGNORECASE,
+        )
+        for match in pattern.finditer(text):
+            yield Replacement(
+                start=match.start(),
+                end=match.end(),
+                text=entry.expansion,
+                priority=300,
+                source=f"unit:{language}:{symbol}",
+                kind="unit",
+                entry_id=f"unit:{language}:{entry.canonical_id or symbol}",
+            )
 
 
 def expand_units(text: str, language: str) -> str:
@@ -662,4 +789,5 @@ __all__ = [
     "iter_unit_replacements",
     "unit_entries",
     "unit_symbols",
+    "validate_unit_registry",
 ]

@@ -19,6 +19,9 @@ from .core import (
     AbbreviationContext,
     AbbreviationEntry,
     AbbreviationExpander,
+    ExpansionMatch,
+    ExpansionResult,
+    ProtectedSpan,
     abbreviation_guards_match,
 )
 
@@ -26,6 +29,9 @@ __all__ = [
     "AbbreviationContext",
     "AbbreviationEntry",
     "AbbreviationExpander",
+    "ExpansionMatch",
+    "ExpansionResult",
+    "ProtectedSpan",
     "TokenAnnotation",
     "abbreviation_guards_match",
     "Expander",

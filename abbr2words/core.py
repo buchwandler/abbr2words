@@ -11,14 +11,15 @@ This module provides the infrastructure for expanding abbreviations during text 
 import re
 from abc import ABC, abstractmethod
 from collections.abc import Collection, Iterable, Iterator
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from re import Pattern
 from typing import TypeAlias
 
 from ._replacements import Replacement, apply_replacements, resolve_replacements
 from .annotations import AnnotationIndex, TokenAnnotation, normalize_annotations
-from .units import NUMBER_BEFORE_UNIT, iter_unit_replacements, unit_entries, unit_symbols
+from .context import profile_for
+from .units import NUMBER_BEFORE_UNIT, UnitEntry, iter_unit_replacements, unit_entries, unit_symbols
 
 
 class AbbreviationContext(Enum):
@@ -43,6 +44,48 @@ def _abbreviation_pattern(value: str) -> str:
         r"[ \t\u00a0\u202f]+" if piece and not piece.strip(" \t\u00a0\u202f") else re.escape(piece)
         for piece in pieces
     )
+
+
+def _entry_pattern(entry: "AbbreviationEntry") -> Pattern[str]:
+    """Compile the symmetric boundary policy for one registered spelling."""
+
+    flags = 0 if entry.case_sensitive else re.IGNORECASE
+    return re.compile(
+        rf"(?<!\w){_abbreviation_pattern(entry.abbreviation)}(?!\w)",
+        flags,
+    )
+
+
+@dataclass(frozen=True, slots=True)
+class ProtectedSpan:
+    """A source range that must not be changed by expansion."""
+
+    start: int
+    end: int
+    kind: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class ExpansionMatch:
+    """One accepted source-aligned expansion from :meth:`expand_with_trace`."""
+
+    start: int
+    end: int
+    source_text: str
+    replacement: str
+    language: str
+    entry_id: str
+    kind: str
+    context: AbbreviationContext | None
+    priority: int
+
+
+@dataclass(frozen=True, slots=True)
+class ExpansionResult:
+    """Expanded text together with the accepted source replacements."""
+
+    text: str
+    matches: tuple[ExpansionMatch, ...]
 
 
 @dataclass
@@ -76,10 +119,49 @@ class AbbreviationEntry:
     only_if_followed_by: str | Pattern[str] | None = None
     only_if_pos: PosConstraints = None
     not_if_pos: PosConstraints = None
+    origin: str = "bundled"
+    _pattern: Pattern[str] = field(init=False, repr=False, compare=False)
+    _preceding_pattern: Pattern[str] | None = field(init=False, repr=False, compare=False)
+    _following_pattern: Pattern[str] | None = field(init=False, repr=False, compare=False)
 
     def __post_init__(self) -> None:
+        if not isinstance(self.abbreviation, str):
+            raise TypeError("abbreviation must be a string")
+        if not self.abbreviation or not self.abbreviation.strip():
+            raise ValueError("abbreviation must not be empty or whitespace-only")
+        if self.abbreviation != self.abbreviation.strip():
+            raise ValueError("abbreviation must not have leading or trailing whitespace")
+        if not isinstance(self.expansion, str):
+            raise TypeError("expansion must be a string")
+        if not self.expansion:
+            raise ValueError("expansion must not be empty")
+        if type(self.case_sensitive) is not bool:
+            raise TypeError("case_sensitive must be a bool")
+        if not isinstance(self.description, str):
+            raise TypeError("description must be a string")
+        if self.origin not in {"bundled", "custom"}:
+            raise ValueError("origin must be 'bundled' or 'custom'")
+        if self.context_expansions is not None:
+            if not isinstance(self.context_expansions, dict):
+                raise TypeError("context_expansions must be a dictionary")
+            if not self.context_expansions:
+                raise ValueError("context_expansions must not be empty")
+            for context, value in self.context_expansions.items():
+                if not isinstance(context, AbbreviationContext):
+                    raise TypeError("context expansion keys must be AbbreviationContext values")
+                if not isinstance(value, str):
+                    raise TypeError("context expansion values must be strings")
+                if not value:
+                    raise ValueError("context expansion values must not be empty")
+        for name in ("only_if_preceded_by", "only_if_followed_by"):
+            value = getattr(self, name)
+            if value is not None and not isinstance(value, (str, re.Pattern)):
+                raise TypeError(f"{name} must be a string, compiled regex, or None")
         self.only_if_pos = _normalize_pos_constraints(self.only_if_pos)
         self.not_if_pos = _normalize_pos_constraints(self.not_if_pos)
+        self._pattern = _entry_pattern(self)
+        self._preceding_pattern = _compile_guard(self.only_if_preceded_by, "only_if_preceded_by")
+        self._following_pattern = _compile_guard(self.only_if_followed_by, "only_if_followed_by")
 
     def get_expansion(self, context: AbbreviationContext | None = None) -> str:
         """Get the appropriate expansion for the given context.
@@ -102,14 +184,31 @@ def _normalize_pos_constraints(
         return None
     if isinstance(labels, str):
         labels = (labels,)
+    elif not isinstance(labels, Collection):
+        raise TypeError("POS constraints must be strings or collections of strings")
     normalized: set[str] = set()
     for label in labels:
         if not isinstance(label, str):
-            raise ValueError(f"POS constraint labels must be strings, got {type(label).__name__}")
+            raise TypeError(f"POS constraint labels must be strings, got {type(label).__name__}")
         value = label.strip().upper()
-        if value:
-            normalized.add(value)
+        if not value:
+            raise ValueError("POS constraint labels must not be empty")
+        normalized.add(value)
+    if not normalized:
+        raise ValueError("POS constraints must not be empty")
     return frozenset(normalized)
+
+
+def _compile_guard(
+    value: str | Pattern[str] | None,
+    name: str,
+) -> Pattern[str] | None:
+    if value is None:
+        return None
+    try:
+        return re.compile(value)
+    except re.error as exc:
+        raise ValueError(f"{name} is not a valid regular expression: {exc}") from exc
 
 
 def abbreviation_guards_match(
@@ -145,18 +244,20 @@ def abbreviation_guards_match(
         return False
 
     if entry.only_if_preceded_by:
-        pattern = entry.only_if_preceded_by
-        if isinstance(pattern, str):
-            pattern = re.compile(pattern)
-        before = text[max(0, start - preceding_window) : start]
-        if not pattern.search(before):
+        pattern = entry._preceding_pattern
+        if pattern is None:
+            return False
+        raw_before = text[max(0, start - preceding_window) : start]
+        before_variants = (raw_before, raw_before.rstrip(" \t\u00a0\u202f"))
+        if not any(
+            (match := pattern.search(before)) is not None and match.end() == len(before)
+            for before in before_variants
+        ):
             return False
 
     if entry.only_if_followed_by:
-        pattern = entry.only_if_followed_by
-        if isinstance(pattern, str):
-            pattern = re.compile(pattern)
-        if not pattern.match(text, end):
+        pattern = entry._following_pattern
+        if pattern is None or not pattern.match(text, end):
             return False
 
     if annotations is not None and (entry.only_if_pos or entry.not_if_pos):
@@ -185,8 +286,9 @@ def abbreviation_guards_match(
 class ContextDetector:
     """Detects context for abbreviations based on surrounding text."""
 
-    def __init__(self) -> None:
+    def __init__(self, language: str = "en") -> None:
         """Initialize context detector with pattern matchers."""
+        self.profile = profile_for(language)
         # Patterns for detecting place names (street, avenue, etc.)
         # Match addresses like "123 Main", "100 N. Main", "50 North Elm"
         self.place_indicators = re.compile(
@@ -229,6 +331,8 @@ class ContextDetector:
                 "Visit 123 St. Louis Ave" → Saint (name wins over distant number)
                 "born in 1850, St. Peter" → Saint (name + distant number)
         """
+        return self.profile.detect_context(abbreviation, before, after)
+
         # Check for time context (3 P.M., 5 A.M.)
         if self.time_indicators.search(before):
             return AbbreviationContext.TIME
@@ -332,8 +436,10 @@ class AbbreviationExpander(ABC):
         language = getattr(self, "UNIT_LANGUAGE", "en")
         self.unit_entries = unit_entries(language)
         self._unit_symbols = unit_symbols(language)
+        self._unit_overrides: dict[str, UnitEntry] = {}
+        self._suppressed_units: set[str] = set()
         self.enable_context_detection = enable_context_detection
-        self.context_detector = ContextDetector() if enable_context_detection else None
+        self.context_detector = ContextDetector(language) if enable_context_detection else None
         self._initialize_abbreviations()
 
     @abstractmethod
@@ -349,9 +455,19 @@ class AbbreviationExpander(ABC):
         Args:
             entry: The abbreviation entry to add
         """
+        if entry.abbreviation in self._unit_symbols and entry.origin == "custom":
+            raise ValueError(
+                f"{entry.abbreviation!r} is a unit symbol; use set_unit() for unit customization"
+            )
         if entry.abbreviation in self._unit_symbols:
             entry.case_sensitive = True
             entry.only_if_preceded_by = entry.only_if_preceded_by or NUMBER_BEFORE_UNIT
+            # Rebuild the compiled fields if a legacy language registry supplied a
+            # unit entry with the default case-insensitive setting.
+            entry._pattern = _entry_pattern(entry)
+            entry._preceding_pattern = _compile_guard(
+                entry.only_if_preceded_by, "only_if_preceded_by"
+            )
         key = entry.abbreviation if entry.case_sensitive else entry.abbreviation.lower()
         self.entries[key] = entry
 
@@ -373,10 +489,18 @@ class AbbreviationExpander(ABC):
         :class:`AbbreviationEntry`.
         """
         context_expansions: dict[AbbreviationContext, str] | None = None
-        default_expansion = expansion
+        default_expansion: str = expansion if isinstance(expansion, str) else ""
+        if not isinstance(expansion, (str, dict)):
+            raise TypeError("expansion must be a string or context-expansion dictionary")
         if isinstance(expansion, dict):
+            if not expansion:
+                raise ValueError("context expansion dictionary must not be empty")
             context_expansions = {}
             for key, value in expansion.items():
+                if not isinstance(key, str):
+                    raise TypeError("context expansion keys must be strings")
+                if not isinstance(value, str):
+                    raise TypeError("context expansion values must be strings")
                 try:
                     context = AbbreviationContext(key.lower())
                 except ValueError:
@@ -397,7 +521,7 @@ class AbbreviationExpander(ABC):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation=abbreviation,
-                expansion=str(default_expansion),
+                expansion=default_expansion,
                 context_expansions=context_expansions,
                 case_sensitive=case_sensitive,
                 description=description,
@@ -405,7 +529,51 @@ class AbbreviationExpander(ABC):
                 only_if_followed_by=only_if_followed_by,
                 only_if_pos=only_if_pos,
                 not_if_pos=not_if_pos,
+                origin="custom",
             )
+        )
+
+    def set_unit(
+        self,
+        symbol: str,
+        expansion: str,
+        *,
+        case_sensitive: bool = True,
+        description: str = "Custom unit",
+    ) -> None:
+        """Override one reviewed unit for this expander instance."""
+        if not isinstance(symbol, str) or not symbol:
+            raise TypeError("unit symbol must be a non-empty string")
+        if not isinstance(expansion, str):
+            raise TypeError("unit expansion must be a string")
+        if not expansion:
+            raise ValueError("unit expansion must not be empty")
+        if type(case_sensitive) is not bool:
+            raise TypeError("case_sensitive must be a bool")
+        self._unit_overrides[symbol] = UnitEntry(
+            (symbol,),
+            expansion,
+            case_sensitive=case_sensitive,
+            description=description,
+            canonical_symbol=symbol,
+            requires_numeric_value=True,
+        )
+        self._suppressed_units.discard(symbol)
+
+    def remove_unit(self, symbol: str) -> bool:
+        """Suppress a bundled unit or remove an instance-local unit override."""
+        if symbol in self._unit_overrides:
+            del self._unit_overrides[symbol]
+            self._suppressed_units.add(symbol)
+            return True
+        if symbol in self._unit_symbols and symbol not in self._suppressed_units:
+            self._suppressed_units.add(symbol)
+            return True
+        return False
+
+    def has_unit(self, symbol: str) -> bool:
+        return symbol in self._unit_overrides or (
+            symbol in self._unit_symbols and symbol not in self._suppressed_units
         )
 
     def remove_abbreviation(self, abbreviation: str, case_sensitive: bool = False) -> bool:
@@ -418,6 +586,8 @@ class AbbreviationExpander(ABC):
         Returns:
             True if the abbreviation was found and removed, False otherwise
         """
+        if abbreviation in self._unit_symbols:
+            raise ValueError("unit symbols must be changed with set_unit() or remove_unit()")
         key = abbreviation if case_sensitive else abbreviation.lower()
         if key in self.entries:
             del self.entries[key]
@@ -457,6 +627,8 @@ class AbbreviationExpander(ABC):
         text: str,
         *,
         annotations: Iterable[TokenAnnotation] | None = None,
+        protected_spans: Iterable[ProtectedSpan | tuple[int, int] | tuple[int, int, str | None]]
+        | None = None,
     ) -> str:
         """Expand all abbreviations in the text.
 
@@ -469,22 +641,77 @@ class AbbreviationExpander(ABC):
         Returns:
             Text with abbreviations expanded
         """
+        return self._expand_result(
+            text, annotations=annotations, protected_spans=protected_spans
+        ).text
+
+    def expand_with_trace(
+        self,
+        text: str,
+        *,
+        annotations: Iterable[TokenAnnotation] | None = None,
+        protected_spans: Iterable[ProtectedSpan | tuple[int, int] | tuple[int, int, str | None]]
+        | None = None,
+    ) -> ExpansionResult:
+        """Expand text and return deterministic source-aligned match metadata."""
+        return self._expand_result(text, annotations=annotations, protected_spans=protected_spans)
+
+    def _expand_result(
+        self,
+        text: str,
+        *,
+        annotations: Iterable[TokenAnnotation] | None,
+        protected_spans: Iterable[ProtectedSpan | tuple[int, int] | tuple[int, int, str | None]]
+        | None,
+    ) -> ExpansionResult:
+        if not isinstance(text, str):
+            raise TypeError("text must be a string")
+        spans = _normalize_protected_spans(text, protected_spans)
         normalized_annotations = normalize_annotations(text, annotations)
         annotation_index = (
             AnnotationIndex(normalized_annotations) if annotations is not None else None
         )
         candidates: list[Replacement] = list(
-            iter_unit_replacements(text, getattr(self, "UNIT_LANGUAGE", "en"))
+            iter_unit_replacements(
+                text,
+                getattr(self, "UNIT_LANGUAGE", "en"),
+                self._unit_overrides,
+                self._suppressed_units,
+            )
         )
+        candidates = [
+            candidate for candidate in candidates if not _overlaps_spans(candidate, spans)
+        ]
 
         # Process all abbreviations against the original source. The resolver
         # preserves longest-first behavior while giving reviewed units priority.
         for entry in self.entries.values():
             if entry.abbreviation in self._unit_symbols:
                 continue
-            candidates.extend(self._iter_entry_replacements(text, entry, annotation_index))
+            candidates.extend(
+                candidate
+                for candidate in self._iter_entry_replacements(text, entry, annotation_index)
+                if not _overlaps_spans(candidate, spans)
+            )
 
-        return apply_replacements(text, resolve_replacements(candidates))
+        selected = resolve_replacements(candidates)
+        return ExpansionResult(
+            text=apply_replacements(text, selected),
+            matches=tuple(
+                ExpansionMatch(
+                    start=item.start,
+                    end=item.end,
+                    source_text=text[item.start : item.end],
+                    replacement=item.text,
+                    language=getattr(self, "UNIT_LANGUAGE", "en"),
+                    entry_id=item.entry_id or item.source,
+                    kind=item.kind,
+                    context=item.context if isinstance(item.context, AbbreviationContext) else None,
+                    priority=item.priority,
+                )
+                for item in selected
+            ),
+        )
 
     def _iter_entry_replacements(
         self,
@@ -501,28 +728,19 @@ class AbbreviationExpander(ABC):
         Returns:
             Replacement candidates for this abbreviation
         """
-        # Build regex pattern with word boundaries
-        # For abbrevs with '.', match at word end or before punctuation
-        abbrev = _abbreviation_pattern(entry.abbreviation)
-        if entry.abbreviation.endswith("."):
-            # Reject only a following word character. This permits closers,
-            # quotes, dashes, and other non-word delimiters while avoiding
-            # false positives such as ``Dr.foo``.
-            pattern = rf"\b{abbrev}(?!\w)"
-        else:
-            # Standard word boundary matching
-            pattern = rf"\b{abbrev}\b"
-
-        flags = 0 if entry.case_sensitive else re.IGNORECASE
-
-        for match in re.finditer(pattern, text, flags=flags):
+        for match in entry._pattern.finditer(text):
             start, end = match.span()
 
             # A dotted abbreviation embedded after another period is usually a
             # fragment of a longer initialism (for example ``B.S.`` in
             # ``A.B.S.``). Leave it intact unless the complete longer entry
             # was matched during the longest-first pass.
-            if start > 0 and text[start - 1] == "." and "." in entry.abbreviation:
+            if (
+                start > 1
+                and text[start - 1] == "."
+                and text[start - 2].isalnum()
+                and "." in entry.abbreviation
+            ):
                 continue
 
             if not abbreviation_guards_match(
@@ -536,10 +754,12 @@ class AbbreviationExpander(ABC):
 
             if not self.enable_context_detection or not self.context_detector:
                 expansion = entry.expansion
+                context = None
             else:
                 # Get surrounding context from the original source.
-                before = text[:start].strip()
-                after = text[end:].strip()
+                window = 96
+                before = text[max(0, start - window) : start].rstrip()
+                after = text[end : min(len(text), end + window)].lstrip()
                 context = self.context_detector.detect_context(match.group(), before, after)
                 expansion = entry.get_expansion(context)
 
@@ -547,8 +767,11 @@ class AbbreviationExpander(ABC):
                 start=start,
                 end=end,
                 text=expansion,
-                priority=100,
+                priority=_entry_priority(entry),
                 source=f"abbr:{entry.abbreviation}",
+                kind="abbreviation",
+                entry_id=f"abbr:{entry.abbreviation}",
+                context=context,
             )
 
     def get_abbreviations_list(self) -> list[str]:
@@ -562,3 +785,40 @@ class AbbreviationExpander(ABC):
     def __repr__(self) -> str:
         """Return string representation."""
         return f"{self.__class__.__name__}(abbreviations={len(self.entries)})"
+
+
+def _entry_priority(entry: AbbreviationEntry) -> int:
+    """Return the documented deterministic precedence for abbreviation entries."""
+    if entry.origin == "custom":
+        return 220 if entry.case_sensitive else 120
+    return 210 if entry.case_sensitive else 110
+
+
+def _normalize_protected_spans(
+    text: str,
+    spans: Iterable[ProtectedSpan | tuple[int, int] | tuple[int, int, str | None]] | None,
+) -> tuple[ProtectedSpan, ...]:
+    if spans is None:
+        return ()
+    normalized: list[ProtectedSpan] = []
+    for index, span in enumerate(spans):
+        if isinstance(span, ProtectedSpan):
+            item = span
+        elif isinstance(span, tuple) and len(span) in {2, 3}:
+            item = ProtectedSpan(*span)
+        else:
+            raise TypeError(f"protected span {index} must be ProtectedSpan or a 2/3-tuple")
+        if not (0 <= item.start < item.end <= len(text)):
+            raise ValueError(f"protected span {index} is outside the source text")
+        if item.kind is not None and not isinstance(item.kind, str):
+            raise TypeError(f"protected span {index} kind must be a string or None")
+        normalized.append(item)
+    normalized.sort(key=lambda item: (item.start, item.end))
+    for index in range(1, len(normalized)):
+        if normalized[index].start < normalized[index - 1].end:
+            raise ValueError("protected spans must not overlap")
+    return tuple(normalized)
+
+
+def _overlaps_spans(item: Replacement, spans: tuple[ProtectedSpan, ...]) -> bool:
+    return any(item.start < span.end and span.start < item.end for span in spans)

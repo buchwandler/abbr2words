@@ -1,5 +1,21 @@
 # Changelog
 
+## Unreleased - 2026-08-06
+
+### Fixed
+
+- Corrected punctuation-safe abbreviation boundaries, ellipsis-adjacent
+  matching, immediate guard enforcement, and deterministic custom overrides.
+- Made unsupported compound-looking unit expressions fail closed and added the
+  Greek small-letter mu unit alias.
+- Improved Unicode-aware German title and English address context decisions.
+
+### Added
+
+- Added explicit protected spans, source-aligned expansion traces, truthful
+  instance-local unit customization, eager registration validation, registry
+  audits, and dense-input regression coverage.
+
 ## [v0.2.0] - 2026-08-06
 
 ### Added

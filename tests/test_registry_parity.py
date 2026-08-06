@@ -35,7 +35,7 @@ EXPECTED_EFFECTIVE = {
     "tr": 15,
 }
 REQUIRED_ALL_LANGUAGE_EFFECTIVE_HASH = (
-    "ad32867b70343de5cade48f0e2a36fe276a3294148061b418ec7350e872a5cc8"
+    "d8abc1d365df9109cee91bcddafafe9206e251a56129818f78437c6d977dfcca"
 )
 SNAPSHOT = json.loads(
     (Path(__file__).parent / "data" / "registry_snapshot.json").read_text(encoding="utf-8")
