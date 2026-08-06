@@ -14,6 +14,7 @@ from examples.full_text_demo import (
     GERMAN_TEXT,
     ITALIAN_TEXT,
     PORTUGUESE_TEXT,
+    SAMPLES,
     SPANISH_TEXT,
     abbreviation_only,
     normalize_for_speech,
@@ -142,6 +143,21 @@ def test_scenario_uses_stable_unit_symbols() -> None:
     assert " min." not in FRENCH_TEXT
 
 
+@pytest.mark.parametrize("name", ("dutch", "swedish", "polish", "russian", "turkish"))
+def test_new_language_samples_are_abbreviation_only(name: str) -> None:
+    lang, text = SAMPLES[name]
+    output = abbreviation_only(text, lang=lang)
+    assert output != text
+
+
+def test_new_language_full_stage_is_explicitly_deferred() -> None:
+    result = run_example(
+        "examples/full_text_demo.py", "--sample", "dutch", "--stage", "full", "--compact"
+    )
+    assert result.returncode != 0
+    assert "supports only --stage abbr" in result.stderr
+
+
 @pytest.mark.parametrize(
     ("text", "lang", "needles"),
     [
@@ -239,7 +255,20 @@ def test_unified_cli_stages_and_all_samples() -> None:
 
     all_samples = run_example("examples/full_text_demo.py", "--all", "--stage", "abbr")
     assert all_samples.returncode == 0
-    for name in ("english", "german", "czech", "spanish", "french", "italian", "portuguese"):
+    for name in (
+        "english",
+        "german",
+        "czech",
+        "spanish",
+        "french",
+        "italian",
+        "portuguese",
+        "dutch",
+        "swedish",
+        "polish",
+        "russian",
+        "turkish",
+    ):
         assert name in all_samples.stdout
     assert "Položte formu" in all_samples.stdout
     assert all_samples.stderr == ""

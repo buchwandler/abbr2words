@@ -24,7 +24,20 @@ def test_cli_reads_stdin(
 
 def test_cli_languages(capsys: pytest.CaptureFixture[str]) -> None:
     assert main(["--languages"]) == 0
-    assert capsys.readouterr().out.splitlines() == ["cs", "de", "en", "es", "fr", "it", "pt"]
+    assert capsys.readouterr().out.splitlines() == [
+        "cs",
+        "de",
+        "en",
+        "es",
+        "fr",
+        "it",
+        "nl",
+        "pl",
+        "pt",
+        "ru",
+        "sv",
+        "tr",
+    ]
 
 
 def test_cli_no_context(capsys: pytest.CaptureFixture[str]) -> None:

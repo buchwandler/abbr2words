@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Iterator
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from ._replacements import Replacement, apply_replacements
 
@@ -27,12 +27,35 @@ class UnitEntry:
     description: str = ""
     canonical_symbol: str | None = None
     requires_numeric_value: bool = True
+    canonical_id: str | None = None
+    reject_following_apostrophe: bool = False
 
 
-def _entry(symbols: str | tuple[str, ...], expansion: str, description: str) -> UnitEntry:
+@dataclass(frozen=True)
+class _UnitDefinition:
+    canonical_id: str
+    symbols: tuple[str, ...]
+    description: str
+
+
+def _entry(
+    symbols: str | tuple[str, ...],
+    expansion: str,
+    description: str,
+    *,
+    canonical_id: str | None = None,
+    reject_following_apostrophe: bool = False,
+) -> UnitEntry:
     if isinstance(symbols, str):
         symbols = (symbols,)
-    return UnitEntry(symbols, expansion, description=description, canonical_symbol=symbols[0])
+    return UnitEntry(
+        symbols,
+        expansion,
+        description=description,
+        canonical_symbol=symbols[0],
+        canonical_id=canonical_id,
+        reject_following_apostrophe=reject_following_apostrophe,
+    )
 
 
 # This is a reviewed inventory, not an attempt to model every UCUM expression.
@@ -81,163 +104,341 @@ _EN = (
     _entry(("tbsp", "tbsp."), "tablespoon", "Customary volume"),
 )
 
-_TRANSLATIONS: dict[str, tuple[str, ...]] = {
-    "cs": (
-        "sekunda",
-        "minuta",
-        "hodina",
-        "den",
-        "milimetr",
-        "centimetr",
-        "metr",
-        "kilometr",
-        "mililitr",
-        "litr",
-        "mikrogram",
-        "miligram",
-        "gram",
-        "kilogram",
-        "tuna",
-        "kelvin",
-        "stupeň Celsia",
-        "stupeň Fahrenheita",
-        "metr za sekundu",
-        "kilometr za hodinu",
+_BASE_DEFINITIONS = (
+    _UnitDefinition("duration-second", ("s",), "Duration"),
+    _UnitDefinition("duration-minute", ("min",), "Duration"),
+    _UnitDefinition("duration-hour", ("h",), "Duration"),
+    _UnitDefinition("duration-day", ("d",), "Duration"),
+    _UnitDefinition("length-millimeter", ("mm",), "Length"),
+    _UnitDefinition("length-centimeter", ("cm",), "Length"),
+    _UnitDefinition("length-meter", ("m",), "Length"),
+    _UnitDefinition("length-kilometer", ("km",), "Length"),
+    _UnitDefinition("volume-milliliter", ("ml", "mL"), "Volume"),
+    _UnitDefinition("volume-liter", ("l", "L"), "Volume"),
+    _UnitDefinition("mass-microgram", ("µg", "ug"), "Mass"),
+    _UnitDefinition("mass-milligram", ("mg",), "Mass"),
+    _UnitDefinition("mass-gram", ("g",), "Mass"),
+    _UnitDefinition("mass-kilogram", ("kg",), "Mass"),
+    _UnitDefinition("mass-tonne", ("t",), "Mass"),
+    _UnitDefinition("temperature-kelvin", ("K",), "Temperature"),
+    _UnitDefinition("temperature-celsius", ("°C",), "Temperature"),
+    _UnitDefinition("temperature-fahrenheit", ("°F",), "Temperature"),
+    _UnitDefinition("speed-meter-per-second", ("m/s",), "Speed"),
+    _UnitDefinition("speed-kilometer-per-hour", ("km/h",), "Speed"),
+)
+
+_LOCALIZED_UNIT_NAMES: dict[str, dict[str, str]] = {
+    "cs": dict(
+        zip(
+            (definition.canonical_id for definition in _BASE_DEFINITIONS),
+            (
+                "sekunda",
+                "minuta",
+                "hodina",
+                "den",
+                "milimetr",
+                "centimetr",
+                "metr",
+                "kilometr",
+                "mililitr",
+                "litr",
+                "mikrogram",
+                "miligram",
+                "gram",
+                "kilogram",
+                "tuna",
+                "kelvin",
+                "stupeň Celsia",
+                "stupeň Fahrenheita",
+                "metr za sekundu",
+                "kilometr za hodinu",
+            ),
+            strict=True,
+        )
     ),
-    "de": (
-        "Sekunde",
-        "Minute",
-        "Stunde",
-        "Tag",
-        "Millimeter",
-        "Zentimeter",
-        "Meter",
-        "Kilometer",
-        "Milliliter",
-        "Liter",
-        "Mikrogramm",
-        "Milligramm",
-        "Gramm",
-        "Kilogramm",
-        "Tonne",
-        "Kelvin",
-        "Grad Celsius",
-        "Grad Fahrenheit",
-        "Meter pro Sekunde",
-        "Kilometer pro Stunde",
+    "de": dict(
+        zip(
+            (definition.canonical_id for definition in _BASE_DEFINITIONS),
+            (
+                "Sekunde",
+                "Minute",
+                "Stunde",
+                "Tag",
+                "Millimeter",
+                "Zentimeter",
+                "Meter",
+                "Kilometer",
+                "Milliliter",
+                "Liter",
+                "Mikrogramm",
+                "Milligramm",
+                "Gramm",
+                "Kilogramm",
+                "Tonne",
+                "Kelvin",
+                "Grad Celsius",
+                "Grad Fahrenheit",
+                "Meter pro Sekunde",
+                "Kilometer pro Stunde",
+            ),
+            strict=True,
+        )
     ),
-    "es": (
-        "segundo",
-        "minuto",
-        "hora",
-        "día",
-        "milímetro",
-        "centímetro",
-        "metro",
-        "kilómetro",
-        "mililitro",
-        "litro",
-        "microgramo",
-        "miligramo",
-        "gramo",
-        "kilogramo",
-        "tonelada",
-        "kelvin",
-        "grado Celsius",
-        "grado Fahrenheit",
-        "metro por segundo",
-        "kilómetro por hora",
+    "es": dict(
+        zip(
+            (definition.canonical_id for definition in _BASE_DEFINITIONS),
+            (
+                "segundo",
+                "minuto",
+                "hora",
+                "día",
+                "milímetro",
+                "centímetro",
+                "metro",
+                "kilómetro",
+                "mililitro",
+                "litro",
+                "microgramo",
+                "miligramo",
+                "gramo",
+                "kilogramo",
+                "tonelada",
+                "kelvin",
+                "grado Celsius",
+                "grado Fahrenheit",
+                "metro por segundo",
+                "kilómetro por hora",
+            ),
+            strict=True,
+        )
     ),
-    "fr": (
-        "seconde",
-        "minute",
-        "heure",
-        "jour",
-        "millimètre",
-        "centimètre",
-        "mètre",
-        "kilomètre",
-        "millilitre",
-        "litre",
-        "microgramme",
-        "milligramme",
-        "gramme",
-        "kilogramme",
-        "tonne",
-        "kelvin",
-        "degré Celsius",
-        "degré Fahrenheit",
-        "mètre par seconde",
-        "kilomètre par heure",
+    "fr": dict(
+        zip(
+            (definition.canonical_id for definition in _BASE_DEFINITIONS),
+            (
+                "seconde",
+                "minute",
+                "heure",
+                "jour",
+                "millimètre",
+                "centimètre",
+                "mètre",
+                "kilomètre",
+                "millilitre",
+                "litre",
+                "microgramme",
+                "milligramme",
+                "gramme",
+                "kilogramme",
+                "tonne",
+                "kelvin",
+                "degré Celsius",
+                "degré Fahrenheit",
+                "mètre par seconde",
+                "kilomètre par heure",
+            ),
+            strict=True,
+        )
     ),
-    "it": (
-        "secondo",
-        "minuto",
-        "ora",
-        "giorno",
-        "millimetro",
-        "centimetro",
-        "metro",
-        "chilometro",
-        "millilitro",
-        "litro",
-        "microgrammo",
-        "milligrammo",
-        "grammo",
-        "chilogrammo",
-        "tonnellata",
-        "kelvin",
-        "grado Celsius",
-        "grado Fahrenheit",
-        "metro al secondo",
-        "chilometro all'ora",
+    "it": dict(
+        zip(
+            (definition.canonical_id for definition in _BASE_DEFINITIONS),
+            (
+                "secondo",
+                "minuto",
+                "ora",
+                "giorno",
+                "millimetro",
+                "centimetro",
+                "metro",
+                "chilometro",
+                "millilitro",
+                "litro",
+                "microgrammo",
+                "milligrammo",
+                "grammo",
+                "chilogrammo",
+                "tonnellata",
+                "kelvin",
+                "grado Celsius",
+                "grado Fahrenheit",
+                "metro al secondo",
+                "chilometro all'ora",
+            ),
+            strict=True,
+        )
     ),
-    "pt": (
-        "segundo",
-        "minuto",
-        "hora",
-        "dia",
-        "milímetro",
-        "centímetro",
-        "metro",
-        "quilômetro",
-        "mililitro",
-        "litro",
-        "micrograma",
-        "miligrama",
-        "grama",
-        "quilograma",
-        "tonelada",
-        "kelvin",
-        "grau Celsius",
-        "grau Fahrenheit",
-        "metro por segundo",
-        "quilômetro por hora",
+    "pt": dict(
+        zip(
+            (definition.canonical_id for definition in _BASE_DEFINITIONS),
+            (
+                "segundo",
+                "minuto",
+                "hora",
+                "dia",
+                "milímetro",
+                "centímetro",
+                "metro",
+                "quilômetro",
+                "mililitro",
+                "litro",
+                "micrograma",
+                "miligrama",
+                "grama",
+                "quilograma",
+                "tonelada",
+                "kelvin",
+                "grau Celsius",
+                "grau Fahrenheit",
+                "metro por segundo",
+                "quilômetro por hora",
+            ),
+            strict=True,
+        )
+    ),
+    "nl": dict(
+        zip(
+            (definition.canonical_id for definition in _BASE_DEFINITIONS),
+            (
+                "seconde",
+                "minuut",
+                "uur",
+                "dag",
+                "millimeter",
+                "centimeter",
+                "meter",
+                "kilometer",
+                "milliliter",
+                "liter",
+                "microgram",
+                "milligram",
+                "gram",
+                "kilogram",
+                "metrische ton",
+                "kelvin",
+                "graad Celsius",
+                "graad Fahrenheit",
+                "meter per seconde",
+                "kilometer per uur",
+            ),
+            strict=True,
+        )
+    ),
+    "sv": dict(
+        zip(
+            (definition.canonical_id for definition in _BASE_DEFINITIONS),
+            (
+                "sekund",
+                "minut",
+                "timme",
+                "dag",
+                "millimeter",
+                "centimeter",
+                "meter",
+                "kilometer",
+                "milliliter",
+                "liter",
+                "mikrogram",
+                "milligram",
+                "gram",
+                "kilogram",
+                "ton",
+                "kelvin",
+                "grad Celsius",
+                "grad Fahrenheit",
+                "meter per sekund",
+                "kilometer per timme",
+            ),
+            strict=True,
+        )
+    ),
+    "pl": dict(
+        zip(
+            (definition.canonical_id for definition in _BASE_DEFINITIONS),
+            (
+                "sekunda",
+                "minuta",
+                "godzina",
+                "dzień",
+                "milimetr",
+                "centymetr",
+                "metr",
+                "kilometr",
+                "mililitr",
+                "litr",
+                "mikrogram",
+                "miligram",
+                "gram",
+                "kilogram",
+                "tona",
+                "kelwin",
+                "stopień Celsjusza",
+                "stopień Fahrenheita",
+                "metr na sekundę",
+                "kilometr na godzinę",
+            ),
+            strict=True,
+        )
+    ),
+    "ru": dict(
+        zip(
+            (definition.canonical_id for definition in _BASE_DEFINITIONS),
+            (
+                "секунда",
+                "минута",
+                "час",
+                "день",
+                "миллиметр",
+                "сантиметр",
+                "метр",
+                "километр",
+                "миллилитр",
+                "литр",
+                "микрограмм",
+                "миллиграмм",
+                "грамм",
+                "килограмм",
+                "тонна",
+                "кельвин",
+                "градус Цельсия",
+                "градус Фаренгейта",
+                "метр в секунду",
+                "километр в час",
+            ),
+            strict=True,
+        )
+    ),
+    "tr": dict(
+        zip(
+            (definition.canonical_id for definition in _BASE_DEFINITIONS),
+            (
+                "saniye",
+                "dakika",
+                "saat",
+                "gün",
+                "milimetre",
+                "santimetre",
+                "metre",
+                "kilometre",
+                "mililitre",
+                "litre",
+                "mikrogram",
+                "miligram",
+                "gram",
+                "kilogram",
+                "ton",
+                "kelvin",
+                "Celsius derece",
+                "Fahrenheit derece",
+                "saniyede metre",
+                "saatte kilometre",
+            ),
+            strict=True,
+        )
     ),
 }
-_BASE_SYMBOLS = (
-    "s",
-    "min",
-    "h",
-    "d",
-    "mm",
-    "cm",
-    "m",
-    "km",
-    "ml",
-    "l",
-    "µg",
-    "mg",
-    "g",
-    "kg",
-    "t",
-    "K",
-    "°C",
-    "°F",
-    "m/s",
-    "km/h",
-)
-_ALIASES = {
+
+_LOCALIZED_ALIASES = {
     "cs": (("hod.", "hodina"), ("min.", "minuta"), ("sek.", "sekunda")),
     "de": (("Std.", "Stunde"), ("Min.", "Minute"), ("Sek.", "Sekunde")),
     "es": (("min.", "minuto"), ("seg", "segundo"), ("seg.", "segundo")),
@@ -246,24 +447,18 @@ _ALIASES = {
     "pt": (("min.", "minuto"), ("seg", "segundo"), ("seg.", "segundo")),
 }
 
-UNIT_ENTRIES: dict[str, tuple[UnitEntry, ...]] = {"en": _EN}
-for _lang, _names in _TRANSLATIONS.items():
-    _items: list[UnitEntry] = []
-    for _symbol, _name in zip(_BASE_SYMBOLS, _names, strict=True):
-        _symbols: tuple[str, ...] = (_symbol,)
-        if _symbol == "ml":
-            _symbols = ("ml", "mL")
-        elif _symbol == "l":
-            _symbols = ("l", "L")
-        elif _symbol == "µg":
-            _symbols = ("µg", "ug")
-        _items.append(_entry(_symbols, _name, "Baseline unit"))
-    _items.extend(
-        _entry(_symbol, _name, "Locale unit") for _symbol, _name in _ALIASES.get(_lang, ())
-    )
-    UNIT_ENTRIES[_lang] = tuple(_items)
+_EXTENDED_DEFINITIONS = (
+    _UnitDefinition("area-square-millimeter", ("mm²", "mm2"), "Area"),
+    _UnitDefinition("area-square-centimeter", ("cm²", "cm2"), "Area"),
+    _UnitDefinition("area-square-meter", ("m²", "m2"), "Area"),
+    _UnitDefinition("area-square-kilometer", ("km²", "km2"), "Area"),
+    _UnitDefinition("area-hectare", ("ha",), "Area"),
+    _UnitDefinition("volume-cubic-millimeter", ("mm³", "mm3"), "Volume"),
+    _UnitDefinition("volume-cubic-centimeter", ("cm³", "cm3"), "Volume"),
+    _UnitDefinition("volume-cubic-meter", ("m³", "m3"), "Volume"),
+)
 
-_EXTENDED_BASELINE: dict[str, tuple[str, ...]] = {
+_EXTENDED_TRANSLATION_VALUES = {
     "cs": (
         "čtvereční milimetr",
         "čtvereční centimetr",
@@ -324,22 +519,100 @@ _EXTENDED_BASELINE: dict[str, tuple[str, ...]] = {
         "centímetro cúbico",
         "metro cúbico",
     ),
+    "nl": (
+        "vierkante millimeter",
+        "vierkante centimeter",
+        "vierkante meter",
+        "vierkante kilometer",
+        "hectare",
+        "kubieke millimeter",
+        "kubieke centimeter",
+        "kubieke meter",
+    ),
+    "sv": (
+        "kvadratmillimeter",
+        "kvadratcentimeter",
+        "kvadratmeter",
+        "kvadratkilometer",
+        "hektar",
+        "kubikmillimeter",
+        "kubikcentimeter",
+        "kubikmeter",
+    ),
+    "pl": (
+        "milimetr kwadratowy",
+        "centymetr kwadratowy",
+        "metr kwadratowy",
+        "kilometr kwadratowy",
+        "hektar",
+        "milimetr sześcienny",
+        "centymetr sześcienny",
+        "metr sześcienny",
+    ),
+    "ru": (
+        "квадратный миллиметр",
+        "квадратный сантиметр",
+        "квадратный метр",
+        "квадратный километр",
+        "гектар",
+        "кубический миллиметр",
+        "кубический сантиметр",
+        "кубический метр",
+    ),
+    "tr": (
+        "milimetre kare",
+        "santimetre kare",
+        "metre kare",
+        "kilometre kare",
+        "hektar",
+        "milimetre küp",
+        "santimetre küp",
+        "metre küp",
+    ),
 }
-for _lang, _names in _EXTENDED_BASELINE.items():
-    _extra_symbols: tuple[tuple[str, ...], ...] = (
-        ("mm²", "mm2"),
-        ("cm²", "cm2"),
-        ("m²", "m2"),
-        ("km²", "km2"),
-        ("ha",),
-        ("mm³", "mm3"),
-        ("cm³", "cm3"),
-        ("m³", "m3"),
+
+_LOCALIZED_EXTENDED_UNIT_NAMES: dict[str, dict[str, str]] = {
+    _lang: dict(
+        zip(
+            (definition.canonical_id for definition in _EXTENDED_DEFINITIONS),
+            _names,
+            strict=True,
+        )
     )
+    for _lang, _names in _EXTENDED_TRANSLATION_VALUES.items()
+}
+
+UNIT_ENTRIES: dict[str, tuple[UnitEntry, ...]] = {"en": _EN}
+for _lang, _names in _LOCALIZED_UNIT_NAMES.items():
+    _items = [
+        _entry(
+            _definition.symbols,
+            _names[_definition.canonical_id],
+            _definition.description,
+            canonical_id=_definition.canonical_id,
+        )
+        for _definition in _BASE_DEFINITIONS
+    ]
+    _items.extend(
+        _entry(_symbol, _name, "Locale unit")
+        for _symbol, _name in _LOCALIZED_ALIASES.get(_lang, ())
+    )
+    UNIT_ENTRIES[_lang] = tuple(_items)
+
+for _lang, _names in _LOCALIZED_EXTENDED_UNIT_NAMES.items():
     UNIT_ENTRIES[_lang] += tuple(
-        _entry(symbols, name, "Baseline unit")
-        for symbols, name in zip(_extra_symbols, _names, strict=True)
+        _entry(
+            _definition.symbols,
+            _names[_definition.canonical_id],
+            _definition.description,
+            canonical_id=_definition.canonical_id,
+        )
+        for _definition in _EXTENDED_DEFINITIONS
     )
+
+UNIT_ENTRIES["tr"] = tuple(
+    replace(entry, reject_following_apostrophe=True) for entry in UNIT_ENTRIES["tr"]
+)
 
 
 def unit_entries(language: str) -> tuple[UnitEntry, ...]:
@@ -353,7 +626,6 @@ def unit_symbols(language: str) -> frozenset[str]:
 def iter_unit_replacements(text: str, language: str) -> Iterator[Replacement]:
     """Yield reviewed unit replacements using offsets from the original text."""
 
-    # Grouped digits, decimal point/comma, signed values, and simple ranges.
     number = r"[+\-−]?(?:\d{1,3}(?:[ \u00a0\u202f]\d{3})+|\d+)(?:[.,]\d+)?"
     value = rf"{number}(?:[–—-]{number})?"
     spacing = r"[ \t\u00a0\u202f]*"
@@ -366,6 +638,8 @@ def iter_unit_replacements(text: str, language: str) -> Iterator[Replacement]:
     by_symbol = {symbol: entry for symbol, entry in alternatives}
     for match in pattern.finditer(text):
         entry = by_symbol[match.group("unit")]
+        if entry.reject_following_apostrophe and text[match.end() : match.end() + 1] in {"'", "’"}:
+            continue
         yield Replacement(
             start=match.start(),
             end=match.end(),

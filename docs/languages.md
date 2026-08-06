@@ -10,12 +10,25 @@ The bundled base-language registries are:
 | `es` | Spanish    |
 | `fr` | French     |
 | `it` | Italian    |
+| `nl` | Dutch      |
+| `pl` | Polish     |
 | `pt` | Portuguese |
+| `ru` | Russian    |
+| `sv` | Swedish    |
+| `tr` | Turkish    |
 
 Language input is normalized by trimming whitespace, lowercasing, accepting both
 hyphens and underscores, and taking the base part of a locale. For example,
 `de-DE`, `en_GB`, and `pt-BR` select `de`, `en`, and `pt`. Common three-letter
-aliases and `cz` for Czech are also accepted.
+aliases and `cz` for Czech are also accepted, including `dut`/`nld`, `pol`,
+`rus`, `swe`, and `tur` for the added registries.
+
+The added registries are intentionally conservative. Ambiguous short forms are
+guarded by numeric/name context or omitted, Russian multiword abbreviations
+accept ordinary, non-breaking, and narrow non-breaking spaces, and Turkish
+lexical entries are case-sensitive. Unit output is a canonical singular lemma;
+the stable API does not realize plural, case, numeral-government, or suffix
+morphology.
 
 ## Known ambiguity
 

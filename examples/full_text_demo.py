@@ -22,13 +22,19 @@ MissingNum2WordsError = _speech_numbers.MissingNum2WordsError
 _normalize_for_speech = _speech_numbers.normalize_for_speech
 
 CZECH_TEXT = _scenario.CZECH_TEXT
+DUTCH_TEXT = _scenario.DUTCH_TEXT
 ENGLISH_TEXT = _scenario.ENGLISH_TEXT
 FRENCH_TEXT = _scenario.FRENCH_TEXT
 GERMAN_TEXT = _scenario.GERMAN_TEXT
 ITALIAN_TEXT = _scenario.ITALIAN_TEXT
 PORTUGUESE_TEXT = _scenario.PORTUGUESE_TEXT
+POLISH_TEXT = _scenario.POLISH_TEXT
+RUSSIAN_TEXT = _scenario.RUSSIAN_TEXT
 SAMPLES = _scenario.SAMPLES
 SPANISH_TEXT = _scenario.SPANISH_TEXT
+SWEDISH_TEXT = _scenario.SWEDISH_TEXT
+TURKISH_TEXT = _scenario.TURKISH_TEXT
+ABBREVIATION_ONLY_LANGUAGES = frozenset({"nl", "pl", "ru", "sv", "tr"})
 
 
 def abbreviation_only(text: str, *, lang: str, context: bool = True) -> str:
@@ -74,6 +80,11 @@ def _render(name: str, text: str, lang: str, args: argparse.Namespace) -> str:
     abbreviation = abbreviation_only(text, lang=lang, context=not args.no_context)
     if args.stage == "abbr":
         return abbreviation
+    if normalize_language(lang) in ABBREVIATION_ONLY_LANGUAGES:
+        _parser().error(
+            f"The {lang} sample currently supports only --stage abbr; "
+            "full speech-number normalization is not configured."
+        )
     try:
         full = normalize_for_speech(text, lang=lang, context=not args.no_context)
     except MissingNum2WordsError as exc:

@@ -35,6 +35,16 @@ class AbbreviationContext(Enum):
 PosConstraints: TypeAlias = str | Collection[str] | None
 
 
+def _abbreviation_pattern(value: str) -> str:
+    """Escape an abbreviation while making registered horizontal spaces flexible."""
+
+    pieces = re.split(r"([ \t\u00a0\u202f]+)", value)
+    return "".join(
+        r"[ \t\u00a0\u202f]+" if piece and not piece.strip(" \t\u00a0\u202f") else re.escape(piece)
+        for piece in pieces
+    )
+
+
 @dataclass
 class AbbreviationEntry:
     """A single abbreviation with its expansion(s).
@@ -493,7 +503,7 @@ class AbbreviationExpander(ABC):
         """
         # Build regex pattern with word boundaries
         # For abbrevs with '.', match at word end or before punctuation
-        abbrev = re.escape(entry.abbreviation)
+        abbrev = _abbreviation_pattern(entry.abbreviation)
         if entry.abbreviation.endswith("."):
             # Reject only a following word character. This permits closers,
             # quotes, dashes, and other non-word delimiters while avoiding

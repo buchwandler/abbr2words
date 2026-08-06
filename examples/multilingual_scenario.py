@@ -67,6 +67,12 @@ PORTUGUESE_TEXT: Final = (
     "2 min. antes de servir». O custo é de aprox. 12,80 EUR mais o depósito."
 )
 
+DUTCH_TEXT: Final = "Dhr. Jansen gebruikt bijv. 500 g, 20 km/h en p. 4."
+SWEDISH_TEXT: Final = "T.ex. används 500 g, 20 km/h och sid. 4."
+POLISH_TEXT: Final = "Np. użyto 500 g, 20 km/h, str. 4 i godz. 8."
+RUSSIAN_TEXT: Final = "Т. е. использовано 500 g, 20 km/h и стр. 4."
+TURKISH_TEXT: Final = "Prof. Kaya için 500 g ve 20 km/h; s. 4."
+
 SAMPLES: Final[dict[str, tuple[str, str]]] = {
     "german": ("de", GERMAN_TEXT),
     "english": ("en-us", ENGLISH_TEXT),
@@ -75,4 +81,9 @@ SAMPLES: Final[dict[str, tuple[str, str]]] = {
     "french": ("fr", FRENCH_TEXT),
     "italian": ("it", ITALIAN_TEXT),
     "portuguese": ("pt", PORTUGUESE_TEXT),
+    "dutch": ("nl", DUTCH_TEXT),
+    "swedish": ("sv", SWEDISH_TEXT),
+    "polish": ("pl", POLISH_TEXT),
+    "russian": ("ru", RUSSIAN_TEXT),
+    "turkish": ("tr", TURKISH_TEXT),
 }

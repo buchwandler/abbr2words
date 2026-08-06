@@ -16,7 +16,12 @@ DECLARATION_COUNTS = {
     "es": 73,
     "fr": 58,
     "it": 85,
+    "nl": 37,
+    "pl": 39,
     "pt": 73,
+    "ru": 16,
+    "sv": 30,
+    "tr": 15,
 }
 
 

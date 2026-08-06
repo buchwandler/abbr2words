@@ -56,8 +56,9 @@ python examples/german.py --full
 python examples/german.py --no-context
 ```
 
-The unified demo presents the same dinner scenario in all seven supported
-languages. The standalone `abbreviations.py` script retains the separate
+The unified demo presents the same dinner scenario in all seven original
+supported languages and abbreviation-only samples for Dutch, Polish, Russian,
+Swedish, and Turkish. The standalone `abbreviations.py` script retains the separate
 supplied English abbreviation sample:
 
 ```console
@@ -69,6 +70,16 @@ python examples/full_text_demo.py --sample french
 python examples/full_text_demo.py --sample italian
 python examples/full_text_demo.py --sample portuguese
 python examples/full_text_demo.py --all
+```
+
+The added language samples currently require the abbreviation-only stage:
+
+```console
+python examples/full_text_demo.py --sample dutch --stage abbr
+python examples/full_text_demo.py --sample polish --stage abbr
+python examples/full_text_demo.py --sample russian --stage abbr
+python examples/full_text_demo.py --sample swedish --stage abbr
+python examples/full_text_demo.py --sample turkish --stage abbr
 ```
 
 Every translated source includes a date, time, numeric units, a title, durations,

@@ -12,6 +12,11 @@ labels are normalized and overlapping or invalid spans raise `ValueError`.
 Missing lexical POS evidence fails open, and numeric unit guards remain
 authoritative.
 
+The bundled language registry includes `cs`, `de`, `en`, `es`, `fr`, `it`, `nl`,
+`pl`, `pt`, `ru`, `sv`, and `tr`. Turkish unit symbols followed by straight or
+curly apostrophe suffixes are intentionally not expanded until suffix
+realization is implemented.
+
 ```{autofunction} abbr2words.expand
 
 ```

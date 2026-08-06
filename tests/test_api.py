@@ -17,7 +17,20 @@ def test_version() -> None:
 
 
 def test_supported_languages() -> None:
-    assert supported_languages() == ("cs", "de", "en", "es", "fr", "it", "pt")
+    assert supported_languages() == (
+        "cs",
+        "de",
+        "en",
+        "es",
+        "fr",
+        "it",
+        "nl",
+        "pl",
+        "pt",
+        "ru",
+        "sv",
+        "tr",
+    )
 
 
 def test_german_expansion() -> None:

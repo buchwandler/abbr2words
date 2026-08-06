@@ -17,7 +17,12 @@ _LANGUAGE_CLASSES: Final[dict[str, tuple[str, str]]] = {
     "es": ("abbr2words.languages.es", "SpanishAbbreviationExpander"),
     "fr": ("abbr2words.languages.fr", "FrenchAbbreviationExpander"),
     "it": ("abbr2words.languages.it", "ItalianAbbreviationExpander"),
+    "nl": ("abbr2words.languages.nl", "DutchAbbreviationExpander"),
+    "pl": ("abbr2words.languages.pl", "PolishAbbreviationExpander"),
     "pt": ("abbr2words.languages.pt", "PortugueseAbbreviationExpander"),
+    "ru": ("abbr2words.languages.ru", "RussianAbbreviationExpander"),
+    "sv": ("abbr2words.languages.sv", "SwedishAbbreviationExpander"),
+    "tr": ("abbr2words.languages.tr", "TurkishAbbreviationExpander"),
 }
 
 _ALIASES: Final[dict[str, str]] = {
@@ -32,6 +37,12 @@ _ALIASES: Final[dict[str, str]] = {
     "fre": "fr",
     "ita": "it",
     "por": "pt",
+    "dut": "nl",
+    "nld": "nl",
+    "pol": "pl",
+    "rus": "ru",
+    "swe": "sv",
+    "tur": "tr",
 }
 
 _SHARED_EXPANDERS: dict[tuple[str, bool], AbbreviationExpander] = {}

@@ -19,10 +19,20 @@ layout (no `src/` directory).
 - Spanish (`es`)
 - French (`fr`)
 - Italian (`it`)
+- Dutch (`nl`)
+- Polish (`pl`)
 - Portuguese (`pt`)
+- Russian (`ru`)
+- Swedish (`sv`)
+- Turkish (`tr`)
 
 Locale forms such as `de-DE`, `en_GB`, and `pt-BR` are accepted and currently map
 to their base-language registry.
+
+Dutch, Polish, Russian, Swedish, and Turkish currently provide conservative
+abbreviation and reviewed numeric-unit registries. Their multilingual examples
+are abbreviation-only; full speech-number normalization remains limited to the
+optional examples configured for the original scenario languages.
 
 ## Installation
 

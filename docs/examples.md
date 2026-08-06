@@ -36,12 +36,24 @@ python examples/full_text_demo.py --sample english --stage abbr --compact
 python examples/full_text_demo.py --sample german --stage full --compact
 ```
 
-The unified demo presents the same dinner scenario in all seven supported
-languages. The standalone `abbreviations.py` script retains the separate
+The unified demo presents the original full-text scenario in seven languages and
+also provides abbreviation-only samples for Dutch, Polish, Russian, Swedish, and
+Turkish. The standalone `abbreviations.py` script retains the separate
 supplied English abbreviation sample. It supports `german`, `english`, `czech`,
 `spanish`, `french`, `italian`, and `portuguese`. `--sample`, `--all`, and `--text` are mutually
 exclusive; `--lang` is required for custom text. The default sample is English
 and the default stage is `both`.
+
+Run the added registries with `--stage abbr`, for example:
+
+```console
+python examples/full_text_demo.py --sample dutch --stage abbr
+python examples/full_text_demo.py --sample russian --stage abbr
+python examples/full_text_demo.py --all --stage abbr
+```
+
+Their full speech-number stage is intentionally deferred; the CLI reports this
+explicitly rather than applying the wrong locale morphology.
 
 All translated source texts include dates, times, units, a title, durations, and
 a currency amount. The wording is localized to exercise each language's actual

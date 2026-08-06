@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Added conservative Dutch, Polish, Russian, Swedish, and Turkish abbreviation
+  and numeric-unit registries with ISO aliases.
+- Refactored localized unit data around canonical unit IDs and added flexible
+  horizontal whitespace matching for Russian multiword abbreviations.
+- Documented Turkish case-sensitive matching, restricted apostrophe-suffix unit
+  policy, and lemma-only morphology limits.
 - Added provider-neutral source-aligned `TokenAnnotation` support.
 - Added optional entry-level POS allow/deny guards.
 - Planned unit and abbreviation replacements against original offsets and

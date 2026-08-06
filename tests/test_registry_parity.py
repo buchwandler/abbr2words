@@ -13,7 +13,12 @@ EXPECTED_DECLARATIONS = {
     "es": 73,
     "fr": 58,
     "it": 85,
+    "nl": 37,
+    "pl": 39,
     "pt": 73,
+    "ru": 16,
+    "sv": 30,
+    "tr": 15,
 }
 EXPECTED_EFFECTIVE = {
     "cs": 65,
@@ -22,10 +27,15 @@ EXPECTED_EFFECTIVE = {
     "es": 72,
     "fr": 57,
     "it": 84,
+    "nl": 37,
+    "pl": 39,
     "pt": 72,
+    "ru": 16,
+    "sv": 30,
+    "tr": 15,
 }
 REQUIRED_ALL_LANGUAGE_EFFECTIVE_HASH = (
-    "57f62b4015f8795e391b3f9a2a1a9f8cca430abe87621a2b01beeb6c2ac8ce34"
+    "ad32867b70343de5cade48f0e2a36fe276a3294148061b418ec7350e872a5cc8"
 )
 SNAPSHOT = json.loads(
     (Path(__file__).parent / "data" / "registry_snapshot.json").read_text(encoding="utf-8")
@@ -36,9 +46,9 @@ def test_effective_registry_counts_match_migration_contract() -> None:
     actual = {lang: len(get_shared_expander(lang).entries) for lang in supported_languages()}
     assert actual == EXPECTED_EFFECTIVE
     assert actual == SNAPSHOT["effective_counts"]
-    assert sum(actual.values()) == 573
+    assert sum(actual.values()) == 710
     assert SNAPSHOT["declarations"] == EXPECTED_DECLARATIONS
-    assert sum(SNAPSHOT["declarations"].values()) == 579
+    assert sum(SNAPSHOT["declarations"].values()) == 716
 
 
 def test_every_effective_registry_field_matches_snapshot() -> None:
