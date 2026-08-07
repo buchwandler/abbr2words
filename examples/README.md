@@ -37,6 +37,7 @@ The pure English demonstration uses the exact supplied English sample:
 
 ```console
 python examples/abbreviations.py
+python examples/replacements.py
 python examples/abbreviations.py --compact
 python examples/abbreviations.py --lang en-gb --no-context
 ```
@@ -147,3 +148,8 @@ python examples/spacy_pos.py
 
 The package never imports spaCy, and the normal `examples` extra remains limited
 to `num2words`.
+
+`replacements.py` demonstrates the exact public planning API for callers that
+need replacement spans and metadata. Unit records are marked with
+`kind="unit"`; the package expands those symbols but does not spell the number
+or select singular/plural grammar.

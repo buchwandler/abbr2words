@@ -24,6 +24,12 @@ expander.add("in.", "inch", only_if_preceded_by=r"\d\s*$")
 expander.add("KI", "Künstliche Intelligenz", case_sensitive=True)
 ```
 
+Followed-by guards are evaluated against the suffix immediately after the
+candidate abbreviation. In `only_if_followed_by=r"^\s*\d"`, `^` therefore
+means “immediately after this abbreviation,” even when the candidate occurs
+after other source text. Preceded-by guards continue to use their bounded
+prefix window.
+
 Registration is validated immediately. Abbreviations and expansions must be
 non-empty strings; context keys and values, POS labels, booleans, and guard
 patterns have stable type/value checks. Guard regexes are compiled once and
@@ -96,3 +102,20 @@ expander.remove_unit("kg")
 Calling `add("kg", ...)` or abbreviation removal for a known unit raises a
 clear error rather than silently changing a registry that expansion ignores.
 Unit overrides do not leak between isolated expanders.
+
+## Finite aliases and exact replacements
+
+Bundled entries can have finite aliases for reviewed formatting variants. For
+example, the German registry accepts `z.B.`, `z. B.`, `z . b .`, and `zB` with
+the same boundary policy and replacement metadata. Aliases are registry data,
+not global regular-expression substitutions, so attached strings such as
+`pizzaB`, `ModellzB12`, and `du.a.test` remain unchanged.
+
+Use the replacement result when a caller needs semantic provenance instead of
+reconstructing edits with a text diff:
+
+```python
+result = expander.expand_with_replacements("Prof. Klein, S. 12")
+for replacement in result.replacements:
+    print(replacement.source, replacement.start, replacement.end)
+```

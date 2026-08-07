@@ -264,6 +264,15 @@ class GermanAbbreviationExpander(AbbreviationExpander):
 
         self.add_abbreviation(
             AbbreviationEntry(
+                abbreviation="Lfd. Nr.",
+                expansion="laufende Nummer",
+                aliases=("Lfd.Nr.",),
+                description="Consecutive number, including compact spelling",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
                 abbreviation="usw.",
                 expansion="und so weiter",
                 description="And so forth (et cetera)",
@@ -282,6 +291,7 @@ class GermanAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="z.B.",
                 expansion="zum Beispiel",
+                aliases=("z. B.", "z . b .", "zB"),
                 description="For example",
             )
         )
@@ -290,13 +300,22 @@ class GermanAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="d.h.",
                 expansion="das heißt",
+                aliases=("d. h.",),
                 description="That is",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="u.a.",
+                expansion="unter anderem",
+                aliases=("u. a.",),
+                description="Among other things",
             )
         )
 
         for abbreviation, expansion, description in (
             ("etc.", "ezetera", "Et cetera"),
-            ("u.a.", "unter anderem", "Among other things"),
             ("zzgl.", "zuzüglich", "Plus/additional"),
             ("Abk.", "Abkürzung", "Abbreviation"),
             ("Abb.", "Abbildung", "Illustration"),

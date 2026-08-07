@@ -6,6 +6,10 @@
 
 ```
 
+```{autofunction} abbr2words.abbr2words_with_replacements
+
+```
+
 `abbr2words(..., annotations=...)` accepts an iterable of source-aligned
 `TokenAnnotation` objects. Their offsets refer to the original input text;
 labels are normalized and overlapping or invalid spans raise `ValueError`.
@@ -17,10 +21,23 @@ registered spellings may start or end with punctuation, but cannot attach to a
 surrounding `\w` character. Optional `protected_spans=[(start, end), ...]`
 prevents replacements in caller-owned ranges such as URLs, markup, or code.
 
-For source-aligned diagnostics, use `Expander.expand_with_trace(...)`. It
-returns an `ExpansionResult` containing expanded text and deterministic,
-non-overlapping `ExpansionMatch` records. Existing convenience calls continue
-to return strings.
+For source-aligned diagnostics or downstream text alignment, use
+`abbr2words_with_replacements(...)` or
+`Expander.expand_with_replacements(...)`. The immutable `ExpansionResult`
+contains the original `source_text`, expanded `text`, and deterministic,
+non-overlapping `ExpansionReplacement` records. Replacement offsets refer to
+the original input, and applying the records from right to left reproduces the
+result exactly. `expand_with_trace(...)` remains as a compatibility view of the
+same result. Existing convenience calls continue to return strings.
+
+```python
+from abbr2words import abbr2words_with_replacements
+
+result = abbr2words_with_replacements("Prof. Klein, S. 12", lang="de")
+print(result.text)
+for replacement in result.replacements:
+    print(replacement.start, replacement.end, replacement.text, replacement.kind)
+```
 
 The bundled language registry includes `cs`, `de`, `en`, `es`, `fr`, `it`, `nl`,
 `pl`, `pt`, `ru`, `sv`, and `tr`. Turkish unit symbols followed by straight or
@@ -72,6 +89,12 @@ partially rewritten. Reviewed aliases include both `µg` and `μg`; unrelated
 source characters are not Unicode-normalized. Unit metadata controls case
 sensitivity and whether a numeric value is required.
 
+Unit replacements have `kind="unit"` in the exact replacement result. This
+layer expands unit symbols/abbreviations lexically; it does not verbalize the
+numeric quantity or choose grammatical singular/plural forms. Callers that
+need a phrase such as `zwei Minuten` should consume the complete numeric
+quantity in a structured quantity stage before calling abbreviation expansion.
+
 ```python
 abbr2words("500 g", lang="en")  # "500 gram"
 abbr2words("section g", lang="en")  # "section g"
@@ -97,6 +120,14 @@ provided. `Expander.add()` exposes the same optional `only_if_pos` and
 ```
 
 ```{autoclass} abbr2words.AbbreviationExpander
+:members:
+```
+
+```{autoclass} abbr2words.ExpansionReplacement
+:members:
+```
+
+```{autoclass} abbr2words.ExpansionResult
 :members:
 ```
 

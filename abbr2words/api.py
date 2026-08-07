@@ -147,6 +147,24 @@ def abbr2words(
     )
 
 
+def abbr2words_with_replacements(
+    text: str,
+    *,
+    lang: str = "en",
+    context: bool = True,
+    annotations: Iterable[TokenAnnotation] | None = None,
+    protected_spans: Iterable[ProtectedSpan | tuple[int, int] | tuple[int, int, str | None]]
+    | None = None,
+) -> ExpansionResult:
+    """Expand *text* and return exact source-aligned replacement metadata."""
+    if not isinstance(text, str):
+        raise TypeError("text must be a string")
+    code = normalize_language(lang)
+    return get_shared_expander(code, context=context).expand_with_replacements(
+        text, annotations=annotations, protected_spans=protected_spans
+    )
+
+
 expand = abbr2words
 
 
@@ -176,6 +194,21 @@ class Expander:
             raise TypeError("text must be a string")
         return self._impl.expand(text, annotations=annotations, protected_spans=protected_spans)
 
+    def expand_with_replacements(
+        self,
+        text: str,
+        *,
+        annotations: Iterable[TokenAnnotation] | None = None,
+        protected_spans: Iterable[ProtectedSpan | tuple[int, int] | tuple[int, int, str | None]]
+        | None = None,
+    ) -> ExpansionResult:
+        """Expand abbreviations and return exact replacement metadata."""
+        if not isinstance(text, str):
+            raise TypeError("text must be a string")
+        return self._impl.expand_with_replacements(
+            text, annotations=annotations, protected_spans=protected_spans
+        )
+
     def expand_with_trace(
         self,
         text: str,
@@ -184,10 +217,8 @@ class Expander:
         protected_spans: Iterable[ProtectedSpan | tuple[int, int] | tuple[int, int, str | None]]
         | None = None,
     ) -> ExpansionResult:
-        """Expand abbreviations and return source-aligned accepted matches."""
-        if not isinstance(text, str):
-            raise TypeError("text must be a string")
-        return self._impl.expand_with_trace(
+        """Compatibility alias for :meth:`expand_with_replacements`."""
+        return self.expand_with_replacements(
             text, annotations=annotations, protected_spans=protected_spans
         )
 

@@ -16,6 +16,7 @@ The abbreviation-only English and German examples need only the package:
 python -m pip install abbr2words
 python examples/abbreviations.py
 python examples/german.py
+python examples/replacements.py
 ```
 
 Install the optional dependency for full speech text:
@@ -90,6 +91,11 @@ abbr2words("section g", lang="en")  # "section g"
 The unit inventory is explicit and reviewed; it is not complete UCUM or arbitrary
 scientific-expression parsing. The optional speech example may use `num2words`
 to render a phrase such as `500 g` as `five hundred grams`.
+
+For downstream consumers that need exact edits, `examples/replacements.py`
+shows the source-aligned planner result. Its replacement offsets refer to the
+original source text, and each replacement has stable `kind`, `language`, and
+rule metadata.
 
 The rules are intentionally limited demonstration code. They do not promise
 perfect grammatical inflection for every locale, arbitrary mathematical or phone

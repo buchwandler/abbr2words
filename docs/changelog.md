@@ -6,6 +6,7 @@
 
 - Corrected punctuation-safe abbreviation boundaries, ellipsis-adjacent
   matching, immediate guard enforcement, and deterministic custom overrides.
+- Corrected anchored followed-by guards after preceding source text.
 - Made unsupported compound-looking unit expressions fail closed and added the
   Greek small-letter mu unit alias.
 - Improved Unicode-aware German title and English address context decisions.
@@ -15,6 +16,10 @@
 - Added explicit protected spans, source-aligned expansion traces, truthful
   instance-local unit customization, eager registration validation, registry
   audits, and dense-input regression coverage.
+- Added immutable source-aligned replacement results, reviewed German compound
+  aliases, and deliberate registry snapshot metadata for those aliases.
+- Documented that unit expansion is lexical symbol expansion and does not own
+  quantity verbalization or grammatical plural selection.
 
 ## [v0.2.0] - 2026-08-06
 

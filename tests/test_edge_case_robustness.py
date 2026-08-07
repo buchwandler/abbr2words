@@ -9,6 +9,7 @@ from abbr2words import (
     Expander,
     ProtectedSpan,
     abbr2words,
+    abbr2words_with_replacements,
     get_expander,
     supported_languages,
 )
@@ -125,6 +126,48 @@ def test_trace_is_source_aligned_reconstructible_and_protected():
         rebuilt = rebuilt[: item.start] + item.replacement + rebuilt[item.end :]
     assert rebuilt == result.text
     assert [item.kind for item in result.matches] == ["abbreviation", "unit"]
+
+
+def test_public_replacement_result_is_immutable_and_reconstructible():
+    source = "Prof. Klein, S. 12; 2 kg"
+    result = abbr2words_with_replacements(source, lang="de")
+
+    assert result.source_text == source
+    assert result.text == abbr2words(source, lang="de")
+    assert [item.kind for item in result.replacements] == [
+        "abbreviation",
+        "abbreviation",
+        "unit",
+    ]
+    assert [item.start for item in result.replacements] == sorted(
+        item.start for item in result.replacements
+    )
+    assert all(
+        left.end <= right.start
+        for left, right in zip(result.replacements, result.replacements[1:], strict=False)
+    )
+    rebuilt = source
+    for item in reversed(result.replacements):
+        rebuilt = rebuilt[: item.start] + item.text + rebuilt[item.end :]
+    assert rebuilt == result.text
+    assert result.replacements[0].abbreviation == "Prof."
+    assert result.replacements[-1].language == "de"
+    with pytest.raises(AttributeError):
+        result.text = "mutated"  # type: ignore[misc]
+
+
+def test_replacement_result_handles_custom_and_unchanged_input():
+    expander = Expander("en", context=False)
+    expander.add("X.", "Example")
+
+    custom = expander.expand_with_replacements("X. X.")
+    unchanged = expander.expand_with_replacements("")
+
+    assert [item.text for item in custom.replacements] == ["Example", "Example"]
+    assert custom.text == "Example Example"
+    assert unchanged.source_text == unchanged.text == ""
+    assert unchanged.replacements == ()
+    assert expander.expand_with_trace("X. X.").replacements == custom.replacements
 
 
 def test_unicode_context_profiles_disambiguate_names_and_addresses():

@@ -8,7 +8,7 @@ from abbr2words.units import unit_symbols
 
 EXPECTED_DECLARATIONS = {
     "cs": 66,
-    "de": 61,
+    "de": 62,
     "en": 163,
     "es": 73,
     "fr": 58,
@@ -22,7 +22,7 @@ EXPECTED_DECLARATIONS = {
 }
 EXPECTED_EFFECTIVE = {
     "cs": 65,
-    "de": 60,
+    "de": 61,
     "en": 163,
     "es": 72,
     "fr": 57,
@@ -35,7 +35,7 @@ EXPECTED_EFFECTIVE = {
     "tr": 15,
 }
 REQUIRED_ALL_LANGUAGE_EFFECTIVE_HASH = (
-    "d8abc1d365df9109cee91bcddafafe9206e251a56129818f78437c6d977dfcca"
+    "70c2d6395caaad7e22c66a51b001d2651c0a1d4545916f43964d66c913f1d868"
 )
 SNAPSHOT = json.loads(
     (Path(__file__).parent / "data" / "registry_snapshot.json").read_text(encoding="utf-8")
@@ -46,9 +46,9 @@ def test_effective_registry_counts_match_migration_contract() -> None:
     actual = {lang: len(get_shared_expander(lang).entries) for lang in supported_languages()}
     assert actual == EXPECTED_EFFECTIVE
     assert actual == SNAPSHOT["effective_counts"]
-    assert sum(actual.values()) == 710
+    assert sum(actual.values()) == 711
     assert SNAPSHOT["declarations"] == EXPECTED_DECLARATIONS
-    assert sum(SNAPSHOT["declarations"].values()) == 716
+    assert sum(SNAPSHOT["declarations"].values()) == 717
 
 
 def test_every_effective_registry_field_matches_snapshot() -> None:
@@ -66,6 +66,7 @@ def test_every_effective_registry_field_matches_snapshot() -> None:
                     "key": key,
                     "abbreviation": entry.abbreviation,
                     "expansion": entry.expansion,
+                    "aliases": list(entry.aliases),
                     "context_expansions": contexts,
                     "case_sensitive": entry.case_sensitive,
                     "description": entry.description,

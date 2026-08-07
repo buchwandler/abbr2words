@@ -46,12 +46,12 @@ def _abbreviation_pattern(value: str) -> str:
     )
 
 
-def _entry_pattern(entry: "AbbreviationEntry") -> Pattern[str]:
+def _entry_pattern(entry: "AbbreviationEntry", spelling: str | None = None) -> Pattern[str]:
     """Compile the symmetric boundary policy for one registered spelling."""
 
     flags = 0 if entry.case_sensitive else re.IGNORECASE
     return re.compile(
-        rf"(?<!\w){_abbreviation_pattern(entry.abbreviation)}(?!\w)",
+        rf"(?<!\w){_abbreviation_pattern(spelling or entry.abbreviation)}(?!\w)",
         flags,
     )
 
@@ -81,11 +81,56 @@ class ExpansionMatch:
 
 
 @dataclass(frozen=True, slots=True)
-class ExpansionResult:
-    """Expanded text together with the accepted source replacements."""
+class ExpansionReplacement:
+    """One accepted replacement against the original source text."""
 
+    start: int
+    end: int
     text: str
-    matches: tuple[ExpansionMatch, ...]
+    source: str
+    kind: str
+    language: str
+    abbreviation: str | None = None
+    rule: str | None = None
+    priority: int = 0
+    context: AbbreviationContext | None = field(default=None, repr=False)
+
+    @property
+    def replacement(self) -> str:
+        """Compatibility alias for the replacement text."""
+        return self.text
+
+    @property
+    def entry_id(self) -> str:
+        """Compatibility alias for the stable rule/source identifier."""
+        return self.rule or self.source
+
+
+@dataclass(frozen=True, slots=True)
+class ExpansionResult:
+    """Expanded text together with accepted source replacements."""
+
+    source_text: str
+    text: str
+    replacements: tuple[ExpansionReplacement, ...]
+
+    @property
+    def matches(self) -> tuple[ExpansionMatch, ...]:
+        """Return the legacy trace view of :attr:`replacements`."""
+        return tuple(
+            ExpansionMatch(
+                start=item.start,
+                end=item.end,
+                source_text=self.source_text[item.start : item.end],
+                replacement=item.text,
+                language=item.language,
+                entry_id=item.entry_id,
+                kind=item.kind,
+                context=item.context,
+                priority=item.priority,
+            )
+            for item in self.replacements
+        )
 
 
 @dataclass
@@ -100,9 +145,10 @@ class AbbreviationEntry:
         description: Human-readable description of the abbreviation
         only_if_preceded_by: Optional regex that must match the text immediately
             before the abbreviation match (typically anchored with $).
-        only_if_followed_by: Optional regex that must match the text immediately
-            after the abbreviation match (typically anchored with ^ or using
-            match()).
+        only_if_followed_by: Optional regex that must match the suffix immediately
+            after the abbreviation match. The pattern is matched against
+            ``text[end:]``; therefore ``^`` means immediately after this
+            candidate, not the beginning of the complete source string.
         only_if_pos: Optional coarse POS label or labels. POS evidence is
             evaluated only when usable source-aligned annotations are present.
         not_if_pos: Optional coarse POS label or labels that veto a match when
@@ -120,7 +166,9 @@ class AbbreviationEntry:
     only_if_pos: PosConstraints = None
     not_if_pos: PosConstraints = None
     origin: str = "bundled"
+    aliases: tuple[str, ...] = ()
     _pattern: Pattern[str] = field(init=False, repr=False, compare=False)
+    _patterns: tuple[Pattern[str], ...] = field(init=False, repr=False, compare=False)
     _preceding_pattern: Pattern[str] | None = field(init=False, repr=False, compare=False)
     _following_pattern: Pattern[str] | None = field(init=False, repr=False, compare=False)
 
@@ -137,6 +185,17 @@ class AbbreviationEntry:
             raise ValueError("expansion must not be empty")
         if type(self.case_sensitive) is not bool:
             raise TypeError("case_sensitive must be a bool")
+        if not isinstance(self.aliases, tuple):
+            raise TypeError("aliases must be a tuple of strings")
+        for alias in self.aliases:
+            if not isinstance(alias, str):
+                raise TypeError("aliases must contain only strings")
+            if not alias or not alias.strip() or alias != alias.strip():
+                raise ValueError("aliases must not be empty or have leading/trailing whitespace")
+            if alias == self.abbreviation:
+                raise ValueError("aliases must differ from abbreviation")
+        if len(set(self.aliases)) != len(self.aliases):
+            raise ValueError("aliases must not contain duplicates")
         if not isinstance(self.description, str):
             raise TypeError("description must be a string")
         if self.origin not in {"bundled", "custom"}:
@@ -159,7 +218,11 @@ class AbbreviationEntry:
                 raise TypeError(f"{name} must be a string, compiled regex, or None")
         self.only_if_pos = _normalize_pos_constraints(self.only_if_pos)
         self.not_if_pos = _normalize_pos_constraints(self.not_if_pos)
-        self._pattern = _entry_pattern(self)
+        self._patterns = tuple(
+            _entry_pattern(self, spelling)
+            for spelling in (self.abbreviation, *self.aliases)
+        )
+        self._pattern = self._patterns[0]
         self._preceding_pattern = _compile_guard(self.only_if_preceded_by, "only_if_preceded_by")
         self._following_pattern = _compile_guard(self.only_if_followed_by, "only_if_followed_by")
 
@@ -257,7 +320,10 @@ def abbreviation_guards_match(
 
     if entry.only_if_followed_by:
         pattern = entry._following_pattern
-        if pattern is None or not pattern.match(text, end):
+        # Match a suffix slice rather than passing ``end`` as the regex
+        # starting position. This preserves the intended relative meaning of
+        # anchors such as ``^\s*\d`` for candidates after preceding text.
+        if pattern is None or not pattern.match(text[end:]):
             return False
 
     if annotations is not None and (entry.only_if_pos or entry.not_if_pos):
@@ -465,6 +531,7 @@ class AbbreviationExpander(ABC):
             # Rebuild the compiled fields if a legacy language registry supplied a
             # unit entry with the default case-insensitive setting.
             entry._pattern = _entry_pattern(entry)
+            entry._patterns = (entry._pattern,)
             entry._preceding_pattern = _compile_guard(
                 entry.only_if_preceded_by, "only_if_preceded_by"
             )
@@ -641,9 +708,20 @@ class AbbreviationExpander(ABC):
         Returns:
             Text with abbreviations expanded
         """
-        return self._expand_result(
+        return self.expand_with_replacements(
             text, annotations=annotations, protected_spans=protected_spans
         ).text
+
+    def expand_with_replacements(
+        self,
+        text: str,
+        *,
+        annotations: Iterable[TokenAnnotation] | None = None,
+        protected_spans: Iterable[ProtectedSpan | tuple[int, int] | tuple[int, int, str | None]]
+        | None = None,
+    ) -> ExpansionResult:
+        """Expand text and return exact immutable replacement metadata."""
+        return self._expand_result(text, annotations=annotations, protected_spans=protected_spans)
 
     def expand_with_trace(
         self,
@@ -653,8 +731,10 @@ class AbbreviationExpander(ABC):
         protected_spans: Iterable[ProtectedSpan | tuple[int, int] | tuple[int, int, str | None]]
         | None = None,
     ) -> ExpansionResult:
-        """Expand text and return deterministic source-aligned match metadata."""
-        return self._expand_result(text, annotations=annotations, protected_spans=protected_spans)
+        """Compatibility alias for :meth:`expand_with_replacements`."""
+        return self.expand_with_replacements(
+            text, annotations=annotations, protected_spans=protected_spans
+        )
 
     def _expand_result(
         self,
@@ -695,19 +775,28 @@ class AbbreviationExpander(ABC):
             )
 
         selected = resolve_replacements(candidates)
+        language = getattr(self, "UNIT_LANGUAGE", "en")
         return ExpansionResult(
+            source_text=text,
             text=apply_replacements(text, selected),
-            matches=tuple(
-                ExpansionMatch(
+            replacements=tuple(
+                ExpansionReplacement(
                     start=item.start,
                     end=item.end,
-                    source_text=text[item.start : item.end],
-                    replacement=item.text,
-                    language=getattr(self, "UNIT_LANGUAGE", "en"),
-                    entry_id=item.entry_id or item.source,
+                    text=item.text,
+                    source=item.source,
                     kind=item.kind,
-                    context=item.context if isinstance(item.context, AbbreviationContext) else None,
+                    language=language,
+                    abbreviation=(
+                        item.source.removeprefix("abbr:")
+                        if item.kind == "abbreviation"
+                        else None
+                    ),
+                    rule=item.entry_id or item.source,
                     priority=item.priority,
+                    context=item.context
+                    if isinstance(item.context, AbbreviationContext)
+                    else None,
                 )
                 for item in selected
             ),
@@ -728,51 +817,52 @@ class AbbreviationExpander(ABC):
         Returns:
             Replacement candidates for this abbreviation
         """
-        for match in entry._pattern.finditer(text):
-            start, end = match.span()
+        for pattern in entry._patterns:
+            for match in pattern.finditer(text):
+                start, end = match.span()
 
-            # A dotted abbreviation embedded after another period is usually a
-            # fragment of a longer initialism (for example ``B.S.`` in
-            # ``A.B.S.``). Leave it intact unless the complete longer entry
-            # was matched during the longest-first pass.
-            if (
-                start > 1
-                and text[start - 1] == "."
-                and text[start - 2].isalnum()
-                and "." in entry.abbreviation
-            ):
-                continue
+                # A dotted abbreviation embedded after another period is usually a
+                # fragment of a longer initialism (for example ``B.S.`` in
+                # ``A.B.S.``). Leave it intact unless the complete longer entry
+                # was matched during the longest-first pass.
+                if (
+                    start > 1
+                    and text[start - 1] == "."
+                    and text[start - 2].isalnum()
+                    and "." in match.group()
+                ):
+                    continue
 
-            if not abbreviation_guards_match(
-                entry,
-                text,
-                start,
-                end,
-                annotations=annotation_index,
-            ):
-                continue
+                if not abbreviation_guards_match(
+                    entry,
+                    text,
+                    start,
+                    end,
+                    annotations=annotation_index,
+                ):
+                    continue
 
-            if not self.enable_context_detection or not self.context_detector:
-                expansion = entry.expansion
-                context = None
-            else:
-                # Get surrounding context from the original source.
-                window = 96
-                before = text[max(0, start - window) : start].rstrip()
-                after = text[end : min(len(text), end + window)].lstrip()
-                context = self.context_detector.detect_context(match.group(), before, after)
-                expansion = entry.get_expansion(context)
+                if not self.enable_context_detection or not self.context_detector:
+                    expansion = entry.expansion
+                    context = None
+                else:
+                    # Get surrounding context from the original source.
+                    window = 96
+                    before = text[max(0, start - window) : start].rstrip()
+                    after = text[end : min(len(text), end + window)].lstrip()
+                    context = self.context_detector.detect_context(match.group(), before, after)
+                    expansion = entry.get_expansion(context)
 
-            yield Replacement(
-                start=start,
-                end=end,
-                text=expansion,
-                priority=_entry_priority(entry),
-                source=f"abbr:{entry.abbreviation}",
-                kind="abbreviation",
-                entry_id=f"abbr:{entry.abbreviation}",
-                context=context,
-            )
+                yield Replacement(
+                    start=start,
+                    end=end,
+                    text=expansion,
+                    priority=_entry_priority(entry),
+                    source=f"abbr:{entry.abbreviation}",
+                    kind="abbreviation",
+                    entry_id=f"abbr:{entry.abbreviation}",
+                    context=context,
+                )
 
     def get_abbreviations_list(self) -> list[str]:
         """Get a list of all supported abbreviations.

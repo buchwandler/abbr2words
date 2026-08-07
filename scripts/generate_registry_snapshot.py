@@ -11,7 +11,7 @@ from abbr2words import get_shared_expander, supported_languages
 
 DECLARATION_COUNTS = {
     "cs": 66,
-    "de": 61,
+    "de": 62,
     "en": 163,
     "es": 73,
     "fr": 58,
@@ -36,6 +36,7 @@ def _entry_row(language: str, key: str, entry: Any) -> dict[str, Any]:
         "key": key,
         "abbreviation": entry.abbreviation,
         "expansion": entry.expansion,
+        "aliases": list(entry.aliases),
         "context_expansions": contexts,
         "case_sensitive": entry.case_sensitive,
         "description": entry.description,
