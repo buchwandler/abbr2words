@@ -109,6 +109,75 @@ def test_french_currency_matches_preserve_source_identity(
 
 
 @pytest.mark.parametrize(
+    ("source", "value", "symbol", "canonical_id", "canonical_symbol"),
+    [
+        ("12,80 EUR", "12,80", "EUR", "currency-euro", "€"),
+        ("EUR 12,80", "12,80", "EUR", "currency-euro", "€"),
+        ("12,80 €", "12,80", "€", "currency-euro", "€"),
+        ("€12,80", "12,80", "€", "currency-euro", "€"),
+        ("10 USD", "10", "USD", "currency-us-dollar", "$"),
+        ("USD 10", "10", "USD", "currency-us-dollar", "$"),
+        ("10 $", "10", "$", "currency-us-dollar", "$"),
+        ("$10", "10", "$", "currency-us-dollar", "$"),
+        ("5 GBP", "5", "GBP", "currency-pound-sterling", "£"),
+        ("GBP 5", "5", "GBP", "currency-pound-sterling", "£"),
+        ("5 £", "5", "£", "currency-pound-sterling", "£"),
+        ("£5", "5", "£", "currency-pound-sterling", "£"),
+    ],
+)
+def test_spanish_currency_matches_preserve_source_identity(
+    source: str,
+    value: str,
+    symbol: str,
+    canonical_id: str,
+    canonical_symbol: str,
+) -> None:
+    match = only_match(source, "es")
+    assert source[match.start : match.end] == source
+    assert source[match.value_start : match.value_end] == value
+    assert match.value == value
+    assert match.symbol == symbol
+    assert match.canonical_id == canonical_id
+    assert match.canonical_symbol == canonical_symbol
+    assert match.language == "es"
+    assert match.category == "currency"
+    assert abbr2words(source, lang="es") == source
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        "EUR",
+        "USD",
+        "GBP",
+        "€",
+        "$",
+        "£",
+        "priceEUR",
+        "EURprice",
+        "A12EURB",
+        "v1.2.3",
+        "name@example.com",
+        "https://example.com/12,80EUR",
+    ],
+)
+def test_spanish_currency_false_positive_boundaries(source: str) -> None:
+    assert list(iter_unit_matches(source, "es")) == []
+
+
+def test_spanish_currency_protected_spans_are_source_relative() -> None:
+    source = "prefix 12,80 EUR and €5"
+    protected_start = source.index("12,80 EUR")
+    protected_end = protected_start + len("12,80 EUR")
+    matches = list(
+        iter_unit_matches(source, "es", protected_spans=[(protected_start, protected_end)])
+    )
+    assert [source[item.start : item.end] for item in matches] == ["€5"]
+    assert matches[0].start == source.index("€5")
+    assert source[matches[0].value_start : matches[0].value_end] == "5"
+
+
+@pytest.mark.parametrize(
     ("source", "value", "symbol", "canonical_id"),
     [
         ("45 min.", "45", "min.", "duration-minute"),

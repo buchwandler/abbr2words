@@ -109,6 +109,27 @@ a complete numeric quantity is spoken. Number words, grammatical number,
 currency major/minor decomposition, and locale-specific spoken decimal policy
 belong to the consuming speech normalizer.
 
+Structured currency identities are available in the reviewed quantity registry
+for French and Spanish. Spanish recognizes `€`/`EUR` as `currency-euro`,
+`$`/`USD` as `currency-us-dollar`, and `£`/`GBP` as
+`currency-pound-sterling` when a numeric value is adjacent in either prefix or
+suffix position:
+
+```python
+from abbr2words import iter_unit_matches
+
+match = next(iter_unit_matches("12,80 EUR", "es"))
+match.value           # "12,80"
+match.canonical_id    # "currency-euro"
+match.canonical_symbol  # "€"
+```
+
+The match preserves the written numeric lexeme, symbol, and source-relative
+offsets. Currency names, number wording, singular/plural agreement, gender,
+cents, decimal realization, and arithmetic remain the responsibility of the
+downstream speech normalizer; standalone currency symbols and codes are not
+lexical rewrites. The reviewed shared inventory is limited to EUR/USD/GBP.
+
 ```python
 abbr2words("500 g", lang="en")
 # "500 gram"

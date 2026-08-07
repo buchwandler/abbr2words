@@ -577,35 +577,66 @@ _LOCALIZED_ALIASES = {
     ),
 }
 
-_FRENCH_CURRENCY_ENTRIES = (
-    _entry(
-        ("€", "EUR"),
-        "euro",
-        "Currency",
-        canonical_id="currency-euro",
-        canonical_symbol="€",
-        category="currency",
-        quantity_position="both",
+_STRUCTURED_CURRENCY_ENTRIES = {
+    "fr": (
+        _entry(
+            ("€", "EUR"),
+            "euro",
+            "Currency",
+            canonical_id="currency-euro",
+            canonical_symbol="€",
+            category="currency",
+            quantity_position="both",
+        ),
+        _entry(
+            ("$", "USD"),
+            "US dollar",
+            "Currency",
+            canonical_id="currency-us-dollar",
+            canonical_symbol="$",
+            category="currency",
+            quantity_position="both",
+        ),
+        _entry(
+            ("£", "GBP"),
+            "pound sterling",
+            "Currency",
+            canonical_id="currency-pound-sterling",
+            canonical_symbol="£",
+            category="currency",
+            quantity_position="both",
+        ),
     ),
-    _entry(
-        ("$", "USD"),
-        "US dollar",
-        "Currency",
-        canonical_id="currency-us-dollar",
-        canonical_symbol="$",
-        category="currency",
-        quantity_position="both",
+    "es": (
+        _entry(
+            ("€", "EUR"),
+            "euro",
+            "Currency",
+            canonical_id="currency-euro",
+            canonical_symbol="€",
+            category="currency",
+            quantity_position="both",
+        ),
+        _entry(
+            ("$", "USD"),
+            "dólar estadounidense",
+            "Currency",
+            canonical_id="currency-us-dollar",
+            canonical_symbol="$",
+            category="currency",
+            quantity_position="both",
+        ),
+        _entry(
+            ("£", "GBP"),
+            "libra esterlina",
+            "Currency",
+            canonical_id="currency-pound-sterling",
+            canonical_symbol="£",
+            category="currency",
+            quantity_position="both",
+        ),
     ),
-    _entry(
-        ("£", "GBP"),
-        "pound sterling",
-        "Currency",
-        canonical_id="currency-pound-sterling",
-        canonical_symbol="£",
-        category="currency",
-        quantity_position="both",
-    ),
-)
+}
 
 _FRENCH_DOTTED_DURATION_ENTRIES = (
     _entry(
@@ -853,7 +884,10 @@ for _lang, _names in _LOCALIZED_EXTENDED_UNIT_NAMES.items():
     )
 
 UNIT_ENTRIES["de"] += _GERMAN_REQUIRED_ENTRIES
-UNIT_ENTRIES["fr"] += _FRENCH_CURRENCY_ENTRIES + _FRENCH_DOTTED_DURATION_ENTRIES
+for _lang, _currency_entries in _STRUCTURED_CURRENCY_ENTRIES.items():
+    UNIT_ENTRIES[_lang] += _currency_entries
+
+UNIT_ENTRIES["fr"] += _FRENCH_DOTTED_DURATION_ENTRIES
 
 UNIT_ENTRIES["tr"] = tuple(
     replace(entry, reject_following_apostrophe=True) for entry in UNIT_ENTRIES["tr"]
@@ -1025,6 +1059,18 @@ def _overlaps_protected(start: int, end: int, spans: tuple[tuple[int, int], ...]
     )
 
 
+def _currency_is_embedded_in_lexical_material(text: str, start: int, end: int) -> bool:
+    """Reject currency candidates embedded in URL/email-like non-prose tokens."""
+    token_start = start
+    while token_start > 0 and not text[token_start - 1].isspace():
+        token_start -= 1
+    token_end = end
+    while token_end < len(text) and not text[token_end].isspace():
+        token_end += 1
+    token = text[token_start:token_end]
+    return "://" in token or ("@" in token and "." in token)
+
+
 def _canonical_symbol(entry: UnitEntry, symbol: str) -> str:
     if entry.canonical_id is not None:
         for definition in _BASE_DEFINITIONS + _EXTENDED_DEFINITIONS:
@@ -1073,6 +1119,10 @@ def iter_unit_matches(
         if entry.reject_following_apostrophe and text[end : end + 1] in {"'", "’"}:
             continue
         start = value_match.start()
+        if entry.category == "currency" and _currency_is_embedded_in_lexical_material(
+            text, start, end
+        ):
+            continue
         if _overlaps_protected(start, end, protected):
             continue
         matches.append(
@@ -1103,6 +1153,10 @@ def iter_unit_matches(
             if _unit_continuation_is_unsupported(text, end):
                 continue
             if entry.reject_following_apostrophe and text[end : end + 1] in {"'", "’"}:
+                continue
+            if entry.category == "currency" and _currency_is_embedded_in_lexical_material(
+                text, start, end
+            ):
                 continue
             if _overlaps_protected(start, end, protected):
                 continue

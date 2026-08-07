@@ -31,7 +31,28 @@ CURRENT_UNIT_SPELLINGS = {
         "hrs.",
         "sec.",
     },
-    "es": {"h", "min", "min.", "seg", "seg.", "km", "m", "cm", "mm", "kg", "g", "mg", "l", "ml"},
+    "es": {
+        "h",
+        "min",
+        "min.",
+        "seg",
+        "seg.",
+        "km",
+        "m",
+        "cm",
+        "mm",
+        "kg",
+        "g",
+        "mg",
+        "l",
+        "ml",
+        "€",
+        "EUR",
+        "$",
+        "USD",
+        "£",
+        "GBP",
+    },
     "fr": {
         "h",
         "min",
@@ -123,11 +144,12 @@ def test_case_sensitive_near_misses_and_attached_words() -> None:
 
 def test_inventory_contains_expected_symbols() -> None:
     assert {"g", "m", "ml", "mL", "L", "km/h", "m/s", "°C"} <= unit_symbols("en")
+    assert {"€", "EUR", "$", "USD", "£", "GBP"} <= unit_symbols("es")
     assert {"€", "EUR", "$", "USD", "£", "GBP", "min.", "sec."} <= unit_symbols("fr")
 
 
 def test_all_legacy_unit_spellings_are_in_reviewed_inventory() -> None:
-    assert sum(len(spellings) for spellings in CURRENT_UNIT_SPELLINGS.values()) == 96
+    assert sum(len(spellings) for spellings in CURRENT_UNIT_SPELLINGS.values()) == 102
     for language, spellings in CURRENT_UNIT_SPELLINGS.items():
         assert spellings <= unit_symbols(language)
 
