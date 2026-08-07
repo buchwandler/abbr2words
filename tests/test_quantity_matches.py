@@ -139,7 +139,9 @@ def test_protected_spans_suppress_only_the_protected_quantity() -> None:
     source = "2 kg; 3 mA"
     protected_start = source.index("2")
     protected_end = protected_start + len("2 kg")
-    matches = list(iter_unit_matches(source, "de", protected_spans=[(protected_start, protected_end)]))
+    matches = list(
+        iter_unit_matches(source, "de", protected_spans=[(protected_start, protected_end)])
+    )
     assert [source[item.start : item.end] for item in matches] == ["3 mA"]
 
 

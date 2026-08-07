@@ -13,11 +13,11 @@ audience: null
 scopes: []
 source_refs: []
 paths:
-- abbr2words/abbr2words/core.py
+  - abbr2words/abbr2words/core.py
 issues: []
 prs: []
 sources:
-- tl:task-0001
+  - tl:task-0001
 contributors: []
 breaking: false
 internal: false

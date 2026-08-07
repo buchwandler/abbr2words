@@ -817,7 +817,9 @@ def validate_unit_registry(language: str) -> None:
             if previous is not None and (
                 previous.expansion != entry.expansion or previous.category != entry.category
             ):
-                raise ValueError(f"ambiguous canonical unit id {entry.canonical_id!r} in {language}")
+                raise ValueError(
+                    f"ambiguous canonical unit id {entry.canonical_id!r} in {language}"
+                )
             canonical_entries[entry.canonical_id] = entry
             if entry.canonical_symbol not in entry.symbols:
                 raise ValueError(f"canonical symbol is not registered for {entry.canonical_id!r}")
@@ -866,8 +868,7 @@ def _unit_inventory(
         (symbol, entry)
         for entry in unit_entries(language)
         for symbol in entry.symbols
-        if suppressed is None
-        or (symbol not in suppressed and entry.canonical_id not in suppressed)
+        if suppressed is None or (symbol not in suppressed and entry.canonical_id not in suppressed)
     ]
     if overrides:
         entries = [item for item in entries if item[0] not in overrides]
@@ -904,7 +905,9 @@ def _normalize_protected_spans(
 
 
 def _overlaps_protected(start: int, end: int, spans: tuple[tuple[int, int], ...]) -> bool:
-    return any(start < protected_end and end > protected_start for protected_start, protected_end in spans)
+    return any(
+        start < protected_end and end > protected_start for protected_start, protected_end in spans
+    )
 
 
 def _canonical_symbol(entry: UnitEntry, symbol: str) -> str:
@@ -982,9 +985,7 @@ def iter_unit_replacements(
     malformed hybrid such as ``5 kilometer / h``.
     """
     inventory = _unit_inventory(language, overrides, suppressed)
-    for unit_match in iter_unit_matches(
-        text, language, overrides=overrides, suppressed=suppressed
-    ):
+    for unit_match in iter_unit_matches(text, language, overrides=overrides, suppressed=suppressed):
         if unit_match.category == "currency":
             continue
         yield Replacement(

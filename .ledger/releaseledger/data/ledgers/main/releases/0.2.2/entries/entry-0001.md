@@ -12,9 +12,9 @@ status: accepted
 audience: null
 scopes: []
 source_refs:
-- tl:task-0001
+  - tl:task-0001
 paths:
-- abbr2words/abbr2words/units.py
+  - abbr2words/abbr2words/units.py
 issues: []
 prs: []
 sources: []
