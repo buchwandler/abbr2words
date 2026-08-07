@@ -7,7 +7,8 @@ versioning:
 entry_id: entry-0004
 release_version: v0.2.1
 kind: docs
-summary: Documented that unit expansion is lexical symbol expansion and does not own
+summary:
+  Documented that unit expansion is lexical symbol expansion and does not own
   quantity verbalization or grammatical plural selection
 status: accepted
 audience: null

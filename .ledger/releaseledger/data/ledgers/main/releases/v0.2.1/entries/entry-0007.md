@@ -7,7 +7,8 @@ versioning:
 entry_id: entry-0007
 release_version: v0.2.1
 kind: added
-summary: Added immutable source-aligned replacement results, reviewed German compound
+summary:
+  Added immutable source-aligned replacement results, reviewed German compound
   aliases, and deliberate registry snapshot metadata for those aliases
 status: accepted
 audience: null

@@ -7,7 +7,8 @@ versioning:
 entry_id: entry-0001
 release_version: v0.2.1
 kind: fixed
-summary: Corrected punctuation-safe abbreviation boundaries, ellipsis-adjacent matching,
+summary:
+  Corrected punctuation-safe abbreviation boundaries, ellipsis-adjacent matching,
   immediate guard enforcement, and deterministic custom overrides
 status: accepted
 audience: null

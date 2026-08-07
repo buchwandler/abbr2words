@@ -7,7 +7,8 @@ versioning:
 entry_id: entry-0003
 release_version: v0.2.1
 kind: fixed
-summary: Made unsupported compound-looking unit expressions fail closed and added
+summary:
+  Made unsupported compound-looking unit expressions fail closed and added
   the Greek small-letter mu unit alias
 status: accepted
 audience: null
