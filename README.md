@@ -99,8 +99,15 @@ printf 'Prof. Klein kommt ggf.' | abbr2words --lang de
 
 `abbr2words` expands registered abbreviations and a reviewed set of unit symbols
 when they occur after numeric quantities. It preserves numeric values and does
-not spell ordinary numbers, dates, times, or currencies, and does not perform
-unit conversion. Unit support is not universal UCUM support.
+not spell ordinary numbers, dates, or times, and does not perform unit conversion
+or currency realization. Unit support is not universal UCUM support. Use the
+public `iter_unit_matches()` API when a downstream semantic normalizer needs the
+original numeric lexeme, source span, and stable canonical quantity identity.
+
+`abbr2words` recognizes and identifies quantity symbols; it does not decide how
+a complete numeric quantity is spoken. Number words, grammatical number,
+currency major/minor decomposition, and locale-specific spoken decimal policy
+belong to the consuming speech normalizer.
 
 ```python
 abbr2words("500 g", lang="en")
@@ -131,7 +138,8 @@ not part of the stable public API. See
 
 The package version is derived from Git tags by `setuptools-scm`. Use tags in the
 form `v0.2.0`, `v0.3.0`, and so on; the corresponding package version is generated
-automatically during builds. A checkout without tags falls back to `0.2.0`.
+automatically during builds. A checkout without tags falls back to `0.2.2` for
+this additive release.
 
 For a release, commit the changes, create an annotated tag, and build from that
 tag:

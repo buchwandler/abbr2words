@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import re
-from collections.abc import Iterator
+from collections.abc import Iterable, Iterator, Mapping, Set
 from dataclasses import dataclass, replace
 
 from ._replacements import Replacement, apply_replacements
@@ -29,6 +29,7 @@ class UnitEntry:
     requires_numeric_value: bool = True
     canonical_id: str | None = None
     reject_following_apostrophe: bool = False
+    category: str = "unit"
 
     def __post_init__(self) -> None:
         if not self.symbols or any(
@@ -47,6 +48,27 @@ class UnitEntry:
             raise ValueError("canonical_symbol must be one of symbols")
         if self.canonical_id is not None and not self.canonical_id:
             raise ValueError("canonical_id must not be empty")
+        if not isinstance(self.category, str):
+            raise TypeError("unit category must be a string")
+        if not self.category:
+            raise ValueError("unit category must not be empty")
+
+
+@dataclass(frozen=True, slots=True)
+class UnitMatch:
+    """One immutable, source-aligned recognized numeric quantity symbol."""
+
+    start: int
+    end: int
+    value_start: int
+    value_end: int
+    value: str
+    symbol: str
+    canonical_id: str | None
+    canonical_symbol: str
+    expansion: str
+    language: str
+    category: str = "unit"
 
 
 @dataclass(frozen=True)
@@ -63,21 +85,26 @@ def _entry(
     *,
     canonical_id: str | None = None,
     reject_following_apostrophe: bool = False,
+    case_sensitive: bool = True,
+    category: str = "unit",
+    canonical_symbol: str | None = None,
 ) -> UnitEntry:
     if isinstance(symbols, str):
         symbols = (symbols,)
     return UnitEntry(
         symbols,
         expansion,
+        case_sensitive=case_sensitive,
         description=description,
-        canonical_symbol=symbols[0],
+        canonical_symbol=canonical_symbol or symbols[0],
         canonical_id=canonical_id,
         reject_following_apostrophe=reject_following_apostrophe,
+        category=category,
     )
 
 
 # This is a reviewed inventory, not an attempt to model every UCUM expression.
-_EN = (
+_EN: tuple[UnitEntry, ...] = (
     _entry("mm", "millimeter", "Length"),
     _entry("cm", "centimeter", "Length"),
     _entry("m", "meter", "Length"),
@@ -121,6 +148,54 @@ _EN = (
     _entry(("tsp", "tsp."), "teaspoon", "Customary volume"),
     _entry(("tbsp", "tbsp."), "tablespoon", "Customary volume"),
 )
+
+_EN_CANONICAL_IDS = {
+    "mm": "length-millimeter",
+    "cm": "length-centimeter",
+    "m": "length-meter",
+    "km": "length-kilometer",
+    "mm²": "area-square-millimeter",
+    "cm²": "area-square-centimeter",
+    "m²": "area-square-meter",
+    "km²": "area-square-kilometer",
+    "ha": "area-hectare",
+    "mm³": "volume-cubic-millimeter",
+    "cm³": "volume-cubic-centimeter",
+    "m³": "volume-cubic-meter",
+    "mL": "volume-milliliter",
+    "L": "volume-liter",
+    "ml": "volume-milliliter",
+    "l": "volume-liter",
+    "µg": "mass-microgram",
+    "μg": "mass-microgram",
+    "ug": "mass-microgram",
+    "mg": "mass-milligram",
+    "g": "mass-gram",
+    "kg": "mass-kilogram",
+    "t": "mass-tonne",
+    "°C": "temperature-celsius",
+    "°F": "temperature-fahrenheit",
+    "K": "temperature-kelvin",
+    "m/s": "speed-meter-per-second",
+    "km/h": "speed-kilometer-per-hour",
+    "s": "duration-second",
+    "min": "duration-minute",
+    "h": "duration-hour",
+    "d": "duration-day",
+    "yr": "duration-year",
+    "in": "customary-inch",
+    "ft": "customary-foot",
+    "yd": "customary-yard",
+    "mi": "customary-mile",
+    "oz": "customary-ounce",
+    "lb": "customary-pound",
+    "gal": "customary-gallon",
+    "qt": "customary-quart",
+    "pt": "customary-pint",
+    "tsp": "customary-teaspoon",
+    "tbsp": "customary-tablespoon",
+}
+_EN = tuple(replace(entry, canonical_id=_EN_CANONICAL_IDS[entry.symbols[0]]) for entry in _EN)
 
 _BASE_DEFINITIONS = (
     _UnitDefinition("duration-second", ("s",), "Duration"),
@@ -457,13 +532,91 @@ _LOCALIZED_UNIT_NAMES: dict[str, dict[str, str]] = {
 }
 
 _LOCALIZED_ALIASES = {
-    "cs": (("hod.", "hodina"), ("min.", "minuta"), ("sek.", "sekunda")),
-    "de": (("Std.", "Stunde"), ("Min.", "Minute"), ("Sek.", "Sekunde")),
-    "es": (("min.", "minuto"), ("seg", "segundo"), ("seg.", "segundo")),
-    "fr": (("sec", "seconde"),),
-    "it": (("min.", "minuto"), ("sec", "secondo"), ("sec.", "secondo")),
-    "pt": (("min.", "minuto"), ("seg", "segundo"), ("seg.", "segundo")),
+    "cs": (
+        ("hod.", "hodina", "duration-hour", True),
+        ("min.", "minuta", "duration-minute", True),
+        ("sek.", "sekunda", "duration-second", True),
+    ),
+    "de": (
+        ("Std.", "Stunde", "duration-hour", False),
+        ("Min.", "Minute", "duration-minute", False),
+        ("Sek.", "Sekunde", "duration-second", False),
+    ),
+    "es": (
+        ("min.", "minuto", "duration-minute", True),
+        ("seg", "segundo", "duration-second", True),
+        ("seg.", "segundo", "duration-second", True),
+    ),
+    "fr": (("sec", "seconde", "duration-second", True),),
+    "it": (
+        ("min.", "minuto", "duration-minute", True),
+        ("sec", "secondo", "duration-second", True),
+        ("sec.", "secondo", "duration-second", True),
+    ),
+    "pt": (
+        ("min.", "minuto", "duration-minute", True),
+        ("seg", "segundo", "duration-second", True),
+        ("seg.", "segundo", "duration-second", True),
+    ),
 }
+
+_GERMAN_REQUIRED_ENTRIES = (
+    _entry("kWh", "Kilowattstunde", "Energy", canonical_id="energy-kilowatt-hour"),
+    _entry("Wh", "Wattstunde", "Energy", canonical_id="energy-watt-hour"),
+    _entry("mAh", "Milliampere-Stunde", "Electric charge", canonical_id="charge-milliampere-hour"),
+    _entry("mA", "Milliampere", "Electric current", canonical_id="current-milliampere"),
+    _entry("GHz", "Gigahertz", "Frequency", canonical_id="frequency-gigahertz"),
+    _entry("MHz", "Megahertz", "Frequency", canonical_id="frequency-megahertz"),
+    _entry("kHz", "Kilohertz", "Frequency", canonical_id="frequency-kilohertz"),
+    _entry("Hz", "Hertz", "Frequency", canonical_id="frequency-hertz"),
+    _entry("W", "Watt", "Power", canonical_id="power-watt"),
+    _entry("V", "Volt", "Electric potential", canonical_id="voltage-volt"),
+    _entry(
+        "Stck.",
+        "Stück",
+        "Count",
+        canonical_id="count-piece",
+        case_sensitive=False,
+    ),
+    _entry(
+        "ltr.",
+        "Liter",
+        "Volume",
+        canonical_id="volume-liter",
+        case_sensitive=False,
+    ),
+    _entry(
+        "Tsd.",
+        "Tausend",
+        "Magnitude",
+        canonical_id="magnitude-thousand",
+        category="magnitude",
+        case_sensitive=False,
+    ),
+    _entry(
+        "Mio.",
+        "Millionen",
+        "Magnitude",
+        canonical_id="magnitude-million",
+        category="magnitude",
+        case_sensitive=False,
+    ),
+    _entry(
+        "Mrd.",
+        "Milliarden",
+        "Magnitude",
+        canonical_id="magnitude-billion",
+        category="magnitude",
+        case_sensitive=False,
+    ),
+    _entry(
+        "EUR",
+        "Euro",
+        "Currency",
+        canonical_id="currency-euro",
+        category="currency",
+    ),
+)
 
 _EXTENDED_DEFINITIONS = (
     _UnitDefinition("area-square-millimeter", ("mm²", "mm2"), "Area"),
@@ -612,8 +765,14 @@ for _lang, _names in _LOCALIZED_UNIT_NAMES.items():
         for _definition in _BASE_DEFINITIONS
     ]
     _items.extend(
-        _entry(_symbol, _name, "Locale unit")
-        for _symbol, _name in _LOCALIZED_ALIASES.get(_lang, ())
+        _entry(
+            _symbol,
+            _name,
+            "Locale unit alias",
+            canonical_id=_canonical_id,
+            case_sensitive=_case_sensitive,
+        )
+        for _symbol, _name, _canonical_id, _case_sensitive in _LOCALIZED_ALIASES.get(_lang, ())
     )
     UNIT_ENTRIES[_lang] = tuple(_items)
 
@@ -627,6 +786,8 @@ for _lang, _names in _LOCALIZED_EXTENDED_UNIT_NAMES.items():
         )
         for _definition in _EXTENDED_DEFINITIONS
     )
+
+UNIT_ENTRIES["de"] += _GERMAN_REQUIRED_ENTRIES
 
 UNIT_ENTRIES["tr"] = tuple(
     replace(entry, reject_following_apostrophe=True) for entry in UNIT_ENTRIES["tr"]
@@ -645,18 +806,19 @@ def validate_unit_registry(language: str) -> None:
     """Validate inventory invariants for one localized reviewed unit registry."""
     entries = unit_entries(language)
     symbols: set[str] = set()
-    canonical_ids: set[str] = set()
+    canonical_entries: dict[str, UnitEntry] = {}
     for entry in entries:
         for symbol in entry.symbols:
             if symbol in symbols:
                 raise ValueError(f"duplicate unit symbol {symbol!r} in {language}")
             symbols.add(symbol)
         if entry.canonical_id is not None:
-            if entry.canonical_id in canonical_ids:
-                raise ValueError(
-                    f"duplicate canonical unit id {entry.canonical_id!r} in {language}"
-                )
-            canonical_ids.add(entry.canonical_id)
+            previous = canonical_entries.get(entry.canonical_id)
+            if previous is not None and (
+                previous.expansion != entry.expansion or previous.category != entry.category
+            ):
+                raise ValueError(f"ambiguous canonical unit id {entry.canonical_id!r} in {language}")
+            canonical_entries[entry.canonical_id] = entry
             if entry.canonical_symbol not in entry.symbols:
                 raise ValueError(f"canonical symbol is not registered for {entry.canonical_id!r}")
     expected = {definition.canonical_id for definition in _BASE_DEFINITIONS + _EXTENDED_DEFINITIONS}
@@ -697,34 +859,79 @@ def _unit_continuation_is_unsupported(text: str, end: int) -> bool:
 
 def _unit_inventory(
     language: str,
-    overrides: dict[str, UnitEntry] | None,
-    suppressed: set[str] | None,
+    overrides: Mapping[str, UnitEntry] | None,
+    suppressed: Set[str] | None,
 ) -> tuple[tuple[str, UnitEntry], ...]:
     entries = [
         (symbol, entry)
         for entry in unit_entries(language)
         for symbol in entry.symbols
-        if suppressed is None or symbol not in suppressed
+        if suppressed is None
+        or (symbol not in suppressed and entry.canonical_id not in suppressed)
     ]
     if overrides:
         entries = [item for item in entries if item[0] not in overrides]
-        entries.extend(overrides.items())
+        entries.extend(
+            item
+            for item in overrides.items()
+            if suppressed is None
+            or (item[0] not in suppressed and item[1].canonical_id not in suppressed)
+        )
     return tuple(sorted(entries, key=lambda item: (-len(item[0]), item[0])))
 
 
-def iter_unit_replacements(
+def _normalize_protected_spans(
+    text: str,
+    protected_spans: Iterable[tuple[int, int]],
+) -> tuple[tuple[int, int], ...]:
+    spans: list[tuple[int, int]] = []
+    for index, span in enumerate(protected_spans):
+        try:
+            start, end = span
+        except (TypeError, ValueError) as error:
+            raise TypeError(f"protected span {index} must be a 2-tuple") from error
+        if type(start) is not int or type(end) is not int:
+            raise TypeError(f"protected span {index} offsets must be integers")
+        if start < 0 or end < start or end > len(text):
+            raise ValueError(f"protected span {index} is outside the source text")
+        if start == end:
+            continue
+        spans.append((start, end))
+    spans.sort()
+    if any(left[1] > right[0] for left, right in zip(spans, spans[1:], strict=False)):
+        raise ValueError("protected spans must not overlap")
+    return tuple(spans)
+
+
+def _overlaps_protected(start: int, end: int, spans: tuple[tuple[int, int], ...]) -> bool:
+    return any(start < protected_end and end > protected_start for protected_start, protected_end in spans)
+
+
+def _canonical_symbol(entry: UnitEntry, symbol: str) -> str:
+    if entry.canonical_id is not None:
+        for definition in _BASE_DEFINITIONS + _EXTENDED_DEFINITIONS:
+            if definition.canonical_id == entry.canonical_id:
+                return definition.symbols[0]
+    return entry.canonical_symbol or symbol
+
+
+def iter_unit_matches(
     text: str,
     language: str,
-    overrides: dict[str, UnitEntry] | None = None,
-    suppressed: set[str] | None = None,
-) -> Iterator[Replacement]:
-    """Yield complete reviewed unit replacements using original offsets.
+    *,
+    overrides: Mapping[str, UnitEntry] | None = None,
+    suppressed: Set[str] | None = None,
+    protected_spans: Iterable[tuple[int, int]] = (),
+) -> Iterator[UnitMatch]:
+    """Yield structured, source-aligned matches for complete numeric quantities.
 
-    Numeric-looking prefixes are never expanded when a longer unsupported unit
-    expression follows them. This deliberately favors unchanged input over a
-    malformed hybrid such as ``5 kilometer / h``.
+    Matching is deliberately lexical: the numeric spelling is preserved and no
+    number, grammar, currency, or locale-specific speech policy is applied.
     """
+    if not isinstance(text, str):
+        raise TypeError("text must be a string")
     inventory = _unit_inventory(language, overrides, suppressed)
+    protected = _normalize_protected_spans(text, protected_spans)
     for value_match in _VALUE_PATTERN.finditer(text):
         value = value_match.group("value")
         unit_start = value_match.end()
@@ -744,14 +951,50 @@ def iter_unit_replacements(
             continue
         if entry.reject_following_apostrophe and text[end : end + 1] in {"'", "’"}:
             continue
-        yield Replacement(
-            start=value_match.start(),
+        start = value_match.start()
+        if _overlaps_protected(start, end, protected):
+            continue
+        yield UnitMatch(
+            start=start,
             end=end,
-            text=f"{value} {entry.expansion}",
+            value_start=value_match.start("value"),
+            value_end=value_match.end("value"),
+            value=value,
+            symbol=text[unit_start:end],
+            canonical_id=entry.canonical_id,
+            canonical_symbol=_canonical_symbol(entry, symbol),
+            expansion=entry.expansion,
+            language=language,
+            category=entry.category,
+        )
+
+
+def iter_unit_replacements(
+    text: str,
+    language: str,
+    overrides: Mapping[str, UnitEntry] | None = None,
+    suppressed: Set[str] | None = None,
+) -> Iterator[Replacement]:
+    """Yield complete reviewed unit replacements using original offsets.
+
+    Numeric-looking prefixes are never expanded when a longer unsupported unit
+    expression follows them. This deliberately favors unchanged input over a
+    malformed hybrid such as ``5 kilometer / h``.
+    """
+    inventory = _unit_inventory(language, overrides, suppressed)
+    for unit_match in iter_unit_matches(
+        text, language, overrides=overrides, suppressed=suppressed
+    ):
+        if unit_match.category == "currency":
+            continue
+        yield Replacement(
+            start=unit_match.start,
+            end=unit_match.end,
+            text=f"{unit_match.value} {unit_match.expansion}",
             priority=300,
-            source=f"unit:{language}:{symbol}",
+            source=f"unit:{language}:{unit_match.symbol}",
             kind="unit",
-            entry_id=f"unit:{language}:{entry.canonical_id or symbol}",
+            entry_id=f"unit:{language}:{unit_match.canonical_id or unit_match.symbol}",
         )
 
     # Honor metadata for future reviewed entries that intentionally do not
@@ -764,10 +1007,10 @@ def iter_unit_replacements(
             rf"(?<!\w){re.escape(symbol)}(?!\w)",
             0 if entry.case_sensitive else re.IGNORECASE,
         )
-        for match in pattern.finditer(text):
+        for replacement_match in pattern.finditer(text):
             yield Replacement(
-                start=match.start(),
-                end=match.end(),
+                start=replacement_match.start(),
+                end=replacement_match.end(),
                 text=entry.expansion,
                 priority=300,
                 source=f"unit:{language}:{symbol}",
@@ -785,7 +1028,9 @@ __all__ = [
     "NUMBER_BEFORE_UNIT",
     "UNIT_ENTRIES",
     "UnitEntry",
+    "UnitMatch",
     "expand_units",
+    "iter_unit_matches",
     "iter_unit_replacements",
     "unit_entries",
     "unit_symbols",

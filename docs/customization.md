@@ -103,6 +103,18 @@ Calling `add("kg", ...)` or abbreviation removal for a known unit raises a
 clear error rather than silently changing a registry that expansion ignores.
 Unit overrides do not leak between isolated expanders.
 
+`set_unit()` retains the reviewed canonical ID when replacing a bundled symbol.
+Pass `canonical_id="..."` to explicitly assign a different identity, or omit it
+for a new user-defined symbol. The optional `category` distinguishes custom
+units from currencies or magnitudes. `remove_unit()` accepts either a symbol or
+a canonical ID; removing an ID suppresses all bundled aliases for that identity.
+The same rules are available through `Expander.iter_unit_matches()`.
+
+For semantic consumers, prefer the structured matcher over parsing replacement
+strings. Numeric quantity matching has priority over lexical abbreviation
+matching, so numeric `1 Mio.` produces one structured magnitude claim while
+standalone `Mio.` retains its ordinary German abbreviation behavior.
+
 ## Finite aliases and exact replacements
 
 Bundled entries can have finite aliases for reviewed formatting variants. For

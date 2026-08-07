@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterable
+from collections.abc import Iterable, Iterator, Mapping, Set
 from importlib import import_module
 from re import Pattern
 from threading import RLock
@@ -17,6 +17,8 @@ from .core import (
     PosConstraints,
     ProtectedSpan,
 )
+from .units import UnitEntry, UnitMatch
+from .units import iter_unit_matches as _iter_unit_matches
 
 _LANGUAGE_CLASSES: Final[dict[str, tuple[str, str]]] = {
     "cs": ("abbr2words.languages.cs", "CzechAbbreviationExpander"),
@@ -74,6 +76,24 @@ def normalize_language(lang: str) -> str:
 def supported_languages() -> tuple[str, ...]:
     """Return the bundled base language codes."""
     return tuple(sorted(_LANGUAGE_CLASSES))
+
+
+def iter_unit_matches(
+    text: str,
+    language: str,
+    *,
+    overrides: Mapping[str, UnitEntry] | None = None,
+    suppressed: Set[str] | None = None,
+    protected_spans: Iterable[tuple[int, int]] = (),
+) -> Iterator[UnitMatch]:
+    """Yield structured source-aligned matches for numeric quantity symbols."""
+    return _iter_unit_matches(
+        text,
+        normalize_language(language),
+        overrides=overrides,
+        suppressed=suppressed,
+        protected_spans=protected_spans,
+    )
 
 
 def _expander_class(lang: str) -> type[AbbreviationExpander]:
@@ -303,11 +323,27 @@ class Expander:
         *,
         case_sensitive: bool = True,
         description: str = "Custom unit",
+        canonical_id: str | None = None,
+        category: str = "unit",
     ) -> None:
         """Override a reviewed unit for this isolated expander."""
         self._impl.set_unit(
-            symbol, expansion, case_sensitive=case_sensitive, description=description
+            symbol,
+            expansion,
+            case_sensitive=case_sensitive,
+            description=description,
+            canonical_id=canonical_id,
+            category=category,
         )
+
+    def iter_unit_matches(
+        self,
+        text: str,
+        *,
+        protected_spans: Iterable[tuple[int, int]] = (),
+    ) -> Iterator[UnitMatch]:
+        """Yield structured matches using this expander's unit customization."""
+        return self._impl.iter_unit_matches(text, protected_spans=protected_spans)
 
     def remove_unit(self, symbol: str) -> bool:
         """Suppress a reviewed unit for this isolated expander."""

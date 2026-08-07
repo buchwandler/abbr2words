@@ -30,6 +30,13 @@ lexical entries are case-sensitive. Unit output is a canonical singular lemma;
 the stable API does not realize plural, case, numeral-government, or suffix
 morphology.
 
+German quantity symbols include the reviewed electrical and frequency forms
+`kWh`, `Wh`, `mAh`, `mA`, `GHz`, `MHz`, `kHz`, `Hz`, `W`, and `V`, plus `Stck.`,
+`ltr.`, `Tsd.`, `Mio.`, `Mrd.`, and `EUR`. Case-sensitive metadata is preserved:
+for example, `2 mA` matches but `2 ma` does not. Dotted German aliases and
+their base symbols share canonical IDs, so `h`/`Std.`, `min`/`Min.`, and
+`l`/`Ltr.` cannot acquire separate semantic identities.
+
 ## Known ambiguity
 
 Some inventories contain collisions whose effective winner follows the source

@@ -10,6 +10,10 @@
 
 ```
 
+```{autofunction} abbr2words.iter_unit_matches
+
+```
+
 `abbr2words(..., annotations=...)` accepts an iterable of source-aligned
 `TokenAnnotation` objects. Their offsets refer to the original input text;
 labels are normalized and overlapping or invalid spans raise `ValueError`.
@@ -100,6 +104,36 @@ abbr2words("500 g", lang="en")  # "500 gram"
 abbr2words("section g", lang="en")  # "section g"
 ```
 
+## Structured quantity matches
+
+Use `iter_unit_matches()` when a downstream semantic stage needs the recognized
+quantity before it performs number or grammar realization:
+
+```python
+from abbr2words import iter_unit_matches
+
+source = "Für 1,5 kg Mehl"
+match = next(iter_unit_matches(source, "de"))
+assert source[match.start : match.end] == "1,5 kg"
+assert source[match.value_start : match.value_end] == "1,5"
+assert match.value == "1,5"
+assert match.symbol == "kg"
+assert match.canonical_id == "mass-kilogram"
+```
+
+`UnitMatch` is immutable and source-aligned. Its `start:end` range covers the
+complete numeric expression and symbol; `value_start:value_end` identifies the
+original numeric lexeme exactly. Matches are deterministic, maximal, and
+non-overlapping. `protected_spans=[(start, end), ...]` suppresses caller-owned
+ranges such as markup, URLs, or code. `overrides` and `suppressed` accept unit
+symbols; suppression also accepts a canonical ID.
+
+The matcher recognizes and identifies quantity symbols. It does not decide how
+the complete quantity is spoken: number-to-words conversion, singular/plural
+grammar, currency decomposition, and locale-specific decimal policy belong to
+the consuming semantic normalizer. Currency and magnitude matches expose their
+`category` without turning this package into a structured-number parser.
+
 ## Core types
 
 ```{autoclass} abbr2words.TokenAnnotation
@@ -128,6 +162,10 @@ provided. `Expander.add()` exposes the same optional `only_if_pos` and
 ```
 
 ```{autoclass} abbr2words.ExpansionResult
+:members:
+```
+
+```{autoclass} abbr2words.UnitMatch
 :members:
 ```
 

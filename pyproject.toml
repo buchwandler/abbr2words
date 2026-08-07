@@ -60,7 +60,7 @@ abbr2words = ["py.typed"]
 
 [tool.setuptools_scm]
 write_to = "abbr2words/_version.py"
-fallback_version = "0.2.0"
+fallback_version = "0.2.2"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -19,7 +19,17 @@ from typing import TypeAlias
 from ._replacements import Replacement, apply_replacements, resolve_replacements
 from .annotations import AnnotationIndex, TokenAnnotation, normalize_annotations
 from .context import profile_for
-from .units import NUMBER_BEFORE_UNIT, UnitEntry, iter_unit_replacements, unit_entries, unit_symbols
+from .units import (
+    NUMBER_BEFORE_UNIT,
+    UnitEntry,
+    UnitMatch,
+    iter_unit_replacements,
+    unit_entries,
+    unit_symbols,
+)
+from .units import (
+    iter_unit_matches as _iter_unit_matches,
+)
 
 
 class AbbreviationContext(Enum):
@@ -520,11 +530,15 @@ class AbbreviationExpander(ABC):
         Args:
             entry: The abbreviation entry to add
         """
-        if entry.abbreviation in self._unit_symbols and entry.origin == "custom":
+        unit_entry = next(
+            (item for item in self.unit_entries if entry.abbreviation in item.symbols),
+            None,
+        )
+        if unit_entry is not None and entry.origin == "custom":
             raise ValueError(
                 f"{entry.abbreviation!r} is a unit symbol; use set_unit() for unit customization"
             )
-        if entry.abbreviation in self._unit_symbols:
+        if unit_entry is not None and unit_entry.category != "magnitude":
             entry.case_sensitive = True
             entry.only_if_preceded_by = entry.only_if_preceded_by or NUMBER_BEFORE_UNIT
             # Rebuild the compiled fields if a legacy language registry supplied a
@@ -606,6 +620,8 @@ class AbbreviationExpander(ABC):
         *,
         case_sensitive: bool = True,
         description: str = "Custom unit",
+        canonical_id: str | None = None,
+        category: str = "unit",
     ) -> None:
         """Override one reviewed unit for this expander instance."""
         if not isinstance(symbol, str) or not symbol:
@@ -616,6 +632,15 @@ class AbbreviationExpander(ABC):
             raise ValueError("unit expansion must not be empty")
         if type(case_sensitive) is not bool:
             raise TypeError("case_sensitive must be a bool")
+        if canonical_id is None:
+            canonical_id = next(
+                (
+                    entry.canonical_id
+                    for entry in self.unit_entries
+                    if symbol in entry.symbols and entry.canonical_id is not None
+                ),
+                None,
+            )
         self._unit_overrides[symbol] = UnitEntry(
             (symbol,),
             expansion,
@@ -623,23 +648,55 @@ class AbbreviationExpander(ABC):
             description=description,
             canonical_symbol=symbol,
             requires_numeric_value=True,
+            canonical_id=canonical_id,
+            category=category,
         )
         self._suppressed_units.discard(symbol)
+        if canonical_id is not None:
+            self._suppressed_units.discard(canonical_id)
 
     def remove_unit(self, symbol: str) -> bool:
         """Suppress a bundled unit or remove an instance-local unit override."""
-        if symbol in self._unit_overrides:
-            del self._unit_overrides[symbol]
+        override_keys = [
+            key
+            for key, entry in self._unit_overrides.items()
+            if key == symbol or entry.canonical_id == symbol
+        ]
+        if override_keys:
+            for key in override_keys:
+                del self._unit_overrides[key]
             self._suppressed_units.add(symbol)
             return True
-        if symbol in self._unit_symbols and symbol not in self._suppressed_units:
+        if symbol in self._unit_symbols or any(
+            entry.canonical_id == symbol for entry in self.unit_entries
+        ):
             self._suppressed_units.add(symbol)
             return True
         return False
 
     def has_unit(self, symbol: str) -> bool:
-        return symbol in self._unit_overrides or (
-            symbol in self._unit_symbols and symbol not in self._suppressed_units
+        if symbol in self._unit_overrides:
+            return True
+        return any(
+            (symbol in entry.symbols or entry.canonical_id == symbol)
+            and symbol not in self._suppressed_units
+            and entry.canonical_id not in self._suppressed_units
+            for entry in self.unit_entries
+        )
+
+    def iter_unit_matches(
+        self,
+        text: str,
+        *,
+        protected_spans: Iterable[tuple[int, int]] = (),
+    ) -> Iterator[UnitMatch]:
+        """Yield structured matches using this expander's unit customization."""
+        return _iter_unit_matches(
+            text,
+            getattr(self, "UNIT_LANGUAGE", "en"),
+            overrides=self._unit_overrides,
+            suppressed=self._suppressed_units,
+            protected_spans=protected_spans,
         )
 
     def remove_abbreviation(self, abbreviation: str, case_sensitive: bool = False) -> bool:
@@ -765,7 +822,11 @@ class AbbreviationExpander(ABC):
         # Process all abbreviations against the original source. The resolver
         # preserves longest-first behavior while giving reviewed units priority.
         for entry in self.entries.values():
-            if entry.abbreviation in self._unit_symbols:
+            unit_entry = next(
+                (item for item in self.unit_entries if entry.abbreviation in item.symbols),
+                None,
+            )
+            if unit_entry is not None and unit_entry.category != "magnitude":
                 continue
             candidates.extend(
                 candidate

@@ -12,6 +12,7 @@ from .api import (
     expand,
     get_expander,
     get_shared_expander,
+    iter_unit_matches,
     normalize_language,
     reset_expanders,
     supported_languages,
@@ -26,6 +27,7 @@ from .core import (
     ProtectedSpan,
     abbreviation_guards_match,
 )
+from .units import UnitEntry, UnitMatch
 
 __all__ = [
     "AbbreviationContext",
@@ -36,6 +38,8 @@ __all__ = [
     "ExpansionResult",
     "ProtectedSpan",
     "TokenAnnotation",
+    "UnitEntry",
+    "UnitMatch",
     "abbreviation_guards_match",
     "Expander",
     "__version__",
@@ -44,6 +48,7 @@ __all__ = [
     "expand",
     "get_expander",
     "get_shared_expander",
+    "iter_unit_matches",
     "normalize_language",
     "reset_expanders",
     "supported_languages",

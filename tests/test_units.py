@@ -81,6 +81,9 @@ def test_every_reviewed_unit_requires_numeric_context(language: str) -> None:
     for entry in unit_entries(language):
         assert entry.requires_numeric_value
         for symbol in entry.symbols:
+            if entry.category == "magnitude":
+                assert abbr2words(symbol, lang=language) == entry.expansion
+                continue
             assert abbr2words(symbol, lang=language) == symbol
 
 

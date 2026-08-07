@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 from abbr2words import get_shared_expander, reset_expanders, supported_languages
-from abbr2words.units import unit_symbols
+from abbr2words.units import unit_entries, unit_symbols
 
 EXPECTED_DECLARATIONS = {
     "cs": 66,
@@ -114,6 +114,11 @@ def test_registry_metadata_counts_match_contract() -> None:
         symbols = unit_symbols(language)
         for entry in get_shared_expander(language).entries.values():
             if entry.abbreviation in symbols:
+                unit_entry = next(
+                    item for item in unit_entries(language) if entry.abbreviation in item.symbols
+                )
+                if unit_entry.category == "magnitude":
+                    continue
                 assert entry.case_sensitive
                 assert entry.only_if_preceded_by or entry.only_if_followed_by
 

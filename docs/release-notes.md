@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Added a public immutable structured quantity-match API with exact source spans,
+  numeric lexeme preservation, protected ranges, categories, and stable canonical IDs.
+- Added the German kokorog2p-compatible quantity inventory for electrical,
+  frequency, magnitude, count, litre, and EUR symbols with reviewed case policy.
+- Preserved lexical abbreviation compatibility while giving numeric magnitude
+  matches priority over standalone `Tsd.`, `Mio.`, and `Mrd.` entries.
+- Documented that quantity-symbol recognition is lexical and semantic; complete
+  number, grammar, and currency realization remains a downstream responsibility.
 - Added conservative Dutch, Polish, Russian, Swedish, and Turkish abbreviation
   and numeric-unit registries with ISO aliases.
 - Refactored localized unit data around canonical unit IDs and added flexible
