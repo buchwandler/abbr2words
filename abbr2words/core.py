@@ -538,7 +538,11 @@ class AbbreviationExpander(ABC):
             raise ValueError(
                 f"{entry.abbreviation!r} is a unit symbol; use set_unit() for unit customization"
             )
-        if unit_entry is not None and unit_entry.category != "magnitude":
+        if (
+            unit_entry is not None
+            and unit_entry.category != "magnitude"
+            and not unit_entry.allow_lexical_overlap
+        ):
             entry.case_sensitive = True
             entry.only_if_preceded_by = entry.only_if_preceded_by or NUMBER_BEFORE_UNIT
             # Rebuild the compiled fields if a legacy language registry supplied a
@@ -826,7 +830,11 @@ class AbbreviationExpander(ABC):
                 (item for item in self.unit_entries if entry.abbreviation in item.symbols),
                 None,
             )
-            if unit_entry is not None and unit_entry.category != "magnitude":
+            if (
+                unit_entry is not None
+                and unit_entry.category != "magnitude"
+                and not unit_entry.allow_lexical_overlap
+            ):
                 continue
             candidates.extend(
                 candidate

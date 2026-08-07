@@ -223,3 +223,9 @@ def test_unit_metadata_is_validated():
         UnitEntry(("kg",), "kilogram", canonical_symbol="g")
     with pytest.raises(TypeError, match="requires_numeric_value"):
         UnitEntry(("kg",), "kilogram", requires_numeric_value=1)
+    with pytest.raises(ValueError, match="quantity_position"):
+        UnitEntry(("€",), "euro", quantity_position="adjacent")
+    with pytest.raises(TypeError, match="allow_lexical_overlap"):
+        UnitEntry(("min.",), "minute", allow_lexical_overlap=1)
+    with pytest.raises(TypeError, match="preserve_sentence_final_period"):
+        UnitEntry(("min.",), "minute", preserve_sentence_final_period=1)

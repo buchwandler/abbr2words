@@ -32,7 +32,28 @@ CURRENT_UNIT_SPELLINGS = {
         "sec.",
     },
     "es": {"h", "min", "min.", "seg", "seg.", "km", "m", "cm", "mm", "kg", "g", "mg", "l", "ml"},
-    "fr": {"h", "min", "sec", "km", "m", "cm", "mm", "kg", "g", "mg", "l", "ml"},
+    "fr": {
+        "h",
+        "min",
+        "min.",
+        "sec",
+        "sec.",
+        "km",
+        "m",
+        "cm",
+        "mm",
+        "kg",
+        "g",
+        "mg",
+        "l",
+        "ml",
+        "€",
+        "EUR",
+        "$",
+        "USD",
+        "£",
+        "GBP",
+    },
     "it": {"h", "min", "min.", "sec", "sec.", "km", "m", "cm", "mm", "kg", "g", "mg", "l", "ml"},
     "pt": {"h", "min", "min.", "seg", "seg.", "km", "m", "cm", "mm", "kg", "g", "mg", "l", "ml"},
 }
@@ -81,6 +102,11 @@ def test_every_reviewed_unit_requires_numeric_context(language: str) -> None:
     for entry in unit_entries(language):
         assert entry.requires_numeric_value
         for symbol in entry.symbols:
+            if entry.allow_lexical_overlap:
+                assert language == "fr"
+                assert symbol == "min."
+                assert abbr2words(symbol, lang=language) == "minimum"
+                continue
             if entry.category == "magnitude":
                 assert abbr2words(symbol, lang=language) == entry.expansion
                 continue
@@ -97,9 +123,26 @@ def test_case_sensitive_near_misses_and_attached_words() -> None:
 
 def test_inventory_contains_expected_symbols() -> None:
     assert {"g", "m", "ml", "mL", "L", "km/h", "m/s", "°C"} <= unit_symbols("en")
+    assert {"€", "EUR", "$", "USD", "£", "GBP", "min.", "sec."} <= unit_symbols("fr")
 
 
 def test_all_legacy_unit_spellings_are_in_reviewed_inventory() -> None:
-    assert sum(len(spellings) for spellings in CURRENT_UNIT_SPELLINGS.values()) == 88
+    assert sum(len(spellings) for spellings in CURRENT_UNIT_SPELLINGS.values()) == 96
     for language, spellings in CURRENT_UNIT_SPELLINGS.items():
         assert spellings <= unit_symbols(language)
+
+
+@pytest.mark.parametrize(
+    ("source", "expected"),
+    [
+        ("Attendez 45 min.", "Attendez 45 minute."),
+        ("Attendez 45 min. puis partez.", "Attendez 45 minute puis partez."),
+        ("Attendez 45 Min.", "Attendez 45 Minute"),
+        ("Attendez 45 Min., puis partez.", "Attendez 45 Minute, puis partez."),
+    ],
+)
+def test_dotted_unit_rendering_preserves_only_sentence_final_punctuation(
+    source: str, expected: str
+) -> None:
+    language = "de" if "Min." in source else "fr"
+    assert abbr2words(source, lang=language) == expected

@@ -30,6 +30,9 @@ class UnitEntry:
     canonical_id: str | None = None
     reject_following_apostrophe: bool = False
     category: str = "unit"
+    quantity_position: str = "suffix"
+    allow_lexical_overlap: bool = False
+    preserve_sentence_final_period: bool = False
 
     def __post_init__(self) -> None:
         if not self.symbols or any(
@@ -52,6 +55,14 @@ class UnitEntry:
             raise TypeError("unit category must be a string")
         if not self.category:
             raise ValueError("unit category must not be empty")
+        if not isinstance(self.quantity_position, str):
+            raise TypeError("unit quantity_position must be a string")
+        if self.quantity_position not in {"prefix", "suffix", "both"}:
+            raise ValueError("unit quantity_position must be 'prefix', 'suffix', or 'both'")
+        if type(self.allow_lexical_overlap) is not bool:
+            raise TypeError("unit allow_lexical_overlap must be a bool")
+        if type(self.preserve_sentence_final_period) is not bool:
+            raise TypeError("unit preserve_sentence_final_period must be a bool")
 
 
 @dataclass(frozen=True, slots=True)
@@ -88,6 +99,9 @@ def _entry(
     case_sensitive: bool = True,
     category: str = "unit",
     canonical_symbol: str | None = None,
+    quantity_position: str = "suffix",
+    allow_lexical_overlap: bool = False,
+    preserve_sentence_final_period: bool = False,
 ) -> UnitEntry:
     if isinstance(symbols, str):
         symbols = (symbols,)
@@ -100,6 +114,9 @@ def _entry(
         canonical_id=canonical_id,
         reject_following_apostrophe=reject_following_apostrophe,
         category=category,
+        quantity_position=quantity_position,
+        allow_lexical_overlap=allow_lexical_overlap,
+        preserve_sentence_final_period=preserve_sentence_final_period,
     )
 
 
@@ -560,6 +577,54 @@ _LOCALIZED_ALIASES = {
     ),
 }
 
+_FRENCH_CURRENCY_ENTRIES = (
+    _entry(
+        ("€", "EUR"),
+        "euro",
+        "Currency",
+        canonical_id="currency-euro",
+        canonical_symbol="€",
+        category="currency",
+        quantity_position="both",
+    ),
+    _entry(
+        ("$", "USD"),
+        "US dollar",
+        "Currency",
+        canonical_id="currency-us-dollar",
+        canonical_symbol="$",
+        category="currency",
+        quantity_position="both",
+    ),
+    _entry(
+        ("£", "GBP"),
+        "pound sterling",
+        "Currency",
+        canonical_id="currency-pound-sterling",
+        canonical_symbol="£",
+        category="currency",
+        quantity_position="both",
+    ),
+)
+
+_FRENCH_DOTTED_DURATION_ENTRIES = (
+    _entry(
+        "min.",
+        "minute",
+        "Locale duration alias",
+        canonical_id="duration-minute",
+        allow_lexical_overlap=True,
+        preserve_sentence_final_period=True,
+    ),
+    _entry(
+        "sec.",
+        "seconde",
+        "Locale duration alias",
+        canonical_id="duration-second",
+        preserve_sentence_final_period=True,
+    ),
+)
+
 _GERMAN_REQUIRED_ENTRIES = (
     _entry("kWh", "Kilowattstunde", "Energy", canonical_id="energy-kilowatt-hour"),
     _entry("Wh", "Wattstunde", "Energy", canonical_id="energy-watt-hour"),
@@ -788,6 +853,7 @@ for _lang, _names in _LOCALIZED_EXTENDED_UNIT_NAMES.items():
     )
 
 UNIT_ENTRIES["de"] += _GERMAN_REQUIRED_ENTRIES
+UNIT_ENTRIES["fr"] += _FRENCH_CURRENCY_ENTRIES + _FRENCH_DOTTED_DURATION_ENTRIES
 
 UNIT_ENTRIES["tr"] = tuple(
     replace(entry, reject_following_apostrophe=True) for entry in UNIT_ENTRIES["tr"]
@@ -836,6 +902,8 @@ _ATOM = r"[+\-−]?(?:(?:\d{1,3}(?:[ \u00a0\u202f]\d{3})+|\d+)(?:[.,]\d+)?|\.\d+
 _VALUE = rf"(?:{_ATOM}(?:[–—-]{_ATOM})?|{_ATOM}{_HSPACE}*/{_HSPACE}*{_ATOM}(?:{_HSPACE}*[×x]{_HSPACE}*{_ATOM})*|{_ATOM}(?:{_HSPACE}*[×x]{_HSPACE}*{_ATOM})+)"
 _VALUE_PATTERN = re.compile(rf"(?<![\w./])(?P<value>{_VALUE})(?P<spacing>[{_HSPACE}]*)")
 _CONTINUATION = re.compile(rf"[{_HSPACE}]*([/^·⋅*×^])")
+_PREFIX_BOUNDARY = r"(?<![\w./])"
+_CLOSING_SENTENCE_CHARS = frozenset("\"'»”’)]}》」』")
 
 
 def _unit_text_matches(text: str, offset: int, symbol: str, case_sensitive: bool) -> bool:
@@ -857,6 +925,53 @@ def _unit_continuation_is_unsupported(text: str, end: int) -> bool:
     if continuation.startswith(".") and len(continuation) > 1 and continuation[1].isalnum():
         return True
     return False
+
+
+def _unit_match(
+    *,
+    start: int,
+    end: int,
+    value_start: int,
+    value_end: int,
+    value: str,
+    symbol: str,
+    entry: UnitEntry,
+    canonical_symbol: str,
+    language: str,
+) -> UnitMatch:
+    return UnitMatch(
+        start=start,
+        end=end,
+        value_start=value_start,
+        value_end=value_end,
+        value=value,
+        symbol=symbol,
+        canonical_id=entry.canonical_id,
+        canonical_symbol=canonical_symbol,
+        expansion=entry.expansion,
+        language=language,
+        category=entry.category,
+    )
+
+
+def _unit_replacement_text(
+    text: str, unit_match: UnitMatch, *, preserve_sentence_final_period: bool
+) -> str:
+    """Render a lexical unit expansion without inventing sentence punctuation."""
+    replacement = f"{unit_match.value} {unit_match.expansion}"
+    if (
+        not preserve_sentence_final_period
+        or unit_match.category != "unit"
+        or not unit_match.symbol.endswith(".")
+    ):
+        return replacement
+
+    suffix = text[unit_match.end :].lstrip(_HSPACE)
+    while suffix and suffix[0] in _CLOSING_SENTENCE_CHARS:
+        suffix = suffix[1:].lstrip(_HSPACE)
+    if not suffix:
+        return f"{replacement}."
+    return replacement
 
 
 def _unit_inventory(
@@ -935,11 +1050,14 @@ def iter_unit_matches(
         raise TypeError("text must be a string")
     inventory = _unit_inventory(language, overrides, suppressed)
     protected = _normalize_protected_spans(text, protected_spans)
+    matches: list[UnitMatch] = []
     for value_match in _VALUE_PATTERN.finditer(text):
         value = value_match.group("value")
         unit_start = value_match.end()
         candidates: list[tuple[str, UnitEntry]] = []
         for symbol, entry in inventory:
+            if entry.quantity_position not in {"suffix", "both"}:
+                continue
             if not entry.requires_numeric_value:
                 continue
             if _unit_text_matches(text, unit_start, symbol, entry.case_sensitive):
@@ -957,19 +1075,57 @@ def iter_unit_matches(
         start = value_match.start()
         if _overlaps_protected(start, end, protected):
             continue
-        yield UnitMatch(
-            start=start,
-            end=end,
-            value_start=value_match.start("value"),
-            value_end=value_match.end("value"),
-            value=value,
-            symbol=text[unit_start:end],
-            canonical_id=entry.canonical_id,
-            canonical_symbol=_canonical_symbol(entry, symbol),
-            expansion=entry.expansion,
-            language=language,
-            category=entry.category,
+        matches.append(
+            _unit_match(
+                start=start,
+                end=end,
+                value_start=value_match.start("value"),
+                value_end=value_match.end("value"),
+                value=value,
+                symbol=text[unit_start:end],
+                entry=entry,
+                canonical_symbol=_canonical_symbol(entry, symbol),
+                language=language,
+            )
         )
+
+    for symbol, entry in inventory:
+        if entry.quantity_position not in {"prefix", "both"} or not entry.requires_numeric_value:
+            continue
+        pattern = re.compile(
+            rf"{_PREFIX_BOUNDARY}(?P<symbol>{re.escape(symbol)})(?P<spacing>[{_HSPACE}]*)"
+            rf"(?P<value>{_VALUE})(?![\w_])",
+            0 if entry.case_sensitive else re.IGNORECASE,
+        )
+        for value_match in pattern.finditer(text):
+            start = value_match.start("symbol")
+            end = value_match.end("value")
+            if _unit_continuation_is_unsupported(text, end):
+                continue
+            if entry.reject_following_apostrophe and text[end : end + 1] in {"'", "’"}:
+                continue
+            if _overlaps_protected(start, end, protected):
+                continue
+            matches.append(
+                _unit_match(
+                    start=start,
+                    end=end,
+                    value_start=value_match.start("value"),
+                    value_end=value_match.end("value"),
+                    value=value_match.group("value"),
+                    symbol=value_match.group("symbol"),
+                    entry=entry,
+                    canonical_symbol=_canonical_symbol(entry, symbol),
+                    language=language,
+                )
+            )
+
+    selected: list[UnitMatch] = []
+    for match in sorted(matches, key=lambda item: (item.start, -(item.end - item.start))):
+        if selected and selected[-1].end > match.start:
+            continue
+        selected.append(match)
+    yield from selected
 
 
 def iter_unit_replacements(
@@ -988,10 +1144,24 @@ def iter_unit_replacements(
     for unit_match in iter_unit_matches(text, language, overrides=overrides, suppressed=suppressed):
         if unit_match.category == "currency":
             continue
+        preserve_sentence_final_period = any(
+            entry.preserve_sentence_final_period
+            and entry.canonical_id == unit_match.canonical_id
+            and any(
+                len(symbol) == len(unit_match.symbol)
+                and _unit_text_matches(unit_match.symbol, 0, symbol, entry.case_sensitive)
+                for symbol in entry.symbols
+            )
+            for _symbol, entry in inventory
+        )
         yield Replacement(
             start=unit_match.start,
             end=unit_match.end,
-            text=f"{unit_match.value} {unit_match.expansion}",
+            text=_unit_replacement_text(
+                text,
+                unit_match,
+                preserve_sentence_final_period=preserve_sentence_final_period,
+            ),
             priority=300,
             source=f"unit:{language}:{unit_match.symbol}",
             kind="unit",

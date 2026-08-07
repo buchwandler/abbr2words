@@ -23,6 +23,8 @@ def test_every_registry_unit_entry_has_numeric_guard() -> None:
                 )
                 if unit_entry.category == "magnitude":
                     continue
+                if unit_entry.allow_lexical_overlap:
+                    continue
                 assert entry.only_if_preceded_by or entry.only_if_followed_by
 
 

@@ -11,6 +11,15 @@ Swedish (`sv`), and Turkish (`tr`). Locale inputs continue to resolve to the
 base registry. The inventories cover common abbreviations and the existing
 duration, length, area, volume, mass, temperature, and speed unit subset.
 
+French additionally exposes reviewed structured currency identities for
+`€`/`EUR`, `$`/`USD`, and `£`/`GBP`, plus dotted numeric duration aliases
+`min.` and `sec.`. These are recognition metadata only: the API preserves
+source spans and numeric lexemes but does not perform currency arithmetic,
+French plural/agreement selection, or number-to-word realization. A standalone
+French `min.` remains the lexical abbreviation for `minimum`; numeric context
+selects the structured `duration-minute` identity. Downstream consumers such
+as `spokenform` own semantic grammar and speech realization.
+
 Unit expansions are canonical lemmas. They intentionally do not realize plural,
 case, numeral government, gender, vowel harmony, or apostrophe-attached suffixes.
 Turkish unit symbols followed by `'` or `’` remain unchanged under the restricted

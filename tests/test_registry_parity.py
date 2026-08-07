@@ -119,6 +119,8 @@ def test_registry_metadata_counts_match_contract() -> None:
                 )
                 if unit_entry.category == "magnitude":
                     continue
+                if unit_entry.allow_lexical_overlap:
+                    continue
                 assert entry.case_sensitive
                 assert entry.only_if_preceded_by or entry.only_if_followed_by
 

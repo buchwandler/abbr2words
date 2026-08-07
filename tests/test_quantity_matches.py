@@ -74,6 +74,75 @@ def test_required_german_inventory_and_case_variants(
     assert match.category == category
 
 
+@pytest.mark.parametrize(
+    ("source", "value", "symbol", "canonical_id"),
+    [
+        ("5€", "5", "€", "currency-euro"),
+        ("5 €", "5", "€", "currency-euro"),
+        ("€5", "5", "€", "currency-euro"),
+        ("€ 5", "5", "€", "currency-euro"),
+        ("12,80 EUR", "12,80", "EUR", "currency-euro"),
+        ("$5", "5", "$", "currency-us-dollar"),
+        ("USD 5", "5", "USD", "currency-us-dollar"),
+        ("5 USD", "5", "USD", "currency-us-dollar"),
+        ("£1", "1", "£", "currency-pound-sterling"),
+        ("2 GBP", "2", "GBP", "currency-pound-sterling"),
+    ],
+)
+def test_french_currency_matches_preserve_source_identity(
+    source: str, value: str, symbol: str, canonical_id: str
+) -> None:
+    match = only_match(source, "fr")
+    assert source[match.start : match.end] == source
+    assert source[match.value_start : match.value_end] == value
+    assert match.value == value
+    assert match.symbol == symbol
+    assert match.canonical_id == canonical_id
+    assert (
+        match.canonical_symbol == symbol
+        if symbol in {"€", "$", "£"}
+        else match.canonical_symbol in {"€", "$", "£"}
+    )
+    assert match.language == "fr"
+    assert match.category == "currency"
+    assert abbr2words(source, lang="fr") == source
+
+
+@pytest.mark.parametrize(
+    ("source", "value", "symbol", "canonical_id"),
+    [
+        ("45 min.", "45", "min.", "duration-minute"),
+        ("30 sec.", "30", "sec.", "duration-second"),
+        ("45 min. puis", "45", "min.", "duration-minute"),
+        ("30 sec. avant", "30", "sec.", "duration-second"),
+    ],
+)
+def test_french_dotted_duration_matches_include_complete_symbol(
+    source: str, value: str, symbol: str, canonical_id: str
+) -> None:
+    match = only_match(source, "fr")
+    assert source[match.start : match.end] == f"{value} {symbol}"
+    assert source[match.value_start : match.value_end] == value
+    assert match.value == value
+    assert match.symbol == symbol
+    assert match.canonical_id == canonical_id
+    assert match.language == "fr"
+    assert match.category == "unit"
+
+
+def test_french_numeric_and_lexical_minimum_cases_remain_distinct() -> None:
+    assert list(iter_unit_matches("min. requis", "fr")) == []
+    assert abbr2words("min. requis", lang="fr") == "minimum requis"
+    assert [match.canonical_id for match in iter_unit_matches("45 min. requis", "fr")] == [
+        "duration-minute"
+    ]
+
+
+@pytest.mark.parametrize("source", ["admin. requis", "45 minuted", "45 min.-rated", "45 secx"])
+def test_french_dotted_duration_boundaries_fail_closed(source: str) -> None:
+    assert list(iter_unit_matches(source, "fr")) == []
+
+
 def test_case_sensitive_milliampere_does_not_accept_lowercase_ma() -> None:
     assert list(iter_unit_matches("2 ma", "de")) == []
     assert only_match("2 mA").symbol == "mA"

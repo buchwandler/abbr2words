@@ -30,6 +30,20 @@ lexical entries are case-sensitive. Unit output is a canonical singular lemma;
 the stable API does not realize plural, case, numeral-government, or suffix
 morphology.
 
+French structured quantities also recognize the reviewed currency identities
+`€`/`EUR`, `$`/`USD`, and `£`/`GBP` in either numeric-prefix or numeric-suffix
+position. These matches preserve the written numeric lexeme, source offsets,
+written symbol, language, category, and stable canonical ID; they do not speak
+the amount or choose French `euro`/`euros`, `centime`/`centimes`, or other
+currency grammar. Downstream consumers such as `spokenform` own that semantic
+realization.
+
+French dotted duration forms `min.` and `sec.` are context-sensitive structured
+quantity aliases. A numeric match consumes the complete dotted symbol, while
+standalone lexical `min.` continues to expand as `minimum`; numeric context is
+what selects the duration identity. Sentence punctuation is rendered by the
+generic abbreviation layer, and French number grammar remains downstream.
+
 German quantity symbols include the reviewed electrical and frequency forms
 `kWh`, `Wh`, `mAh`, `mA`, `GHz`, `MHz`, `kHz`, `Hz`, `W`, and `V`, plus `Stck.`,
 `ltr.`, `Tsd.`, `Mio.`, `Mrd.`, and `EUR`. Case-sensitive metadata is preserved:
