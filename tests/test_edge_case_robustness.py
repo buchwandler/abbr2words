@@ -25,7 +25,9 @@ from abbr2words.units import UnitEntry, validate_unit_registry
         ("it", "n° 5", "numero 5"),
     ],
 )
-def test_punctuation_ending_builtins_use_symmetric_boundaries(lang: str, source: str, expected: str):
+def test_punctuation_ending_builtins_use_symmetric_boundaries(
+    lang: str, source: str, expected: str
+):
     assert abbr2words(source, lang=lang) == expected
 
 
@@ -182,7 +184,10 @@ def test_registry_invariants_and_casing_audit():
     for language in supported_languages():
         validate_unit_registry(language)
         for entry in get_expander(language).entries.values():
-            if entry.abbreviation.isupper() and sum(char.isalpha() for char in entry.abbreviation) >= 2:
+            if (
+                entry.abbreviation.isupper()
+                and sum(char.isalpha() for char in entry.abbreviation) >= 2
+            ):
                 assert entry.case_sensitive or "." in entry.abbreviation
 
 

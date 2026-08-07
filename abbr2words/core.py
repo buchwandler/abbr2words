@@ -219,8 +219,7 @@ class AbbreviationEntry:
         self.only_if_pos = _normalize_pos_constraints(self.only_if_pos)
         self.not_if_pos = _normalize_pos_constraints(self.not_if_pos)
         self._patterns = tuple(
-            _entry_pattern(self, spelling)
-            for spelling in (self.abbreviation, *self.aliases)
+            _entry_pattern(self, spelling) for spelling in (self.abbreviation, *self.aliases)
         )
         self._pattern = self._patterns[0]
         self._preceding_pattern = _compile_guard(self.only_if_preceded_by, "only_if_preceded_by")
@@ -788,15 +787,11 @@ class AbbreviationExpander(ABC):
                     kind=item.kind,
                     language=language,
                     abbreviation=(
-                        item.source.removeprefix("abbr:")
-                        if item.kind == "abbreviation"
-                        else None
+                        item.source.removeprefix("abbr:") if item.kind == "abbreviation" else None
                     ),
                     rule=item.entry_id or item.source,
                     priority=item.priority,
-                    context=item.context
-                    if isinstance(item.context, AbbreviationContext)
-                    else None,
+                    context=item.context if isinstance(item.context, AbbreviationContext) else None,
                 )
                 for item in selected
             ),

@@ -994,9 +994,7 @@
       "key": "d.h.",
       "abbreviation": "d.h.",
       "expansion": "das heißt",
-      "aliases": [
-        "d. h."
-      ],
+      "aliases": ["d. h."],
       "context_expansions": null,
       "case_sensitive": false,
       "description": "That is",
@@ -1263,9 +1261,7 @@
       "key": "lfd. nr.",
       "abbreviation": "Lfd. Nr.",
       "expansion": "laufende Nummer",
-      "aliases": [
-        "Lfd.Nr."
-      ],
+      "aliases": ["Lfd.Nr."],
       "context_expansions": null,
       "case_sensitive": false,
       "description": "Consecutive number, including compact spelling",
@@ -1505,9 +1501,7 @@
       "key": "u.a.",
       "abbreviation": "u.a.",
       "expansion": "unter anderem",
-      "aliases": [
-        "u. a."
-      ],
+      "aliases": ["u. a."],
       "context_expansions": null,
       "case_sensitive": false,
       "description": "Among other things",
@@ -1531,11 +1525,7 @@
       "key": "z.b.",
       "abbreviation": "z.B.",
       "expansion": "zum Beispiel",
-      "aliases": [
-        "z. B.",
-        "z . b .",
-        "zB"
-      ],
+      "aliases": ["z. B.", "z . b .", "zB"],
       "context_expansions": null,
       "case_sensitive": false,
       "description": "For example",
