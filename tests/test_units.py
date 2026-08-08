@@ -97,7 +97,30 @@ CURRENT_UNIT_SPELLINGS = {
         "£",
         "GBP",
     },
-    "pt": {"h", "min", "min.", "seg", "seg.", "km", "m", "cm", "mm", "kg", "g", "mg", "l", "ml"},
+    "pt": {
+        "h",
+        "min",
+        "min.",
+        "seg",
+        "seg.",
+        "km",
+        "m",
+        "cm",
+        "mm",
+        "kg",
+        "g",
+        "mg",
+        "l",
+        "ml",
+        "€",
+        "EUR",
+        "$",
+        "USD",
+        "£",
+        "GBP",
+        "R$",
+        "BRL",
+    },
 }
 
 
@@ -185,8 +208,44 @@ def test_italian_currency_registry_uses_reviewed_lemmas() -> None:
     assert all(entry.quantity_position == "both" for entry in entries.values())
 
 
+def test_portuguese_currency_registry_uses_reviewed_lemmas_and_metadata() -> None:
+    entries = {
+        entry.canonical_id: entry for entry in unit_entries("pt") if entry.category == "currency"
+    }
+    assert {
+        canonical_id: (
+            entry.symbols,
+            entry.expansion,
+            entry.canonical_symbol,
+            entry.category,
+            entry.quantity_position,
+            entry.requires_numeric_value,
+        )
+        for canonical_id, entry in entries.items()
+    } == {
+        "currency-euro": (("€", "EUR"), "euro", "€", "currency", "both", True),
+        "currency-us-dollar": (
+            ("$", "USD"),
+            "dólar americano",
+            "$",
+            "currency",
+            "both",
+            True,
+        ),
+        "currency-pound-sterling": (
+            ("£", "GBP"),
+            "libra esterlina",
+            "£",
+            "currency",
+            "both",
+            True,
+        ),
+        "currency-brazilian-real": (("R$", "BRL"), "real", "R$", "currency", "both", True),
+    }
+
+
 def test_all_legacy_unit_spellings_are_in_reviewed_inventory() -> None:
-    assert sum(len(spellings) for spellings in CURRENT_UNIT_SPELLINGS.values()) == 108
+    assert sum(len(spellings) for spellings in CURRENT_UNIT_SPELLINGS.values()) == 116
     for language, spellings in CURRENT_UNIT_SPELLINGS.items():
         assert spellings <= unit_symbols(language)
 

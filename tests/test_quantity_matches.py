@@ -252,6 +252,79 @@ def test_spanish_currency_protected_spans_are_source_relative() -> None:
 
 
 @pytest.mark.parametrize(
+    ("source", "value", "symbol", "canonical_id", "canonical_symbol"),
+    [
+        ("12,80 EUR", "12,80", "EUR", "currency-euro", "€"),
+        ("EUR 12,80", "12,80", "EUR", "currency-euro", "€"),
+        ("12,80 €", "12,80", "€", "currency-euro", "€"),
+        ("€12,80", "12,80", "€", "currency-euro", "€"),
+        ("10 USD", "10", "USD", "currency-us-dollar", "$"),
+        ("USD 10", "10", "USD", "currency-us-dollar", "$"),
+        ("10 $", "10", "$", "currency-us-dollar", "$"),
+        ("$10", "10", "$", "currency-us-dollar", "$"),
+        ("5 GBP", "5", "GBP", "currency-pound-sterling", "£"),
+        ("GBP 5", "5", "GBP", "currency-pound-sterling", "£"),
+        ("5 £", "5", "£", "currency-pound-sterling", "£"),
+        ("£5", "5", "£", "currency-pound-sterling", "£"),
+        ("12,80 BRL", "12,80", "BRL", "currency-brazilian-real", "R$"),
+        ("BRL 12,80", "12,80", "BRL", "currency-brazilian-real", "R$"),
+        ("R$12,80", "12,80", "R$", "currency-brazilian-real", "R$"),
+        ("12,80 R$", "12,80", "R$", "currency-brazilian-real", "R$"),
+    ],
+)
+def test_portuguese_currency_matches_preserve_identity_and_offsets(
+    source: str,
+    value: str,
+    symbol: str,
+    canonical_id: str,
+    canonical_symbol: str,
+) -> None:
+    match = only_match(source, "pt")
+    assert match.start == 0
+    assert match.end == len(source)
+    assert source[match.start : match.end] == source
+    assert source[match.value_start : match.value_end] == value
+    assert match.value == value
+    assert match.symbol == symbol
+    assert match.canonical_id == canonical_id
+    assert match.canonical_symbol == canonical_symbol
+    assert match.category == "currency"
+    assert match.language == "pt"
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        "EUR",
+        "BRL",
+        "priceEUR",
+        "priceBRL",
+        "EURprice",
+        "BRLprice",
+        "A12EURB",
+        "A12BRLB",
+        "https://example.com/12,80EUR",
+        "https://example.com/12,80BRL",
+        "12 EUR/USD",
+    ],
+)
+def test_portuguese_currency_matching_rejects_standalone_and_compound_material(
+    source: str,
+) -> None:
+    assert list(iter_unit_matches(source, "pt")) == []
+
+
+def test_portuguese_currency_protected_spans_suppress_only_protected_quantity() -> None:
+    source = "12,80 EUR e R$12,80"
+    protected_end = len("12,80 EUR")
+    matches = list(iter_unit_matches(source, "pt", protected_spans=[(0, protected_end)]))
+    assert [source[item.start : item.end] for item in matches] == ["R$12,80"]
+    assert matches[0].start == source.index("R$12,80")
+    assert matches[0].value == "12,80"
+    assert matches[0].canonical_id == "currency-brazilian-real"
+
+
+@pytest.mark.parametrize(
     ("source", "value", "symbol", "canonical_id"),
     [
         ("45 min.", "45", "min.", "duration-minute"),

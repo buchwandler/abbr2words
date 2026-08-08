@@ -665,6 +665,44 @@ _STRUCTURED_CURRENCY_ENTRIES = {
             quantity_position="both",
         ),
     ),
+    "pt": (
+        _entry(
+            ("€", "EUR"),
+            "euro",
+            "Currency",
+            canonical_id="currency-euro",
+            canonical_symbol="€",
+            category="currency",
+            quantity_position="both",
+        ),
+        _entry(
+            ("$", "USD"),
+            "dólar americano",
+            "Currency",
+            canonical_id="currency-us-dollar",
+            canonical_symbol="$",
+            category="currency",
+            quantity_position="both",
+        ),
+        _entry(
+            ("£", "GBP"),
+            "libra esterlina",
+            "Currency",
+            canonical_id="currency-pound-sterling",
+            canonical_symbol="£",
+            category="currency",
+            quantity_position="both",
+        ),
+        _entry(
+            ("R$", "BRL"),
+            "real",
+            "Currency",
+            canonical_id="currency-brazilian-real",
+            canonical_symbol="R$",
+            category="currency",
+            quantity_position="both",
+        ),
+    ),
 }
 
 _FRENCH_DOTTED_DURATION_ENTRIES = (
