@@ -46,9 +46,7 @@ def test_spanish_structured_currency_matches_preserve_identity_and_offsets(
 
 def test_spanish_currency_registry_uses_reviewed_lemmas() -> None:
     entries = {
-        entry.canonical_id: entry
-        for entry in unit_entries("es")
-        if entry.category == "currency"
+        entry.canonical_id: entry for entry in unit_entries("es") if entry.category == "currency"
     }
     assert {
         canonical_id: (entry.symbols, entry.expansion, entry.canonical_symbol)
@@ -86,9 +84,10 @@ def test_spanish_lexical_collision_and_numeric_duration_policy_are_preserved() -
     entry = get_shared_expander("es").get_abbreviation("mar.", case_sensitive=True)
     assert entry.expansion == "marzo"
     assert abbr2words("mar.", lang="es") == "marzo"
-    assert [(match.value, match.symbol, match.canonical_id) for match in iter_unit_matches(
-        "5 min. y 5 seg.", "es"
-    )] == [
+    assert [
+        (match.value, match.symbol, match.canonical_id)
+        for match in iter_unit_matches("5 min. y 5 seg.", "es")
+    ] == [
         ("5", "min.", "duration-minute"),
         ("5", "seg.", "duration-second"),
     ]

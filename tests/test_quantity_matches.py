@@ -165,6 +165,80 @@ def test_spanish_currency_false_positive_boundaries(source: str) -> None:
     assert list(iter_unit_matches(source, "es")) == []
 
 
+@pytest.mark.parametrize(
+    ("source", "value", "symbol", "canonical_id", "canonical_symbol"),
+    [
+        ("12,80 EUR", "12,80", "EUR", "currency-euro", "€"),
+        ("12,80 €", "12,80", "€", "currency-euro", "€"),
+        ("€12,80", "12,80", "€", "currency-euro", "€"),
+        ("10 USD", "10", "USD", "currency-us-dollar", "$"),
+        ("$10", "10", "$", "currency-us-dollar", "$"),
+        ("5 GBP", "5", "GBP", "currency-pound-sterling", "£"),
+        ("£5", "5", "£", "currency-pound-sterling", "£"),
+    ],
+)
+def test_italian_structured_currency_matches_preserve_identity_and_offsets(
+    source: str,
+    value: str,
+    symbol: str,
+    canonical_id: str,
+    canonical_symbol: str,
+) -> None:
+    matches = list(iter_unit_matches(source, "it_IT"))
+    assert len(matches) == 1
+    match = matches[0]
+    assert source[match.start : match.end] == source
+    assert source[match.value_start : match.value_end] == value
+    assert match.value == value
+    assert match.symbol == symbol
+    assert match.canonical_id == canonical_id
+    assert match.canonical_symbol == canonical_symbol
+    assert match.category == "currency"
+    assert match.language == "it"
+    assert abbr2words(source, lang="it") == source
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        "Costa 12,80 EUR.",
+        "Costa €12,80.",
+    ],
+)
+def test_italian_currency_sentence_punctuation_is_outside_match(source: str) -> None:
+    match = only_match(source, "it")
+    assert source[match.start : match.end] == source[match.start : -1]
+    assert source[match.end :] == "."
+
+
+def test_italian_currency_protected_spans_suppress_only_protected_quantity() -> None:
+    source = "12,80 EUR e 5 EUR"
+    protected_end = len("12,80 EUR")
+    matches = list(iter_unit_matches(source, "it", protected_spans=[(0, protected_end)]))
+    assert [source[item.start : item.end] for item in matches] == ["5 EUR"]
+    assert matches[0].start == source.index("5 EUR")
+    assert matches[0].value == "5"
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        "EUR",
+        "€",
+        "$",
+        "£",
+        "priceEUR",
+        "A12EURB",
+        "12,80 EURfoo",
+        "name@example.com",
+        "https://example.com/12,80EUR",
+        "12 EUR/USD",
+    ],
+)
+def test_italian_currency_matching_rejects_lexical_and_compound_material(source: str) -> None:
+    assert list(iter_unit_matches(source, "it")) == []
+
+
 def test_spanish_currency_protected_spans_are_source_relative() -> None:
     source = "prefix 12,80 EUR and €5"
     protected_start = source.index("12,80 EUR")

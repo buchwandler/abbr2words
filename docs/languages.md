@@ -30,13 +30,12 @@ lexical entries are case-sensitive. Unit output is a canonical singular lemma;
 the stable API does not realize plural, case, numeral-government, or suffix
 morphology.
 
-French structured quantities also recognize the reviewed currency identities
-`€`/`EUR`, `$`/`USD`, and `£`/`GBP` in either numeric-prefix or numeric-suffix
-position. These matches preserve the written numeric lexeme, source offsets,
-written symbol, language, category, and stable canonical ID; they do not speak
-the amount or choose French `euro`/`euros`, `centime`/`centimes`, or other
-currency grammar. Downstream consumers such as `spokenform` own that semantic
-realization.
+French, Italian, and Spanish structured quantities also recognize the reviewed
+currency identities `€`/`EUR`, `$`/`USD`, and `£`/`GBP` in either numeric-prefix
+or numeric-suffix position. These matches preserve the written numeric lexeme,
+source offsets, written symbol, language, category, and stable canonical ID;
+they do not speak the amount or choose locale-specific currency grammar.
+Downstream consumers such as `spokenform` own that semantic realization.
 
 French dotted duration forms `min.` and `sec.` are context-sensitive structured
 quantity aliases. A numeric match consumes the complete dotted symbol, while

@@ -110,7 +110,7 @@ currency major/minor decomposition, and locale-specific spoken decimal policy
 belong to the consuming speech normalizer.
 
 Structured currency identities are available in the reviewed quantity registry
-for French and Spanish. Spanish recognizes `€`/`EUR` as `currency-euro`,
+for French, Italian, and Spanish. Italian recognizes `€`/`EUR` as `currency-euro`,
 `$`/`USD` as `currency-us-dollar`, and `£`/`GBP` as
 `currency-pound-sterling` when a numeric value is adjacent in either prefix or
 suffix position:
@@ -118,7 +118,7 @@ suffix position:
 ```python
 from abbr2words import iter_unit_matches
 
-match = next(iter_unit_matches("12,80 EUR", "es"))
+match = next(iter_unit_matches("12,80 EUR", "it"))
 match.value           # "12,80"
 match.canonical_id    # "currency-euro"
 match.canonical_symbol  # "€"

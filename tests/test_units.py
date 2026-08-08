@@ -75,7 +75,28 @@ CURRENT_UNIT_SPELLINGS = {
         "£",
         "GBP",
     },
-    "it": {"h", "min", "min.", "sec", "sec.", "km", "m", "cm", "mm", "kg", "g", "mg", "l", "ml"},
+    "it": {
+        "h",
+        "min",
+        "min.",
+        "sec",
+        "sec.",
+        "km",
+        "m",
+        "cm",
+        "mm",
+        "kg",
+        "g",
+        "mg",
+        "l",
+        "ml",
+        "€",
+        "EUR",
+        "$",
+        "USD",
+        "£",
+        "GBP",
+    },
     "pt": {"h", "min", "min.", "seg", "seg.", "km", "m", "cm", "mm", "kg", "g", "mg", "l", "ml"},
 }
 
@@ -146,10 +167,26 @@ def test_inventory_contains_expected_symbols() -> None:
     assert {"g", "m", "ml", "mL", "L", "km/h", "m/s", "°C"} <= unit_symbols("en")
     assert {"€", "EUR", "$", "USD", "£", "GBP"} <= unit_symbols("es")
     assert {"€", "EUR", "$", "USD", "£", "GBP", "min.", "sec."} <= unit_symbols("fr")
+    assert {"€", "EUR", "$", "USD", "£", "GBP"} <= unit_symbols("it")
+
+
+def test_italian_currency_registry_uses_reviewed_lemmas() -> None:
+    entries = {
+        entry.canonical_id: entry for entry in unit_entries("it") if entry.category == "currency"
+    }
+    assert {
+        canonical_id: (entry.symbols, entry.expansion, entry.canonical_symbol)
+        for canonical_id, entry in entries.items()
+    } == {
+        "currency-euro": (("€", "EUR"), "euro", "€"),
+        "currency-us-dollar": (("$", "USD"), "dollaro statunitense", "$"),
+        "currency-pound-sterling": (("£", "GBP"), "sterlina britannica", "£"),
+    }
+    assert all(entry.quantity_position == "both" for entry in entries.values())
 
 
 def test_all_legacy_unit_spellings_are_in_reviewed_inventory() -> None:
-    assert sum(len(spellings) for spellings in CURRENT_UNIT_SPELLINGS.values()) == 102
+    assert sum(len(spellings) for spellings in CURRENT_UNIT_SPELLINGS.values()) == 108
     for language, spellings in CURRENT_UNIT_SPELLINGS.items():
         assert spellings <= unit_symbols(language)
 
