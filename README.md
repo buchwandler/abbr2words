@@ -110,9 +110,10 @@ currency major/minor decomposition, and locale-specific spoken decimal policy
 belong to the consuming speech normalizer.
 
 Structured currency identities are available in the reviewed quantity registry
-for Czech, French, Italian, and Spanish. Czech recognizes `Kč`/`CZK` as
-`currency-czech-koruna`, and reuses the shared `currency-euro`,
+for Czech, English, French, Italian, and Spanish. Czech recognizes `Kč`/`CZK` as
+`currency-czech-koruna`; English recognizes the shared `currency-euro`,
 `currency-us-dollar`, and `currency-pound-sterling` identities for EUR/USD/GBP.
+The other listed languages also reuse the shared EUR/USD/GBP identities.
 These identities are recognized when a numeric value is adjacent in either
 prefix or suffix position:
 

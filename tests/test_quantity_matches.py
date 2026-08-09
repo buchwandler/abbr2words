@@ -75,6 +75,115 @@ def test_required_german_inventory_and_case_variants(
 
 
 @pytest.mark.parametrize(
+    ("source", "value", "symbol", "canonical_id", "canonical_symbol"),
+    [
+        ("$12.50", "12.50", "$", "currency-us-dollar", "$"),
+        ("$ 12.50", "12.50", "$", "currency-us-dollar", "$"),
+        ("12.50$", "12.50", "$", "currency-us-dollar", "$"),
+        ("12.50 $", "12.50", "$", "currency-us-dollar", "$"),
+        ("USD 12.50", "12.50", "USD", "currency-us-dollar", "$"),
+        ("12.50 USD", "12.50", "USD", "currency-us-dollar", "$"),
+        ("£1.01", "1.01", "£", "currency-pound-sterling", "£"),
+        ("GBP 1.01", "1.01", "GBP", "currency-pound-sterling", "£"),
+        ("1.01 GBP", "1.01", "GBP", "currency-pound-sterling", "£"),
+        ("€2", "2", "€", "currency-euro", "€"),
+        ("EUR 2", "2", "EUR", "currency-euro", "€"),
+        ("2 EUR", "2", "EUR", "currency-euro", "€"),
+    ],
+)
+def test_english_currency_matches_preserve_identity_and_offsets(
+    source: str,
+    value: str,
+    symbol: str,
+    canonical_id: str,
+    canonical_symbol: str,
+) -> None:
+    match = only_match(source, "en")
+    assert match.start == 0
+    assert match.end == len(source)
+    assert match.value_start == source.index(value)
+    assert match.value_end == match.value_start + len(value)
+    assert source[match.start : match.end] == source
+    assert source[match.value_start : match.value_end] == value
+    assert match.value == value
+    assert match.symbol == symbol
+    assert match.canonical_id == canonical_id
+    assert match.canonical_symbol == canonical_symbol
+    assert match.category == "currency"
+    assert match.language == "en"
+    assert abbr2words(source, lang="en") == source
+
+
+def test_english_currency_alias_normalizes_language() -> None:
+    match = only_match("USD 12.50", "en-gb")
+    assert match.language == "en"
+    assert match.canonical_id == "currency-us-dollar"
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        "EUR",
+        "USD",
+        "GBP",
+        "€",
+        "$",
+        "£",
+        "priceEUR",
+        "EURprice",
+        "A12EURB",
+        "USD 12.50foo",
+        "USD 12.50.75",
+        "name@example.com",
+        "https://example.com/12.50EUR",
+        "12 EUR/USD",
+    ],
+)
+def test_english_currency_matching_rejects_lexical_and_malformed_material(
+    source: str,
+) -> None:
+    assert list(iter_unit_matches(source, "en")) == []
+
+
+def test_english_currency_protected_spans_suppress_only_protected_quantity() -> None:
+    source = "prefix $5 and EUR 6"
+    protected_start = source.index("$5")
+    protected_end = protected_start + len("$5")
+    matches = list(
+        iter_unit_matches(source, "en", protected_spans=[(protected_start, protected_end)])
+    )
+    assert [source[item.start : item.end] for item in matches] == ["EUR 6"]
+    assert matches[0].start == source.index("EUR 6")
+    assert matches[0].value == "6"
+
+
+def test_english_currency_sentence_punctuation_is_outside_match() -> None:
+    source = "$12.50."
+    match = only_match(source, "en")
+    assert source[match.start : match.end] == "$12.50"
+    assert source[match.end :] == "."
+
+
+@pytest.mark.parametrize(
+    ("source", "canonical_id"),
+    [
+        ("10 in.", "customary-inch"),
+        ("37°C.", "temperature-celsius"),
+        ("2 kg", "mass-kilogram"),
+    ],
+)
+def test_existing_english_unit_matches_remain_unchanged(source: str, canonical_id: str) -> None:
+    match = only_match(source, "en")
+    assert match.canonical_id == canonical_id
+    if source == "37°C.":
+        assert source[match.end :] == "."
+
+
+def test_english_in_sentence_is_not_a_unit_match() -> None:
+    assert list(iter_unit_matches("They wandered around in.", "en")) == []
+
+
+@pytest.mark.parametrize(
     ("source", "value", "symbol", "canonical_id"),
     [
         ("5€", "5", "€", "currency-euro"),

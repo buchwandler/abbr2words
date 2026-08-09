@@ -11,9 +11,10 @@ Swedish (`sv`), and Turkish (`tr`). Locale inputs continue to resolve to the
 base registry. The inventories cover common abbreviations and the existing
 duration, length, area, volume, mass, temperature, and speed unit subset.
 
-Czech, French, Italian, and Spanish expose reviewed structured currency
-identities. Czech recognizes `Kč`/`CZK` as `currency-czech-koruna` and reuses
-the shared `€`/`EUR`, `$`/`USD`, and `£`/`GBP` identities. These are recognition
+Czech, English, French, Italian, and Spanish expose reviewed structured currency
+identities. Czech recognizes `Kč`/`CZK` as `currency-czech-koruna`; English and
+the other listed languages reuse the shared `€`/`EUR`, `$`/`USD`, and `£`/`GBP`
+identities. These are recognition
 metadata only: the API preserves source spans and numeric lexemes but does not
 perform currency arithmetic, plural/agreement selection, or number-to-word
 realization. French also exposes dotted numeric duration aliases `min.` and
