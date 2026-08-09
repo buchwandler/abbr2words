@@ -12,7 +12,9 @@ customization
 pos-annotations
 cli
 languages
+language-sources
 api
 examples
 changelog
+release-notes
 ```

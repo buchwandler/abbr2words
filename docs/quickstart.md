@@ -28,7 +28,9 @@ abbr2words("Fr. Klein", lang="de", context=False)  # Freitag Klein
 
 The `context` choice applies to each call and is independent of earlier calls.
 
-The package expands abbreviations only. It does not normalize ordinary numbers,
-dates, times, currencies, measurements, or general punctuation. The input must
-be a string; a non-string raises `TypeError`, and an unknown language raises
-`ValueError`.
+The package expands abbreviations and reviewed unit symbols after numeric
+quantities. Ordinary numeric values are preserved, while unit symbols such as
+`500 g` can become `500 gram`. Complete number wording, dates, times, currency
+realization, measurement conversion, and grammatical agreement remain outside
+this package. The input must be a string; a non-string raises `TypeError`, and
+an unknown language raises `ValueError`.

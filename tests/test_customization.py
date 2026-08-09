@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pytest
 
+import abbr2words.core as core
 from abbr2words import (
     Expander,
     TokenAnnotation,
@@ -35,6 +36,33 @@ def test_shared_context_customization_accepts_string_contexts() -> None:
 
     assert shared.get_abbreviation("Ex.").get_expansion() == "Example"
     assert shared.get_abbreviation("Ex.").context_expansions
+
+
+def test_expansion_uses_one_registry_snapshot(monkeypatch: pytest.MonkeyPatch) -> None:
+    expander = get_expander("en")
+    expander.add_custom_abbreviation("First.", "first", case_sensitive=True)
+    original_unit_replacements = core.iter_unit_replacements
+    state = {"units_mutated": False, "entries_mutated": False}
+
+    def mutate_units(text: str, language: str, overrides, suppressed):
+        if not state["units_mutated"]:
+            state["units_mutated"] = True
+            expander.set_unit("kg", "custom kilogram")
+        return original_unit_replacements(text, language, overrides, suppressed)
+
+    monkeypatch.setattr(core, "iter_unit_replacements", mutate_units)
+    original_entry_replacements = expander._iter_entry_replacements
+
+    def mutate_entries(text: str, entry, annotation_index):
+        if not state["entries_mutated"]:
+            state["entries_mutated"] = True
+            expander.add_custom_abbreviation("Late.", "late", case_sensitive=True)
+        yield from original_entry_replacements(text, entry, annotation_index)
+
+    monkeypatch.setattr(expander, "_iter_entry_replacements", mutate_entries)
+
+    assert expander.expand("First. Late. 2 kg") == "first Late. 2 kilogram"
+    assert expander.expand("First. Late. 2 kg") == "first late 2 custom kilogram"
 
 
 def test_english_custom_add_matches_base_context_and_guard_behavior() -> None:

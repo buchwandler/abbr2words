@@ -359,140 +359,15 @@ def abbreviation_guards_match(
 
 
 class ContextDetector:
-    """Detects context for abbreviations based on surrounding text."""
+    """Compatibility wrapper around the language-specific context profile."""
 
     def __init__(self, language: str = "en") -> None:
-        """Initialize context detector with pattern matchers."""
+        """Initialize the detector for *language*."""
         self.profile = profile_for(language)
-        # Patterns for detecting place names (street, avenue, etc.)
-        # Match addresses like "123 Main", "100 N. Main", "50 North Elm"
-        self.place_indicators = re.compile(
-            # Address number, optional direction abbrev
-            r"\b\d+\s+(?:[A-Z]\.\s+)?\w+(?:\s+\w+)*$",
-            re.IGNORECASE,
-        )
-
-        # Patterns for detecting titles (before names)
-        self.title_indicators = re.compile(
-            r"^(?:\w+\s+)*[A-Z][a-z]+",  # Followed by capitalized name
-        )
-
-        # Patterns for detecting time (with numbers)
-        self.time_indicators = re.compile(
-            r"\b\d{1,2}(?::\d{2})?\s*$",  # Preceded by time (3:00, 5)
-            re.IGNORECASE,
-        )
 
     def detect_context(self, abbreviation: str, before: str, after: str) -> AbbreviationContext:
-        """Detect the context of an abbreviation.
-
-        Args:
-            abbreviation: The abbreviation itself
-            before: Text before the abbreviation
-            after: Text after the abbreviation
-
-        Returns:
-            The detected context type
-
-        Note:
-            St. abbreviation uses multi-signal detection for robustness:
-            - Priority 1: Saint/city name recognition (highest confidence)
-            - Priority 2: House number pattern in close proximity (~30 chars)
-            - Priority 3: Default to "Saint" for unknown names
-
-            Examples:
-                "123 Main St." → Street (house number pattern)
-                "St. Louis" → Saint (city name recognized)
-                "Visit 123 St. Louis Ave" → Saint (name wins over distant number)
-                "born in 1850, St. Peter" → Saint (name + distant number)
-        """
+        """Return the context selected by the configured language profile."""
         return self.profile.detect_context(abbreviation, before, after)
-
-        # Check for time context (3 P.M., 5 A.M.)
-        if self.time_indicators.search(before):
-            return AbbreviationContext.TIME
-
-        # Special handling for St. abbreviation (Saint vs Street)
-        # Uses multi-signal approach for robust detection
-        if abbreviation.lower() in ["st.", "st"]:
-            # PRIORITY 1: Check for saint/city name (HIGHEST CONFIDENCE)
-            if after:
-                # Common saint names
-                saint_names = {
-                    "peter",
-                    "paul",
-                    "john",
-                    "mary",
-                    "patrick",
-                    "francis",
-                    "joseph",
-                    "michael",
-                    "george",
-                    "luke",
-                    "mark",
-                    "matthew",
-                    "thomas",
-                    "james",
-                    "anthony",
-                    "andrew",
-                }
-
-                # Common city names that start with St.
-                city_names = {
-                    "louis",
-                    "paul",
-                    "petersburg",
-                    "augustine",
-                    "helena",
-                    "cloud",
-                    "albans",
-                    "andrews",
-                }
-
-                # Get first word and clean it (remove possessives, punctuation)
-                first_word = after.strip().split()[0].lower() if after.strip() else ""
-                first_word = first_word.rstrip("'s.,;:!?")
-
-                if first_word in saint_names or first_word in city_names:
-                    return AbbreviationContext.RELIGIOUS
-
-            # PRIORITY 2: Check for house number pattern (CLOSE PROXIMITY)
-            # Only check last 30 characters to avoid distant numbers
-            # Pattern: "[number] [optional direction] [street name]"
-            # Examples: "123 Main", "456 N. Oak", "10 Park"
-            proximity_limit = 30
-            recent_text = before[-proximity_limit:] if len(before) > proximity_limit else before
-
-            # Special case: Ordinal numbers directly before St. = Street
-            # "5th St." "42nd St." "3rd St."
-            ordinal_street_pattern = re.compile(r"\d+(?:st|nd|rd|th)\s*$", re.IGNORECASE)
-            if ordinal_street_pattern.search(recent_text):
-                return AbbreviationContext.PLACE
-
-            # Match house number followed by optional direction and street
-            # Catches: "123 Main St." "456 N. Oak St."
-            # But NOT: "born in 1850, St." (too far away)
-            house_number_pattern = re.compile(
-                # Number + optional direction + capitalized word
-                r"\d+\s+(?:[NSEW]\.?\s+)?[A-Z]\w*\s*$",
-                re.IGNORECASE,
-            )
-
-            if house_number_pattern.search(recent_text):
-                return AbbreviationContext.PLACE
-
-            # PRIORITY 3: Default to religious (Saint)
-            return AbbreviationContext.RELIGIOUS
-
-        # Check for place context for other abbreviations (Ave., Rd., Blvd., etc.)
-        if self.place_indicators.search(before):
-            return AbbreviationContext.PLACE
-
-        # Check for title context (Dr. Smith, Prof. Johnson)
-        if after and self.title_indicators.match(after):
-            return AbbreviationContext.TITLE
-
-        return AbbreviationContext.DEFAULT
 
 
 class AbbreviationExpander(ABC):
@@ -811,12 +686,15 @@ class AbbreviationExpander(ABC):
         annotation_index = (
             AnnotationIndex(normalized_annotations) if annotations is not None else None
         )
+        entries = tuple(self.entries.values())
+        unit_overrides = dict(self._unit_overrides)
+        suppressed_units = frozenset(self._suppressed_units)
         candidates: list[Replacement] = list(
             iter_unit_replacements(
                 text,
                 getattr(self, "UNIT_LANGUAGE", "en"),
-                self._unit_overrides,
-                self._suppressed_units,
+                unit_overrides,
+                suppressed_units,
             )
         )
         candidates = [
@@ -825,7 +703,7 @@ class AbbreviationExpander(ABC):
 
         # Process all abbreviations against the original source. The resolver
         # preserves longest-first behavior while giving reviewed units priority.
-        for entry in self.entries.values():
+        for entry in entries:
             unit_entry = next(
                 (item for item in self.unit_entries if entry.abbreviation in item.symbols),
                 None,

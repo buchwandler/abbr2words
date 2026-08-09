@@ -17,6 +17,7 @@ From a checkout, install the package and development tools in editable mode:
 
 ```console
 python -m pip install -e ".[dev]"
+python -m build
 pytest
 ```
 

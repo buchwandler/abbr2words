@@ -3,19 +3,19 @@ schema_version: 2
 object_type: release
 versioning:
   schema_version: 1
-  revision: 6
-version: 0.2.3
-status: released
-title: Release 0.2.3
-released_at: "2026-08-07"
-previous_version: 0.2.2
+  revision: 1
+version: 0.2.4
+status: planned
+title: Release 0.2.4
+released_at: null
+previous_version: 0.2.3
 cancel_reason: null
 superseded_by: null
 changelog_file: docs/changelog.md
 boundary_ref: null
 source_refs: []
 source_count: null
-entry_count: 4
+entry_count: 0
 artifact_count: 0
 git_base_ref: null
 git_base_sha: null
@@ -25,4 +25,4 @@ git_range: null
 git_commit_count: null
 ---
 
-French structured currency and dotted duration prerequisites for downstream semantic normalization.
+Next planned release after 0.2.3.

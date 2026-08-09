@@ -85,9 +85,12 @@ reset_expanders("de")
 the current process and is not a synchronization mechanism between threads or
 processes; applications should coordinate concurrent mutation themselves.
 
-Shared lookup and reset are atomic, while expansion observes a complete
-registry snapshot. Applications should still avoid mutating a shared registry
-while a long expansion is running.
+Shared lookup and reset are atomic. At the start of each expansion, the
+expander captures a complete snapshot of its abbreviation entries, unit
+overrides, and suppressed-unit set; later mutations affect the next expansion,
+not the one already in progress. Applications should still avoid mutating a
+shared registry while a long expansion is running because registry mutation is
+not itself coordinated with other application-level state.
 
 ## Unit customization
 

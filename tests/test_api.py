@@ -12,7 +12,7 @@ def reset_shared_registries() -> None:
 
 
 def test_version() -> None:
-    assert fallback_version == "0.2.2"
+    assert fallback_version == "0.2.3"
     assert __version__
 
 

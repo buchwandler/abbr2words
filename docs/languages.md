@@ -30,11 +30,14 @@ lexical entries are case-sensitive. Unit output is a canonical singular lemma;
 the stable API does not realize plural, case, numeral-government, or suffix
 morphology.
 
-French, Italian, and Spanish structured quantities also recognize the reviewed
-currency identities `€`/`EUR`, `$`/`USD`, and `£`/`GBP` in either numeric-prefix
-or numeric-suffix position. These matches preserve the written numeric lexeme,
-source offsets, written symbol, language, category, and stable canonical ID;
-they do not speak the amount or choose locale-specific currency grammar.
+English, French, Italian, Portuguese, and Spanish structured quantities recognize
+the reviewed shared currency identities `€`/`EUR`, `$`/`USD`, and `£`/`GBP` in
+either numeric-prefix or numeric-suffix position. Portuguese additionally
+recognizes `R$`/`BRL` as `currency-brazilian-real`, while Czech recognizes
+`Kč`/`CZK` as `currency-czech-koruna`. These matches preserve the written
+numeric lexeme, source offsets, written symbol, language, category, and stable
+canonical ID; they do not speak the amount or choose locale-specific currency
+grammar.
 Downstream consumers such as `spokenform` own that semantic realization.
 
 French dotted duration forms `min.` and `sec.` are context-sensitive structured

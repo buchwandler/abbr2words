@@ -153,6 +153,10 @@ provided. `Expander.add()` exposes the same optional `only_if_pos` and
 :members:
 ```
 
+```{autoclass} abbr2words.ExpansionMatch
+:members:
+```
+
 ```{autoclass} abbr2words.AbbreviationExpander
 :members:
 ```
@@ -166,6 +170,14 @@ provided. `Expander.add()` exposes the same optional `only_if_pos` and
 ```
 
 ```{autoclass} abbr2words.UnitMatch
+:members:
+```
+
+```{autoclass} abbr2words.ProtectedSpan
+:members:
+```
+
+```{autoclass} abbr2words.UnitEntry
 :members:
 ```
 

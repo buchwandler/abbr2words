@@ -44,6 +44,7 @@ For development:
 
 ```bash
 python -m pip install -e ".[dev]"
+python -m build
 pytest
 ```
 
@@ -110,10 +111,12 @@ currency major/minor decomposition, and locale-specific spoken decimal policy
 belong to the consuming speech normalizer.
 
 Structured currency identities are available in the reviewed quantity registry
-for Czech, English, French, Italian, and Spanish. Czech recognizes `Kč`/`CZK` as
-`currency-czech-koruna`; English recognizes the shared `currency-euro`,
-`currency-us-dollar`, and `currency-pound-sterling` identities for EUR/USD/GBP.
-The other listed languages also reuse the shared EUR/USD/GBP identities.
+for Czech, English, French, Italian, Portuguese, and Spanish. Czech recognizes
+`Kč`/`CZK` as `currency-czech-koruna`; Portuguese also recognizes
+`R$`/`BRL` as `currency-brazilian-real`; English, French, Italian, and Spanish
+recognize the shared `currency-euro`, `currency-us-dollar`, and
+`currency-pound-sterling` identities for EUR/USD/GBP. The other listed
+languages do not currently expose structured currency identities.
 These identities are recognized when a numeric value is adjacent in either
 prefix or suffix position:
 
@@ -160,16 +163,16 @@ not part of the stable public API. See
 ## Versioning
 
 The package version is derived from Git tags by `setuptools-scm`. Use tags in the
-form `v0.2.0`, `v0.3.0`, and so on; the corresponding package version is generated
-automatically during builds. A checkout without tags falls back to `0.2.2` for
-this additive release.
+form `v0.2.3`, `v0.2.4`, and so on; the corresponding package version is generated
+automatically during builds. A checkout without tags falls back to `0.2.3` for
+this release.
 
 For a release, commit the changes, create an annotated tag, and build from that
 tag:
 
 ```bash
-git tag -a v0.2.0 -m "Release 0.2.0"
-uv build
+git tag -a v0.2.3 -m "Release 0.2.3"
+python -m build
 ```
 
 ## License
