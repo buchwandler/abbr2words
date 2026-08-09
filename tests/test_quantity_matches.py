@@ -199,6 +199,72 @@ def test_italian_structured_currency_matches_preserve_identity_and_offsets(
 
 
 @pytest.mark.parametrize(
+    ("source", "value", "symbol", "canonical_id", "canonical_symbol"),
+    [
+        ("100 Kč", "100", "Kč", "currency-czech-koruna", "Kč"),
+        ("100 CZK", "100", "CZK", "currency-czech-koruna", "Kč"),
+        ("Kč 100", "100", "Kč", "currency-czech-koruna", "Kč"),
+        ("CZK 100", "100", "CZK", "currency-czech-koruna", "Kč"),
+        ("12,80 Kč", "12,80", "Kč", "currency-czech-koruna", "Kč"),
+        ("€ 12,80", "12,80", "€", "currency-euro", "€"),
+        ("12,80 EUR", "12,80", "EUR", "currency-euro", "€"),
+        ("$ 5", "5", "$", "currency-us-dollar", "$"),
+        ("5 USD", "5", "USD", "currency-us-dollar", "$"),
+        ("£ 7", "7", "£", "currency-pound-sterling", "£"),
+        ("7 GBP", "7", "GBP", "currency-pound-sterling", "£"),
+    ],
+)
+def test_czech_currency_matches_preserve_identity_and_offsets(
+    source: str,
+    value: str,
+    symbol: str,
+    canonical_id: str,
+    canonical_symbol: str,
+) -> None:
+    match = only_match(source, "cs")
+    assert match.start == 0
+    assert match.end == len(source)
+    assert source[match.start : match.end] == source
+    assert source[match.value_start : match.value_end] == value
+    assert match.value == value
+    assert match.symbol == symbol
+    assert match.canonical_id == canonical_id
+    assert match.canonical_symbol == canonical_symbol
+    assert match.category == "currency"
+    assert match.language == "cs"
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        "Kč",
+        "CZK",
+        "EUR",
+        "priceCZK",
+        "CZKprice",
+        "A12CZKB",
+        "https://example.test/CZK/100",
+        "name+CZK@example.test",
+        "v1.2.3",
+    ],
+)
+def test_czech_currency_matching_rejects_standalone_and_compound_material(source: str) -> None:
+    assert list(iter_unit_matches(source, "cs")) == []
+
+
+def test_czech_currency_protected_span_suppresses_complete_expression() -> None:
+    source = "prefix 100 Kč and CZK 100"
+    protected_start = source.index("100 Kč")
+    protected_end = protected_start + len("100 Kč")
+    matches = list(
+        iter_unit_matches(source, "cs", protected_spans=[(protected_start, protected_end)])
+    )
+    assert [source[item.start : item.end] for item in matches] == ["CZK 100"]
+    assert matches[0].canonical_id == "currency-czech-koruna"
+    assert matches[0].start == source.index("CZK 100")
+
+
+@pytest.mark.parametrize(
     "source",
     [
         "Costa 12,80 EUR.",

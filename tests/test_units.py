@@ -188,6 +188,7 @@ def test_case_sensitive_near_misses_and_attached_words() -> None:
 
 def test_inventory_contains_expected_symbols() -> None:
     assert {"g", "m", "ml", "mL", "L", "km/h", "m/s", "°C"} <= unit_symbols("en")
+    assert {"Kč", "CZK", "€", "EUR", "$", "USD", "£", "GBP"} <= unit_symbols("cs")
     assert {"€", "EUR", "$", "USD", "£", "GBP"} <= unit_symbols("es")
     assert {"€", "EUR", "$", "USD", "£", "GBP", "min.", "sec."} <= unit_symbols("fr")
     assert {"€", "EUR", "$", "USD", "£", "GBP"} <= unit_symbols("it")
@@ -206,6 +207,49 @@ def test_italian_currency_registry_uses_reviewed_lemmas() -> None:
         "currency-pound-sterling": (("£", "GBP"), "sterlina britannica", "£"),
     }
     assert all(entry.quantity_position == "both" for entry in entries.values())
+
+
+def test_czech_currency_registry_uses_shared_identities_and_metadata() -> None:
+    entries = {
+        entry.canonical_id: entry for entry in unit_entries("cs") if entry.category == "currency"
+    }
+    assert {
+        canonical_id: (
+            entry.symbols,
+            entry.expansion,
+            entry.canonical_symbol,
+            entry.category,
+            entry.quantity_position,
+            entry.requires_numeric_value,
+        )
+        for canonical_id, entry in entries.items()
+    } == {
+        "currency-czech-koruna": (
+            ("Kč", "CZK"),
+            "česká koruna",
+            "Kč",
+            "currency",
+            "both",
+            True,
+        ),
+        "currency-euro": (("€", "EUR"), "euro", "€", "currency", "both", True),
+        "currency-us-dollar": (
+            ("$", "USD"),
+            "americký dolar",
+            "$",
+            "currency",
+            "both",
+            True,
+        ),
+        "currency-pound-sterling": (
+            ("£", "GBP"),
+            "libra šterlinků",
+            "£",
+            "currency",
+            "both",
+            True,
+        ),
+    }
 
 
 def test_portuguese_currency_registry_uses_reviewed_lemmas_and_metadata() -> None:

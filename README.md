@@ -110,10 +110,11 @@ currency major/minor decomposition, and locale-specific spoken decimal policy
 belong to the consuming speech normalizer.
 
 Structured currency identities are available in the reviewed quantity registry
-for French, Italian, and Spanish. Italian recognizes `€`/`EUR` as `currency-euro`,
-`$`/`USD` as `currency-us-dollar`, and `£`/`GBP` as
-`currency-pound-sterling` when a numeric value is adjacent in either prefix or
-suffix position:
+for Czech, French, Italian, and Spanish. Czech recognizes `Kč`/`CZK` as
+`currency-czech-koruna`, and reuses the shared `currency-euro`,
+`currency-us-dollar`, and `currency-pound-sterling` identities for EUR/USD/GBP.
+These identities are recognized when a numeric value is adjacent in either
+prefix or suffix position:
 
 ```python
 from abbr2words import iter_unit_matches

@@ -11,14 +11,16 @@ Swedish (`sv`), and Turkish (`tr`). Locale inputs continue to resolve to the
 base registry. The inventories cover common abbreviations and the existing
 duration, length, area, volume, mass, temperature, and speed unit subset.
 
-French, Italian, and Spanish expose reviewed structured currency identities for
-`€`/`EUR`, `$`/`USD`, and `£`/`GBP`. These are recognition metadata only: the
-API preserves source spans and numeric lexemes but does not perform currency
-arithmetic, plural/agreement selection, or number-to-word realization. French
-also exposes dotted numeric duration aliases `min.` and `sec.`; a standalone
-French `min.` remains the lexical abbreviation for `minimum`, while numeric
-context selects the structured `duration-minute` identity. Downstream consumers
-such as `spokenform` own semantic grammar and speech realization.
+Czech, French, Italian, and Spanish expose reviewed structured currency
+identities. Czech recognizes `Kč`/`CZK` as `currency-czech-koruna` and reuses
+the shared `€`/`EUR`, `$`/`USD`, and `£`/`GBP` identities. These are recognition
+metadata only: the API preserves source spans and numeric lexemes but does not
+perform currency arithmetic, plural/agreement selection, or number-to-word
+realization. French also exposes dotted numeric duration aliases `min.` and
+`sec.`; a standalone French `min.` remains the lexical abbreviation for
+`minimum`, while numeric context selects the structured `duration-minute`
+identity. Downstream consumers such as `spokenform` own semantic grammar and
+speech realization.
 
 Unit expansions are canonical lemmas. They intentionally do not realize plural,
 case, numeral government, gender, vowel harmony, or apostrophe-attached suffixes.

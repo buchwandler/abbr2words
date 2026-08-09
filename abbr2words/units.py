@@ -578,6 +578,44 @@ _LOCALIZED_ALIASES = {
 }
 
 _STRUCTURED_CURRENCY_ENTRIES = {
+    "cs": (
+        _entry(
+            ("Kč", "CZK"),
+            "česká koruna",
+            "Currency",
+            canonical_id="currency-czech-koruna",
+            canonical_symbol="Kč",
+            category="currency",
+            quantity_position="both",
+        ),
+        _entry(
+            ("€", "EUR"),
+            "euro",
+            "Currency",
+            canonical_id="currency-euro",
+            canonical_symbol="€",
+            category="currency",
+            quantity_position="both",
+        ),
+        _entry(
+            ("$", "USD"),
+            "americký dolar",
+            "Currency",
+            canonical_id="currency-us-dollar",
+            canonical_symbol="$",
+            category="currency",
+            quantity_position="both",
+        ),
+        _entry(
+            ("£", "GBP"),
+            "libra šterlinků",
+            "Currency",
+            canonical_id="currency-pound-sterling",
+            canonical_symbol="£",
+            category="currency",
+            quantity_position="both",
+        ),
+    ),
     "fr": (
         _entry(
             ("€", "EUR"),
