@@ -72,7 +72,32 @@ def test_direction_guards_do_not_rewrite_dotted_initialisms(source: str, expecte
 def test_celsius_and_circa_are_distinct() -> None:
     assert abbr2words("c. 1995", lang="en") == "circa 1995"
     assert abbr2words("37°C.", lang="en") == "37 degree Celsius."
+    assert abbr2words("37 c.", lang="en") == "37 degree Celsius."
     assert abbr2words("The value is C.", lang="en") == "The value is C."
     assert abbr2words("Code P.S. remains readable.", lang="en") == (
         "Code postscript remains readable."
     )
+
+
+@pytest.mark.parametrize(
+    ("source", "expected"),
+    [
+        ("123 Main St.", "123 Main Street"),
+        ("456 Oak St. is here", "456 Oak Street is here"),
+        ("100 N. Elm St.", "100 North Elm Street"),
+        ("I live at 5 Park St.", "I live at 5 Park Street"),
+        ("The shop on 5th St.", "The shop on 5th Street"),
+        ("St. Patrick's Day", "Saint Patrick's Day"),
+        ("St. Peter was an apostle", "Saint Peter was an apostle"),
+        ("The church of St. John", "The church of Saint John"),
+        ("Visit St. Louis", "Visit Saint Louis"),
+        ("St. Paul, Minnesota", "Saint Paul, Minnesota"),
+        ("123 St. Louis Avenue", "123 Saint Louis Avenue"),
+        ("I live on St. Patrick Street", "I live on Saint Patrick Street"),
+        ("St. Christopher", "Saint Christopher"),
+        ("Visit St.", "Visit Saint"),
+        ("Main St. is closed.", "Main Street is closed."),
+    ],
+)
+def test_english_st_compatibility_matrix(source: str, expected: str) -> None:
+    assert abbr2words(source, lang="en") == expected

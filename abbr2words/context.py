@@ -13,6 +13,51 @@ _HOUSE_AND_STREET = re.compile(
     re.UNICODE | re.IGNORECASE,
 )
 _STREET_NAME = re.compile(r"(?:^|[\s,;(])(?:[\w'’\-]+)(?:\s+[\w'’\-]+)*$", re.UNICODE)
+_REVIEWED_STREET_NAME = re.compile(
+    r"(?:^|[\s,;(])(?P<name>[A-Z][\w'’\-]*(?:\s+[A-Z][\w'’\-]*)*)\s*$",
+    re.UNICODE,
+)
+_STREET_NAME_PROSE = frozenset(
+    {
+        "a",
+        "an",
+        "and",
+        "at",
+        "be",
+        "been",
+        "but",
+        "by",
+        "call",
+        "closed",
+        "for",
+        "from",
+        "go",
+        "had",
+        "has",
+        "have",
+        "he",
+        "here",
+        "i",
+        "in",
+        "is",
+        "near",
+        "of",
+        "on",
+        "or",
+        "please",
+        "see",
+        "she",
+        "that",
+        "the",
+        "they",
+        "this",
+        "to",
+        "visit",
+        "was",
+        "we",
+        "were",
+    }
+)
 
 
 def _context(name: str) -> Any:
@@ -35,6 +80,15 @@ def _name_evidence(after: str) -> bool:
         return False
     first_cased = next((char for char in token if char.isupper() or char.islower()), "")
     return first_cased.isupper() or (token.isupper() and len(token) > 1)
+
+
+def _reviewed_street_name_evidence(before: str) -> bool:
+    """Accept a bounded, title-cased street-name suffix, not arbitrary prose."""
+    match = _REVIEWED_STREET_NAME.search(before)
+    if not match:
+        return False
+    first_token = match.group("name").split(maxsplit=1)[0].casefold()
+    return first_token not in _STREET_NAME_PROSE
 
 
 class ContextProfile(ABC):
@@ -94,7 +148,7 @@ class EnglishContextProfile(DefaultContextProfile):
                 return _context("religious")
             if re.search(r"\d+(?:st|nd|rd|th)\s*$", before, re.IGNORECASE):
                 return _context("place")
-            if _HOUSE_AND_STREET.search(before) or _STREET_NAME.search(before):
+            if _HOUSE_AND_STREET.search(before) or _reviewed_street_name_evidence(before):
                 return _context("place")
             return _context("religious")
         if abbreviation.casefold() in {"dr.", "drive", "ave.", "rd.", "blvd."}:

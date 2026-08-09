@@ -179,6 +179,70 @@ def test_existing_english_unit_matches_remain_unchanged(source: str, canonical_i
         assert source[match.end :] == "."
 
 
+@pytest.mark.parametrize(
+    ("source", "value", "symbol", "canonical_id", "canonical_symbol"),
+    [
+        ("37°C", "37", "°C", "temperature-celsius", "°C"),
+        ("37 °C", "37", "°C", "temperature-celsius", "°C"),
+        ("37° C", "37", "° C", "temperature-celsius", "°C"),
+        ("37 ° C", "37", "° C", "temperature-celsius", "°C"),
+        ("37 C", "37", "C", "temperature-celsius", "°C"),
+        ("37C", "37", "C", "temperature-celsius", "°C"),
+        ("37 c.", "37", "c.", "temperature-celsius", "°C"),
+        ("-40 C.", "-40", "C.", "temperature-celsius", "°C"),
+        ("98°F", "98", "°F", "temperature-fahrenheit", "°F"),
+        ("98 °F", "98", "°F", "temperature-fahrenheit", "°F"),
+        ("98° F", "98", "° F", "temperature-fahrenheit", "°F"),
+        ("98 F", "98", "F", "temperature-fahrenheit", "°F"),
+        ("98F", "98", "F", "temperature-fahrenheit", "°F"),
+        ("98 f.", "98", "f.", "temperature-fahrenheit", "°F"),
+    ],
+)
+def test_english_temperature_aliases_preserve_source_identity_and_offsets(
+    source: str,
+    value: str,
+    symbol: str,
+    canonical_id: str,
+    canonical_symbol: str,
+) -> None:
+    match = only_match(source, "en")
+    assert match.start == 0
+    assert match.end == len(source)
+    assert match.value_start == source.index(value)
+    assert match.value_end == match.value_start + len(value)
+    assert source[match.start : match.end] == source
+    assert source[match.value_start : match.value_end] == value
+    assert match.value == value
+    assert match.symbol == symbol
+    assert match.canonical_id == canonical_id
+    assert match.canonical_symbol == canonical_symbol
+
+
+@pytest.mark.parametrize(
+    "source",
+    ["C.", "F.", "Plan C.", "Press F.", "abcC", "Celsius", "Fahrenheit"],
+)
+def test_english_temperature_aliases_require_numeric_evidence(source: str) -> None:
+    assert list(iter_unit_matches(source, "en")) == []
+    assert abbr2words(source, lang="en") == source
+
+
+def test_english_temperature_protected_spans_suppress_only_protected_quantity() -> None:
+    source = "37 c. and 98 F."
+    protected_start = source.index("37 c.")
+    protected_end = protected_start + len("37 c.")
+    matches = list(
+        iter_unit_matches(source, "en", protected_spans=[(protected_start, protected_end)])
+    )
+    assert [source[item.start : item.end] for item in matches] == ["98 F."]
+
+
+def test_english_temperature_repeated_occurrences_expand_independently() -> None:
+    assert abbr2words("37 c. and 37 c.", lang="en") == (
+        "37 degree Celsius and 37 degree Celsius."
+    )
+
+
 def test_english_in_sentence_is_not_a_unit_match() -> None:
     assert list(iter_unit_matches("They wandered around in.", "en")) == []
 
