@@ -45,6 +45,44 @@ def test_matches_preserve_numeric_lexeme_and_complete_source_span(
     assert match.category == "unit"
 
 
+@pytest.mark.parametrize("source", ["5 kg", "10.0 kg", "30,000 kg", ".5 kg", "1,5 kg", "1 000 kg"])
+def test_existing_english_numeric_forms_remain_complete(source: str) -> None:
+    match = only_match(source, "en")
+    assert source[match.start : match.end] == source
+    assert match.value == source[: -len(" kg")]
+    assert match.canonical_id == "mass-kilogram"
+
+
+@pytest.mark.parametrize(
+    ("source", "symbol", "canonical_id"),
+    [
+        ("30,000.10 in.", "in.", "customary-inch"),
+        ("30,000.10 ft.", "ft.", "customary-foot"),
+        ("30,000.10 kg", "kg", "mass-kilogram"),
+    ],
+)
+def test_english_grouped_decimal_units_match_complete_identity(
+    source: str, symbol: str, canonical_id: str
+) -> None:
+    match = only_match(source, "en")
+    assert source[match.start : match.end] == source
+    assert source[match.value_start : match.value_end] == "30,000.10"
+    assert match.value == "30,000.10"
+    assert match.symbol == symbol
+    assert match.canonical_id == canonical_id
+
+
+@pytest.mark.parametrize("source", ["1.02.3 kg", "30,00.10 kg", "2kg-rated", "1 m^2"])
+def test_english_grouped_decimal_malformed_and_ambiguous_forms_remain_unmatched(
+    source: str,
+) -> None:
+    assert list(iter_unit_matches(source, "en")) == []
+
+
+def test_english_grouped_decimal_syntax_isolated_from_german() -> None:
+    assert list(iter_unit_matches("30,000.10 kg", "de")) == []
+
+
 @pytest.mark.parametrize(
     ("source", "canonical_id", "category"),
     [
@@ -79,10 +117,12 @@ def test_required_german_inventory_and_case_variants(
     [
         ("$12.50", "12.50", "$", "currency-us-dollar", "$"),
         ("$ 12.50", "12.50", "$", "currency-us-dollar", "$"),
+        ("$30,000.10", "30,000.10", "$", "currency-us-dollar", "$"),
         ("12.50$", "12.50", "$", "currency-us-dollar", "$"),
         ("12.50 $", "12.50", "$", "currency-us-dollar", "$"),
         ("USD 12.50", "12.50", "USD", "currency-us-dollar", "$"),
         ("12.50 USD", "12.50", "USD", "currency-us-dollar", "$"),
+        ("30,000.10 USD", "30,000.10", "USD", "currency-us-dollar", "$"),
         ("£1.01", "1.01", "£", "currency-pound-sterling", "£"),
         ("GBP 1.01", "1.01", "GBP", "currency-pound-sterling", "£"),
         ("1.01 GBP", "1.01", "GBP", "currency-pound-sterling", "£"),

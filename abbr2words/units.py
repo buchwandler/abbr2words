@@ -1078,9 +1078,20 @@ def validate_unit_registry(language: str) -> None:
 
 
 _HSPACE = " \t\u00a0\u202f"
-_ATOM = r"[+\-−]?(?:(?:\d{1,3}(?:[ \u00a0\u202f]\d{3})+|\d+)(?:[.,]\d+)?|\.\d+)(?:[eE][+\-]?\d+)?"
-_VALUE = rf"(?:{_ATOM}(?:[–—-]{_ATOM})?|{_ATOM}{_HSPACE}*/{_HSPACE}*{_ATOM}(?:{_HSPACE}*[×x]{_HSPACE}*{_ATOM})*|{_ATOM}(?:{_HSPACE}*[×x]{_HSPACE}*{_ATOM})+)"
+_EXPONENT = r"(?:[eE][+\-]?\d+)?"
+_ATOM_CORE = r"(?:(?:\d{1,3}(?:[ \u00a0\u202f]\d{3})+|\d+)(?:[.,]\d+)?|\.\d+)"
+_ATOM = rf"[+\-−]?{_ATOM_CORE}{_EXPONENT}"
+_EN_ATOM = rf"[+\-−]?(?:\d{{1,3}}(?:,\d{{3}})+(?:\.\d+)?|{_ATOM_CORE}){_EXPONENT}"
+
+
+def _value_expression(atom: str) -> str:
+    return rf"(?:{atom}(?:[–—-]{atom})?|{atom}{_HSPACE}*/{_HSPACE}*{atom}(?:{_HSPACE}*[×x]{_HSPACE}*{atom})*|{atom}(?:{_HSPACE}*[×x]{_HSPACE}*{atom})+)"
+
+
+_VALUE = _value_expression(_ATOM)
+_EN_VALUE = _value_expression(_EN_ATOM)
 _VALUE_PATTERN = re.compile(rf"(?<![\w./])(?P<value>{_VALUE})(?P<spacing>[{_HSPACE}]*)")
+_EN_VALUE_PATTERN = re.compile(rf"(?<![\w./])(?P<value>{_EN_VALUE})(?P<spacing>[{_HSPACE}]*)")
 _CONTINUATION = re.compile(rf"[{_HSPACE}]*([/^·⋅*×^])")
 _PREFIX_BOUNDARY = r"(?<![\w./])"
 _CLOSING_SENTENCE_CHARS = frozenset("\"'»”’)]}》」』")
@@ -1242,8 +1253,10 @@ def iter_unit_matches(
         raise TypeError("text must be a string")
     inventory = _unit_inventory(language, overrides, suppressed)
     protected = _normalize_protected_spans(text, protected_spans)
+    value_expression = _EN_VALUE if language == "en" else _VALUE
+    value_pattern = _EN_VALUE_PATTERN if language == "en" else _VALUE_PATTERN
     matches: list[UnitMatch] = []
-    for value_match in _VALUE_PATTERN.finditer(text):
+    for value_match in value_pattern.finditer(text):
         value = value_match.group("value")
         unit_start = value_match.end()
         candidates: list[tuple[str, UnitEntry]] = []
@@ -1290,7 +1303,7 @@ def iter_unit_matches(
             continue
         pattern = re.compile(
             rf"{_PREFIX_BOUNDARY}(?P<symbol>{re.escape(symbol)})(?P<spacing>[{_HSPACE}]*)"
-            rf"(?P<value>{_VALUE})(?![\w_])",
+            rf"(?P<value>{value_expression})(?![\w_])",
             0 if entry.case_sensitive else re.IGNORECASE,
         )
         for value_match in pattern.finditer(text):

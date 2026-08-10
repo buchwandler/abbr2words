@@ -135,6 +135,18 @@ def test_numeric_forms_expand(source: str) -> None:
     assert abbr2words(source, lang="en") != source
 
 
+@pytest.mark.parametrize(
+    ("source", "expected"),
+    (
+        ("30,000.10 in.", "30,000.10 inch"),
+        ("30,000.10 ft.", "30,000.10 foot"),
+        ("30,000.10 kg", "30,000.10 kilogram"),
+    ),
+)
+def test_english_grouped_decimal_units_expand_lexically(source: str, expected: str) -> None:
+    assert abbr2words(source, lang="en") == expected
+
+
 @pytest.mark.parametrize("space", (" ", "\u00a0", "\u202f", ""))
 def test_grouped_numbers_and_compact_units(space: str) -> None:
     source = f"1{space}000{space}kg"
