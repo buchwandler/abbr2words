@@ -238,9 +238,7 @@ def test_english_temperature_protected_spans_suppress_only_protected_quantity() 
 
 
 def test_english_temperature_repeated_occurrences_expand_independently() -> None:
-    assert abbr2words("37 c. and 37 c.", lang="en") == (
-        "37 degree Celsius and 37 degree Celsius."
-    )
+    assert abbr2words("37 c. and 37 c.", lang="en") == ("37 degree Celsius and 37 degree Celsius.")
 
 
 def test_english_in_sentence_is_not_a_unit_match() -> None:

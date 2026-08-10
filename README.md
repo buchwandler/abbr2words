@@ -163,15 +163,15 @@ not part of the stable public API. See
 ## Versioning
 
 The package version is derived from Git tags by `setuptools-scm`. Use tags in the
-form `v0.2.3`, `v0.2.4`, and so on; the corresponding package version is generated
-automatically during builds. A checkout without tags falls back to `0.2.3` for
-this release.
+form `v<version>`; the corresponding package version is generated automatically
+during builds. A checkout without tags falls back to `0+unknown`.
 
 For a release, commit the changes, create an annotated tag, and build from that
 tag:
 
 ```bash
-git tag -a v0.2.3 -m "Release 0.2.3"
+git tag -a v<version> -m "Release <version>"
+git push origin v<version>
 python -m build
 ```
 

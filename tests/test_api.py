@@ -11,8 +11,9 @@ def reset_shared_registries() -> None:
     reset_expanders()
 
 
-def test_version() -> None:
-    assert fallback_version == "0.2.3"
+def test_source_fallback_version_is_neutral() -> None:
+    assert fallback_version == "0+unknown"
+    assert fallback_version != "0.2.3"
     assert __version__
 
 
