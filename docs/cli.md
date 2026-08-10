@@ -19,7 +19,7 @@ Options:
 
 - `--lang CODE` selects a language or locale; the default is `en`.
 - `--no-context` disables contextual disambiguation.
-- `--languages` prints the supported base language codes and exits.
+- `--languages` prints every supported canonical base and explicit locale key and exits.
 
 Invalid language or input values are reported as parser errors and return a
 nonzero exit status. Successful expansion prints one line to standard output.

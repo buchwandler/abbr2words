@@ -1,0 +1,29 @@
+{
+  "language": "zh_CN",
+  "entries": [
+    {
+      "language": "zh_CN",
+      "key": "№",
+      "abbreviation": "№",
+      "expansion": "编号",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Number sign",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "zh_CN",
+      "key": "人民币",
+      "abbreviation": "人民币",
+      "expansion": "人民币",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    }
+  ]
+}

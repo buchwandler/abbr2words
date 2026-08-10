@@ -14,7 +14,7 @@ from collections.abc import Collection, Iterable, Iterator
 from dataclasses import dataclass, field
 from enum import Enum
 from re import Pattern
-from typing import TypeAlias
+from typing import Literal, TypeAlias
 
 from ._replacements import Replacement, apply_replacements, resolve_replacements
 from .annotations import AnnotationIndex, TokenAnnotation, normalize_annotations
@@ -57,11 +57,17 @@ def _abbreviation_pattern(value: str) -> str:
 
 
 def _entry_pattern(entry: "AbbreviationEntry", spelling: str | None = None) -> Pattern[str]:
-    """Compile the symmetric boundary policy for one registered spelling."""
+    """Compile the reviewed boundary policy for one registered spelling."""
 
     flags = 0 if entry.case_sensitive else re.IGNORECASE
+    if entry.boundary == "word":
+        left_boundary = r"(?<!\w)"
+        right_boundary = r"(?!\w)"
+    else:
+        left_boundary = entry.left_boundary or ""
+        right_boundary = entry.right_boundary or ""
     return re.compile(
-        rf"(?<!\w){_abbreviation_pattern(spelling or entry.abbreviation)}(?!\w)",
+        rf"{left_boundary}{_abbreviation_pattern(spelling or entry.abbreviation)}{right_boundary}",
         flags,
     )
 
@@ -175,6 +181,9 @@ class AbbreviationEntry:
     only_if_followed_by: str | Pattern[str] | None = None
     only_if_pos: PosConstraints = None
     not_if_pos: PosConstraints = None
+    boundary: Literal["word", "custom"] = "word"
+    left_boundary: str | None = None
+    right_boundary: str | None = None
     origin: str = "bundled"
     aliases: tuple[str, ...] = ()
     _pattern: Pattern[str] = field(init=False, repr=False, compare=False)
@@ -195,6 +204,14 @@ class AbbreviationEntry:
             raise ValueError("expansion must not be empty")
         if type(self.case_sensitive) is not bool:
             raise TypeError("case_sensitive must be a bool")
+        if self.boundary not in {"word", "custom"}:
+            raise ValueError("boundary must be 'word' or 'custom'")
+        for name in ("left_boundary", "right_boundary"):
+            value = getattr(self, name)
+            if value is not None and not isinstance(value, str):
+                raise TypeError(f"{name} must be a string or None")
+        if self.boundary == "word" and (self.left_boundary or self.right_boundary):
+            raise ValueError("custom boundary expressions require boundary='custom'")
         if not isinstance(self.aliases, tuple):
             raise TypeError("aliases must be a tuple of strings")
         for alias in self.aliases:

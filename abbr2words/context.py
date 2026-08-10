@@ -179,9 +179,10 @@ class GermanContextProfile(DefaultContextProfile):
 
 
 def profile_for(language: str) -> ContextProfile:
-    if language == "en":
+    base = language.split("_", 1)[0]
+    if base == "en":
         return EnglishContextProfile()
-    if language == "de":
+    if base == "de":
         return GermanContextProfile()
     return DefaultContextProfile()
 

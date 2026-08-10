@@ -3,7 +3,13 @@ from __future__ import annotations
 import pytest
 
 from abbr2words import abbr2words, supported_languages
-from abbr2words.units import unit_entries, unit_symbols
+from abbr2words.units import (
+    NumericFormatProfile,
+    iter_unit_matches,
+    numeric_format_profile,
+    unit_entries,
+    unit_symbols,
+)
 
 CURRENT_UNIT_SPELLINGS = {
     "cs": {"hod.", "min.", "sek.", "km", "m", "cm", "mm", "kg", "g", "l"},
@@ -153,6 +159,25 @@ def test_grouped_numbers_and_compact_units(space: str) -> None:
     assert "kilogram" in abbr2words(source, lang="en")
 
 
+@pytest.mark.parametrize(
+    "source",
+    ("1,23,456 g", "1.234,56 kg", "1\u00a0234 g", "١٬٢٣٤٫٥٦ g"),
+)
+def test_numeric_profiles_preserve_locale_written_values(source: str) -> None:
+    matches = tuple(iter_unit_matches(source, "de"))
+
+    assert len(matches) == 1
+    assert matches[0].value == source.rsplit(" ", 1)[0]
+
+
+def test_numeric_profiles_are_explicit_and_malformed_grouping_fails_closed() -> None:
+    profile = numeric_format_profile("de")
+    assert isinstance(profile, NumericFormatProfile)
+    assert profile.grouping == "flexible"
+    assert tuple(iter_unit_matches("1,234,56 kg", "de")) == ()
+    assert tuple(iter_unit_matches("1.234.56 kg", "de")) == ()
+
+
 @pytest.mark.parametrize("source", ("m", "g", "h", "s", "C", "F", "B", "T", "section g", "m/s"))
 def test_standalone_symbols_and_partial_compounds_are_unchanged(source: str) -> None:
     assert abbr2words(source, lang="en") == source
@@ -180,7 +205,7 @@ def test_every_reviewed_unit_requires_numeric_context(language: str) -> None:
         assert entry.requires_numeric_value
         for symbol in entry.symbols:
             if entry.allow_lexical_overlap:
-                assert language == "fr"
+                assert language.split("_", 1)[0] == "fr"
                 assert symbol == "min."
                 assert abbr2words(symbol, lang=language) == "minimum"
                 continue

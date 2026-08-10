@@ -1,0 +1,17 @@
+{
+  "language": "be",
+  "entries": [
+    {
+      "language": "be",
+      "key": "гл.",
+      "abbreviation": "гл.",
+      "expansion": "галоўны",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Reference abbreviation",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    }
+  ]
+}

@@ -11,11 +11,13 @@ print(abbr2words(text, lang="de"))
 # Professor Klein kommt gegebenenfalls am Freitag
 ```
 
-Locale forms and common aliases are normalized to the bundled base language:
+Locale forms and common aliases use exact-locale-first resolution with base fallback:
 
 ```python
 abbr2words("Prof. Klein", lang="de-DE")
 abbr2words("Prof. Klein", lang="ger")
+normalize_language("pt-BR")  # "pt_BR"
+normalize_language("en_GB")  # "en"
 ```
 
 Context detection is enabled by default. For German `Fr.`, the surrounding text
@@ -33,4 +35,4 @@ quantities. Ordinary numeric values are preserved, while unit symbols such as
 `500 g` can become `500 gram`. Complete number wording, dates, times, currency
 realization, measurement conversion, and grammatical agreement remain outside
 this package. The input must be a string; a non-string raises `TypeError`, and
-an unknown language raises `ValueError`.
+an unknown language raises `ValueError`. `base_language("pt-BR")` returns `"pt"`.

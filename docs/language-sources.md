@@ -6,10 +6,25 @@ spelling; it is not an abbreviation or morphology dependency.
 
 ## Registry scope
 
-The current added registries are Dutch (`nl`), Polish (`pl`), Russian (`ru`),
-Swedish (`sv`), and Turkish (`tr`). Locale inputs continue to resolve to the
-base registry. The inventories cover common abbreviations and the existing
-duration, length, area, volume, mass, temperature, and speed unit subset.
+The registry contains the 49 base keys and 14 explicit locale overlays pinned in
+`tests/data/num2words_language_registry.json`. Each new base has a conservative
+seed inventory and the reviewed common duration, length, area, volume, mass,
+temperature, and speed unit subset. Locale entries inherit their base and only
+add reviewed local address, currency, or script-specific forms.
+
+The source/review ledger for the newly added bases is intentionally explicit:
+
+| Group | Codes | Primary language/orthography source | Unit source | Review status |
+| ----- | ----- | ----------------------------------- | ---------- | ------------ |
+| Latin | `ca`, `cy`, `da`, `eo`, `fi`, `hu`, `id`, `is`, `lt`, `lv`, `no`, `ro`, `sk`, `sl`, `tet`, `vi` | national orthography/abbreviation guidance; CLDR locale data | BIPM SI + CLDR | conservative agent seed; native review pending |
+| Cyrillic | `be`, `kz`, `mn`, `sr`, `tg`, `uk` | national orthography and abbreviation guidance | BIPM SI + CLDR | conservative agent seed; native review pending |
+| RTL | `ar`, `fa`, `he` | national orthography guidance | BIPM SI + CLDR | conservative agent seed; native review pending |
+| Indic | `bn`, `hi`, `kn`, `te` | national orthography guidance | BIPM SI + CLDR | conservative agent seed; native review pending |
+| East/Southeast Asian | `ja`, `ko`, `th`, `zh` | national orthography guidance | BIPM SI + CLDR | conservative agent seed; native review pending |
+| Specialist | `am`, `az`, `ce`, `hy` | national orthography guidance | BIPM SI + CLDR | conservative agent seed; native review pending |
+
+Locale overlays are `en_IN`, `en_NG`, `es_CO`, `es_CR`, `es_GT`, `es_NI`,
+`es_VE`, `fr_BE`, `fr_CH`, `fr_DZ`, `pt_BR`, `zh_CN`, `zh_HK`, and `zh_TW`.
 
 Czech, English, French, Italian, Portuguese, and Spanish expose reviewed
 structured currency identities. Czech recognizes `Kč`/`CZK` as
@@ -41,6 +56,7 @@ first-release policy.
 - Gramota and GOST R 7.0.12-2011 guidance: Russian graphical abbreviations.
 - Türk Dil Kurumu: Turkish abbreviation, abbreviation-index, and punctuation
   guidance.
+- ISO 4217: currency codes and locale currency identities.
 
 The brief that introduced this registry was reviewed on 2026-08-06. The
 implementation preserves a source description on each seed category and keeps

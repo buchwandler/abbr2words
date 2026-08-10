@@ -17,42 +17,17 @@ from .core import (
     PosConstraints,
     ProtectedSpan,
 )
+from .language_registry import (
+    LANGUAGE_SPECS,
+    language_spec,
+    resolve_language,
+    supported_language_keys,
+)
 from .units import UnitEntry, UnitMatch
 from .units import iter_unit_matches as _iter_unit_matches
 
 _LANGUAGE_CLASSES: Final[dict[str, tuple[str, str]]] = {
-    "cs": ("abbr2words.languages.cs", "CzechAbbreviationExpander"),
-    "de": ("abbr2words.languages.de", "GermanAbbreviationExpander"),
-    "en": ("abbr2words.languages.en", "EnglishAbbreviationExpander"),
-    "es": ("abbr2words.languages.es", "SpanishAbbreviationExpander"),
-    "fr": ("abbr2words.languages.fr", "FrenchAbbreviationExpander"),
-    "it": ("abbr2words.languages.it", "ItalianAbbreviationExpander"),
-    "nl": ("abbr2words.languages.nl", "DutchAbbreviationExpander"),
-    "pl": ("abbr2words.languages.pl", "PolishAbbreviationExpander"),
-    "pt": ("abbr2words.languages.pt", "PortugueseAbbreviationExpander"),
-    "ru": ("abbr2words.languages.ru", "RussianAbbreviationExpander"),
-    "sv": ("abbr2words.languages.sv", "SwedishAbbreviationExpander"),
-    "tr": ("abbr2words.languages.tr", "TurkishAbbreviationExpander"),
-}
-
-_ALIASES: Final[dict[str, str]] = {
-    "cz": "cs",
-    "cze": "cs",
-    "ces": "cs",
-    "deu": "de",
-    "ger": "de",
-    "eng": "en",
-    "spa": "es",
-    "fra": "fr",
-    "fre": "fr",
-    "ita": "it",
-    "por": "pt",
-    "dut": "nl",
-    "nld": "nl",
-    "pol": "pl",
-    "rus": "ru",
-    "swe": "sv",
-    "tur": "tr",
+    key: (spec.module, spec.class_name) for key, spec in LANGUAGE_SPECS.items()
 }
 
 _SHARED_EXPANDERS: dict[tuple[str, bool], AbbreviationExpander] = {}
@@ -60,22 +35,18 @@ _SHARED_LOCK = RLock()
 
 
 def normalize_language(lang: str) -> str:
-    """Normalize an ISO-style language or locale code to a bundled language."""
-    if not isinstance(lang, str) or not lang.strip():
-        raise ValueError("lang must be a non-empty language code")
-
-    normalized = lang.strip().lower().replace("_", "-")
-    base = normalized.split("-", 1)[0]
-    base = _ALIASES.get(base, base)
-    if base not in _LANGUAGE_CLASSES:
-        supported = ", ".join(sorted(_LANGUAGE_CLASSES))
-        raise ValueError(f"Unsupported language {lang!r}. Supported languages: {supported}")
-    return base
+    """Normalize and resolve an ISO-style language or locale code."""
+    return resolve_language(lang)
 
 
-def supported_languages() -> tuple[str, ...]:
-    """Return the bundled base language codes."""
-    return tuple(sorted(_LANGUAGE_CLASSES))
+def base_language(lang: str) -> str:
+    """Return the resolved base language for a language or locale input."""
+    return normalize_language(lang).split("_", 1)[0]
+
+
+def supported_languages(*, include_locales: bool = True) -> tuple[str, ...]:
+    """Return sorted bundled language and, optionally, locale keys."""
+    return supported_language_keys(include_locales=include_locales)
 
 
 def iter_unit_matches(
@@ -98,9 +69,9 @@ def iter_unit_matches(
 
 def _expander_class(lang: str) -> type[AbbreviationExpander]:
     code = normalize_language(lang)
-    module_name, class_name = _LANGUAGE_CLASSES[code]
-    module = import_module(module_name)
-    cls = getattr(module, class_name)
+    spec = language_spec(code)
+    module = import_module(spec.module)
+    cls = getattr(module, spec.class_name)
     return cls
 
 
@@ -138,7 +109,7 @@ def reset_expanders(lang: str | None = None) -> None:
                     del _SHARED_EXPANDERS[key]
 
             # Preserve cleanup for callers importing language modules directly.
-            module_name, _ = _LANGUAGE_CLASSES[code]
+            module_name = language_spec(code).module
             import_module(module_name).reset_expander()
 
 

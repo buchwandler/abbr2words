@@ -1,0 +1,17 @@
+{
+  "language": "kn",
+  "entries": [
+    {
+      "language": "kn",
+      "key": "ನಂ.",
+      "abbreviation": "ನಂ.",
+      "expansion": "ಸಂಖ್ಯೆ",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Number reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    }
+  ]
+}

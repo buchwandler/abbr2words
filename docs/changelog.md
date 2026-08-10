@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Added the pinned 63-key num2words language/locale parity registry with exact-locale-first resolution and base fallback.
+- Added inherited locale unit inventories, conservative Unicode-aware language registries, and sharded deterministic registry snapshots.
+
 ## [v0.2.5] - 2026-08-10
 
 ### Added

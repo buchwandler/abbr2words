@@ -1,4 +1,4 @@
-"""Regenerate the committed effective abbreviation registry snapshot."""
+"""Regenerate deterministic sharded effective abbreviation registry snapshots."""
 
 from __future__ import annotations
 
@@ -8,21 +8,6 @@ from pathlib import Path
 from typing import Any
 
 from abbr2words import get_shared_expander, supported_languages
-
-DECLARATION_COUNTS = {
-    "cs": 66,
-    "de": 62,
-    "en": 163,
-    "es": 73,
-    "fr": 58,
-    "it": 85,
-    "nl": 37,
-    "pl": 39,
-    "pt": 73,
-    "ru": 16,
-    "sv": 30,
-    "tr": 15,
-}
 
 
 def _entry_row(language: str, key: str, entry: Any) -> dict[str, Any]:
@@ -49,33 +34,50 @@ def _entry_row(language: str, key: str, entry: Any) -> dict[str, Any]:
     }
 
 
-def build_snapshot() -> dict[str, Any]:
-    """Return the current registry data in the test snapshot format."""
-    entries = [
+def build_registry(language: str) -> list[dict[str, Any]]:
+    """Return one sorted effective registry shard."""
+    rows = [
         _entry_row(language, key, entry)
-        for language in supported_languages()
         for key, entry in get_shared_expander(language).entries.items()
     ]
-    entries.sort(key=lambda row: (row["language"], row["key"]))
-    canonical = json.dumps(entries, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return sorted(rows, key=lambda row: row["key"])
+
+
+def _canonical(rows: list[dict[str, Any]]) -> str:
+    return json.dumps(rows, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def build_index(registries: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
+    """Return the compact shard index and all-registry integrity hash."""
+    all_rows = [row for language in sorted(registries) for row in registries[language]]
     return {
-        "declarations": DECLARATION_COUNTS,
-        "effective_counts": {
-            language: sum(row["language"] == language for row in entries)
-            for language in supported_languages()
+        "repository": "abbr2words",
+        "languages": {
+            language: {
+                "count": len(rows),
+                "sha256": hashlib.sha256(_canonical(rows).encode()).hexdigest(),
+            }
+            for language, rows in sorted(registries.items())
         },
-        "required_all_language_effective_hash": hashlib.sha256(canonical.encode()).hexdigest(),
-        "entries": entries,
+        "all_sha256": hashlib.sha256(_canonical(all_rows).encode()).hexdigest(),
     }
 
 
 def main() -> int:
-    """Write the snapshot consumed by the registry parity tests."""
-    output = Path(__file__).parents[1] / "tests" / "data" / "registry_snapshot.json"
-    output.write_text(
-        json.dumps(build_snapshot(), indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    root = Path(__file__).parents[1] / "tests" / "data" / "registries"
+    root.mkdir(parents=True, exist_ok=True)
+    registries = {language: build_registry(language) for language in supported_languages()}
+    for language, rows in registries.items():
+        (root / f"{language}.json").write_text(
+            json.dumps({"language": language, "entries": rows}, indent=2, ensure_ascii=False)
+            + "\n",
+            encoding="utf-8",
+        )
+    (root / "index.json").write_text(
+        json.dumps(build_index(registries), indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
     )
-    print(f"wrote {output}")
+    print(f"wrote {len(registries)} registry shards to {root}")
     return 0
 
 

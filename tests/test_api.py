@@ -2,7 +2,15 @@ from __future__ import annotations
 
 import pytest
 
-from abbr2words import Expander, __version__, abbr2words, reset_expanders, supported_languages
+from abbr2words import (
+    Expander,
+    __version__,
+    abbr2words,
+    base_language,
+    normalize_language,
+    reset_expanders,
+    supported_languages,
+)
 from abbr2words.__about__ import __version__ as fallback_version
 
 
@@ -18,20 +26,9 @@ def test_source_fallback_version_is_neutral() -> None:
 
 
 def test_supported_languages() -> None:
-    assert supported_languages() == (
-        "cs",
-        "de",
-        "en",
-        "es",
-        "fr",
-        "it",
-        "nl",
-        "pl",
-        "pt",
-        "ru",
-        "sv",
-        "tr",
-    )
+    assert len(supported_languages()) == 63
+    assert len(supported_languages(include_locales=False)) == 49
+    assert set(supported_languages(include_locales=False)) <= set(supported_languages())
 
 
 def test_german_expansion() -> None:
@@ -43,6 +40,20 @@ def test_german_expansion() -> None:
 
 def test_locale_alias() -> None:
     assert abbr2words("Prof. Klein", lang="de-DE") == "Professor Klein"
+
+
+def test_locale_resolution_falls_back_to_base() -> None:
+    assert normalize_language("fr_FR") == "fr"
+    assert normalize_language("en_GB") == "en"
+    assert normalize_language("DE-de") == "de"
+    assert base_language("de-DE") == "de"
+
+
+def test_canonical_language_input_and_malformed_tags() -> None:
+    assert normalize_language("  de  ") == "de"
+    assert normalize_language("rus_RU") == "ru"
+    with pytest.raises(ValueError, match="Unsupported language"):
+        normalize_language("xx__YY")
 
 
 def test_german_context_for_fr() -> None:

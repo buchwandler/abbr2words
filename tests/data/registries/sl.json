@@ -1,0 +1,17 @@
+{
+  "language": "sl",
+  "entries": [
+    {
+      "language": "sl",
+      "key": "št.",
+      "abbreviation": "št.",
+      "expansion": "številka",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Number reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    }
+  ]
+}

@@ -19,7 +19,6 @@ class MissingNum2WordsError(RuntimeError):
     """Raised when full-text normalization is requested without num2words."""
 
 
-_NUM2WORDS_LOCALES = {"pt-br": "pt_BR", "en-gb": "en_GB"}
 _NUMBER = r"[+-]?(?:\d{1,3}(?:[,.]\d{3})+|\d+)(?:[,.]\d+)?"
 _NUMBER_RE = re.compile(_NUMBER)
 _EMAIL_RE = re.compile(r"(?<!\w)[\w.+-]+@[\w-]+(?:\.[\w-]+)+(?!\w)")
@@ -334,9 +333,8 @@ def _num2words(value: Decimal | int, *, lang: str, **kwargs: str) -> str:
         raise MissingNum2WordsError(
             'Full-text normalization requires the examples extra: python -m pip install "abbr2words[examples]"'
         ) from exc
-    locale = _NUM2WORDS_LOCALES.get(lang.lower(), lang)
     try:
-        return str(num2words(value, lang=locale, **kwargs))
+        return str(num2words(value, lang=lang, **kwargs))
     except (NotImplementedError, TypeError, ValueError):
         raise
 

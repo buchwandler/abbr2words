@@ -1,0 +1,17 @@
+{
+  "language": "no",
+  "entries": [
+    {
+      "language": "no",
+      "key": "nr.",
+      "abbreviation": "nr.",
+      "expansion": "nummer",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Number reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    }
+  ]
+}

@@ -5,8 +5,10 @@ from __future__ import annotations
 import re
 from collections.abc import Iterable, Iterator, Mapping, Set
 from dataclasses import dataclass, replace
+from typing import Literal
 
 from ._replacements import Replacement, apply_replacements
+from .unit_data import entries as external_unit_entries
 
 NUMBER_BEFORE_UNIT = (
     r"(?:^|[^\w.])"
@@ -15,6 +17,34 @@ NUMBER_BEFORE_UNIT = (
     r"(?:[.,]\d+)?"
     r"[ \t\u00a0\u202f]*$"
 )
+
+
+@dataclass(frozen=True, slots=True)
+class NumericFormatProfile:
+    """Recognition-only numeric punctuation policy for a language family."""
+
+    decimal_separators: tuple[str, ...]
+    grouping_separators: tuple[str, ...]
+    grouping: Literal["western", "indian", "flexible"]
+
+
+NUMERIC_FORMAT_PROFILES = {
+    "default": NumericFormatProfile(
+        decimal_separators=(".", ",", "٫"),
+        grouping_separators=(",", ".", " ", "\u00a0", "\u202f", "٬"),
+        grouping="flexible",
+    ),
+    "en": NumericFormatProfile(
+        decimal_separators=(".",),
+        grouping_separators=(",", " ", "\u00a0", "\u202f"),
+        grouping="western",
+    ),
+}
+
+
+def numeric_format_profile(language: str) -> NumericFormatProfile:
+    """Return the recognition profile used for a language key."""
+    return NUMERIC_FORMAT_PROFILES.get(language, NUMERIC_FORMAT_PROFILES["default"])
 
 
 @dataclass(frozen=True)
@@ -1041,7 +1071,12 @@ UNIT_ENTRIES["tr"] = tuple(
 
 
 def unit_entries(language: str) -> tuple[UnitEntry, ...]:
-    return UNIT_ENTRIES[language]
+    if language in UNIT_ENTRIES:
+        return UNIT_ENTRIES[language]
+    external = external_unit_entries(language)
+    if external is None:
+        raise KeyError(language)
+    return external
 
 
 def unit_symbols(language: str) -> frozenset[str]:
@@ -1069,6 +1104,9 @@ def validate_unit_registry(language: str) -> None:
             canonical_entries[entry.canonical_id] = entry
             if entry.canonical_symbol not in entry.symbols:
                 raise ValueError(f"canonical symbol is not registered for {entry.canonical_id!r}")
+    external = external_unit_entries(language)
+    if external is not None and language not in UNIT_ENTRIES:
+        return
     expected = {definition.canonical_id for definition in _BASE_DEFINITIONS + _EXTENDED_DEFINITIONS}
     localized = set(_LOCALIZED_UNIT_NAMES.get(language, {})) | set(
         _LOCALIZED_EXTENDED_UNIT_NAMES.get(language, {})
@@ -1079,9 +1117,23 @@ def validate_unit_registry(language: str) -> None:
 
 _HSPACE = " \t\u00a0\u202f"
 _EXPONENT = r"(?:[eE][+\-]?\d+)?"
-_ATOM_CORE = r"(?:(?:\d{1,3}(?:[ \u00a0\u202f]\d{3})+|\d+)(?:[.,]\d+)?|\.\d+)"
+_DIGITS = r"\d"
+_WESTERN_COMMA_GROUP = rf"{_DIGITS}{{1,3}}(?:,{_DIGITS}{{3}})+"
+_WESTERN_SPACE_GROUP = rf"{_DIGITS}{{1,3}}(?:[ \u00a0\u202f]{_DIGITS}{{3}})+"
+_DOT_GROUP = rf"{_DIGITS}{{1,3}}(?:\.{_DIGITS}{{3}})+"
+_INDIAN_GROUP = rf"{_DIGITS}{{1,3}}(?:,{_DIGITS}{{2}})+,{_DIGITS}{{3}}"
+_ARABIC_GROUP = rf"{_DIGITS}{{1,3}}(?:٬{_DIGITS}{{3}})+"
+_FLEXIBLE_GROUPED = (
+    rf"(?:{_INDIAN_GROUP}(?:[.٫]{_DIGITS}+)?|"
+    rf"{_DOT_GROUP}(?:,{_DIGITS}+)?|"
+    rf"{_WESTERN_SPACE_GROUP}(?:[.,٫]{_DIGITS}+)?|"
+    rf"{_ARABIC_GROUP}(?:٫{_DIGITS}+)?)"
+)
+_PLAIN_NUMBER = rf"{_DIGITS}+(?:[.,٫]{_DIGITS}+)?"
+_ATOM_CORE = rf"(?:{_FLEXIBLE_GROUPED}|{_PLAIN_NUMBER}|\.{_DIGITS}+)"
 _ATOM = rf"[+\-−]?{_ATOM_CORE}{_EXPONENT}"
-_EN_ATOM = rf"[+\-−]?(?:\d{{1,3}}(?:,\d{{3}})+(?:\.\d+)?|{_ATOM_CORE}){_EXPONENT}"
+_EN_PLAIN_NUMBER = rf"{_DIGITS}+(?:[.,]{_DIGITS}+)?"
+_EN_ATOM = rf"[+\-−]?(?:{_WESTERN_COMMA_GROUP}(?:\.{_DIGITS}+)?|{_WESTERN_SPACE_GROUP}(?:\.{_DIGITS}+)?|{_EN_PLAIN_NUMBER}|\.{_DIGITS}+){_EXPONENT}"
 
 
 def _value_expression(atom: str) -> str:
@@ -1090,8 +1142,8 @@ def _value_expression(atom: str) -> str:
 
 _VALUE = _value_expression(_ATOM)
 _EN_VALUE = _value_expression(_EN_ATOM)
-_VALUE_PATTERN = re.compile(rf"(?<![\w./])(?P<value>{_VALUE})(?P<spacing>[{_HSPACE}]*)")
-_EN_VALUE_PATTERN = re.compile(rf"(?<![\w./])(?P<value>{_EN_VALUE})(?P<spacing>[{_HSPACE}]*)")
+_VALUE_PATTERN = re.compile(rf"(?<![\w./,٬])(?P<value>{_VALUE})(?P<spacing>[{_HSPACE}]*)")
+_EN_VALUE_PATTERN = re.compile(rf"(?<![\w./,٬])(?P<value>{_EN_VALUE})(?P<spacing>[{_HSPACE}]*)")
 _CONTINUATION = re.compile(rf"[{_HSPACE}]*([/^·⋅*×^])")
 _PREFIX_BOUNDARY = r"(?<![\w./])"
 _CLOSING_SENTENCE_CHARS = frozenset("\"'»”’)]}》」』")
@@ -1410,12 +1462,15 @@ def expand_units(text: str, language: str) -> str:
 
 __all__ = [
     "NUMBER_BEFORE_UNIT",
+    "NUMERIC_FORMAT_PROFILES",
+    "NumericFormatProfile",
     "UNIT_ENTRIES",
     "UnitEntry",
     "UnitMatch",
     "expand_units",
     "iter_unit_matches",
     "iter_unit_replacements",
+    "numeric_format_profile",
     "unit_entries",
     "unit_symbols",
     "validate_unit_registry",

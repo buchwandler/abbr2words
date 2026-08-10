@@ -1,0 +1,17 @@
+{
+  "language": "fa",
+  "entries": [
+    {
+      "language": "fa",
+      "key": "د.",
+      "abbreviation": "د.",
+      "expansion": "دکتر",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Doctor",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    }
+  ]
+}

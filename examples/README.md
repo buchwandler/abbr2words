@@ -31,6 +31,11 @@ python -m pip install -e ".[examples]"
 `num2words` is an optional third-party dependency distributed under the LGPL and
 is not part of the core runtime dependencies.
 
+Locale examples include `pt_BR`, `es_NI`, `fr_CH`, `en_IN`, and `zh_CN`. The
+abbreviation stage resolves these keys directly; full number spelling still
+depends on the installed optional `num2words` release and may fall back or remain
+abbreviation-only when that release lacks a key.
+
 ## Abbreviations only
 
 The pure English demonstration uses the exact supplied English sample:

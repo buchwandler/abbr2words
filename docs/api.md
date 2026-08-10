@@ -43,8 +43,11 @@ for replacement in result.replacements:
     print(replacement.start, replacement.end, replacement.text, replacement.kind)
 ```
 
-The bundled language registry includes `cs`, `de`, `en`, `es`, `fr`, `it`, `nl`,
-`pl`, `pt`, `ru`, `sv`, and `tr`. Turkish unit symbols followed by straight or
+The bundled language registry follows the 63-key current-master parity snapshot:
+49 base keys plus the explicit locale overlays `en_IN`, `en_NG`, `es_CO`,
+`es_CR`, `es_GT`, `es_NI`, `es_VE`, `fr_BE`, `fr_CH`, `fr_DZ`, `pt_BR`,
+`zh_CN`, `zh_HK`, and `zh_TW`. `normalize_language()` returns an exact locale
+key when registered and otherwise its base key. Turkish unit symbols followed by straight or
 curly apostrophe suffixes are intentionally not expanded until suffix
 realization is implemented.
 
@@ -53,6 +56,10 @@ realization is implemented.
 ```
 
 ```{autofunction} abbr2words.normalize_language
+
+```
+
+```{autofunction} abbr2words.base_language
 
 ```
 

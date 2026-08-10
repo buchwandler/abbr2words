@@ -26,6 +26,8 @@ def test_wheel_contains_runtime_and_license_files() -> None:
 
     assert "abbr2words/py.typed" in names
     assert "abbr2words/api.py" in names
+    assert "abbr2words/language_registry.py" in names
+    assert "abbr2words/unit_data/__init__.py" in names
     assert "abbr2words/languages/en.py" in names
     assert any(name.endswith(".dist-info/licenses/LICENSE") for name in names)
     assert any(name.endswith(".dist-info/licenses/NOTICE") for name in names)

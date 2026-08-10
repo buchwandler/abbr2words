@@ -1,0 +1,17 @@
+{
+  "language": "ko",
+  "entries": [
+    {
+      "language": "ko",
+      "key": "№",
+      "abbreviation": "№",
+      "expansion": "번호",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Number sign",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    }
+  ]
+}

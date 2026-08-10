@@ -1,0 +1,17 @@
+{
+  "language": "uk",
+  "entries": [
+    {
+      "language": "uk",
+      "key": "№",
+      "abbreviation": "№",
+      "expansion": "номер",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Number sign",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    }
+  ]
+}

@@ -13,26 +13,27 @@ layout (no `src/` directory).
 
 ## Supported languages
 
-- Czech (`cs`)
-- German (`de`)
-- English (`en`)
-- Spanish (`es`)
-- French (`fr`)
-- Italian (`it`)
-- Dutch (`nl`)
-- Polish (`pl`)
-- Portuguese (`pt`)
-- Russian (`ru`)
-- Swedish (`sv`)
-- Turkish (`tr`)
+The registry follows the pinned current-master `num2words` key contract. It has
+49 base keys:
 
-Locale forms such as `de-DE`, `en_GB`, and `pt-BR` are accepted and currently map
-to their base-language registry.
+`am`, `ar`, `az`, `be`, `bn`, `ca`, `ce`, `cs`, `cy`, `da`, `de`, `en`, `eo`,
+`es`, `fa`, `fi`, `fr`, `he`, `hi`, `hu`, `hy`, `id`, `is`, `it`, `ja`, `kn`,
+`ko`, `kz`, `lt`, `lv`, `mn`, `nl`, `no`, `pl`, `pt`, `ro`, `ru`, `sk`, `sl`,
+`sr`, `sv`, `te`, `tet`, `tg`, `th`, `tr`, `uk`, `vi`, and `zh`.
 
-Dutch, Polish, Russian, Swedish, and Turkish currently provide conservative
-abbreviation and reviewed numeric-unit registries. Their multilingual examples
-are abbreviation-only; full speech-number normalization remains limited to the
-optional examples configured for the original scenario languages.
+The 14 explicit locale overlays are `en_IN`, `en_NG`, `es_CO`, `es_CR`,
+`es_GT`, `es_NI`, `es_VE`, `fr_BE`, `fr_CH`, `fr_DZ`, `pt_BR`, `zh_CN`,
+`zh_HK`, and `zh_TW`.
+
+Language resolution trims input, accepts hyphens and underscores, canonicalizes
+base/region casing, tries an exact locale first, then falls back to its base.
+Thus `pt-BR` resolves to `pt_BR`, `fr_FR` to `fr`, and `en_GB` to `en`.
+`eo` and `es_NI` are explicit registry keys; `eu` is unsupported. Use
+`base_language()` when a caller needs the resolved base key.
+
+This is abbreviation and unit support. Optional `num2words` remains a separate
+number-verbalization component, and installed releases may support fewer keys
+than this registry. No num2words code or runtime dependency is copied here.
 
 ## Installation
 

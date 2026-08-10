@@ -1,0 +1,17 @@
+{
+  "language": "ca",
+  "entries": [
+    {
+      "language": "ca",
+      "key": "sr.",
+      "abbreviation": "Sr.",
+      "expansion": "Senyor",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Honorific",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    }
+  ]
+}

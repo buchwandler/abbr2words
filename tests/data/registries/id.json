@@ -1,0 +1,17 @@
+{
+  "language": "id",
+  "entries": [
+    {
+      "language": "id",
+      "key": "no.",
+      "abbreviation": "No.",
+      "expansion": "nomor",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Number reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    }
+  ]
+}

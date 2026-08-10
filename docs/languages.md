@@ -1,27 +1,31 @@
 # Languages
 
-The bundled base-language registries are:
+The bundled base-language registries are the 49 base keys in the pinned
+num2words parity contract:
 
-| Code | Language   |
-| ---- | ---------- |
-| `cs` | Czech      |
-| `de` | German     |
-| `en` | English    |
-| `es` | Spanish    |
-| `fr` | French     |
-| `it` | Italian    |
-| `nl` | Dutch      |
-| `pl` | Polish     |
-| `pt` | Portuguese |
-| `ru` | Russian    |
-| `sv` | Swedish    |
-| `tr` | Turkish    |
+| Codes |
+| ----- |
+| `am` `ar` `az` `be` `bn` `ca` `ce` `cs` `cy` `da` `de` `en` `eo` |
+| `es` `fa` `fi` `fr` `he` `hi` `hu` `hy` `id` `is` `it` `ja` `kn` |
+| `ko` `kz` `lt` `lv` `mn` `nl` `no` `pl` `pt` `ro` `ru` `sk` `sl` |
+| `sr` `sv` `te` `tet` `tg` `th` `tr` `uk` `vi` `zh` |
 
-Language input is normalized by trimming whitespace, lowercasing, accepting both
-hyphens and underscores, and taking the base part of a locale. For example,
-`de-DE`, `en_GB`, and `pt-BR` select `de`, `en`, and `pt`. Common three-letter
-aliases and `cz` for Czech are also accepted, including `dut`/`nld`, `pol`,
-`rus`, `swe`, and `tur` for the added registries.
+Explicit locale overlays inherit a base registry and are independently keyed:
+
+| Base | Locale overlays | num2words parity |
+| ---- | --------------- | ---------------- |
+| `en` | `en_IN`, `en_NG` | v0.5.14 |
+| `es` | `es_CO`, `es_CR`, `es_GT`, `es_NI`, `es_VE` | v0.5.14 |
+| `fr` | `fr_BE`, `fr_CH`, `fr_DZ` | v0.5.14 |
+| `pt` | `pt_BR` | v0.5.14 |
+| `zh` | `zh_CN`, `zh_HK`, `zh_TW` | current master only |
+
+Language input is normalized by trimming whitespace, accepting both hyphens and
+underscores, canonicalizing base/region casing, and trying the exact registered
+locale before falling back to its base. For example, `pt-BR` selects `pt_BR`,
+`fr_FR` selects `fr`, and `en_GB` selects `en`. Common verified three-letter
+aliases and `cz` for Czech remain accepted. `eo` and `es_NI` are explicit keys;
+`eu` is not supported.
 
 The added registries are intentionally conservative. Ambiguous short forms are
 guarded by numeric/name context or omitted, Russian multiword abbreviations
