@@ -11,7 +11,7 @@ from abbr2words.__main__ import main
 
 def test_cli_expands_positional_text(capsys: pytest.CaptureFixture[str]) -> None:
     assert main(["--lang", "de", "Prof. Klein kommt ggf."]) == 0
-    assert capsys.readouterr().out == "Professor Klein kommt gegebenenfalls\n"
+    assert capsys.readouterr().out == "Professor Klein kommt gegebenenfalls.\n"
 
 
 def test_cli_reads_stdin(

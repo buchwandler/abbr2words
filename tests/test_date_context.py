@@ -43,7 +43,7 @@ def test_italian_month_and_title_contexts_use_one_canonical_entry() -> None:
     assert abbr2words("12 gen. 2024", lang="it") == "12 gennaio 2024"
     assert abbr2words("Gen. Rossi", lang="it") == "Generale Rossi"
     assert abbr2words("5 mag. 2024", lang="it") == "5 maggio 2024"
-    assert abbr2words("Dott. Mag. Bianchi", lang="it") == "Dottor Magistrato Bianchi"
+    assert abbr2words("Dott. Mag. Bianchi", lang="it") == "Dottor magistrato Bianchi"
 
     expander = get_expander("it")
     assert expander.get_abbreviation("gen.").context_expansions

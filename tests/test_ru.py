@@ -6,7 +6,7 @@ from abbr2words import abbr2words, normalize_language
 def test_russian_alias_and_flexible_horizontal_whitespace() -> None:
     assert normalize_language("rus_RU") == "ru"
     assert abbr2words("т. е. и т.\u00a0д. и\u202fт.\u202fп.", lang="ru") == (
-        "то есть и так далее и тому подобное"
+        "то есть и так далее и тому подобное."
     )
 
 

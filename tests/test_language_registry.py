@@ -116,7 +116,7 @@ def test_locale_shared_registry_mutations_do_not_leak_to_base_or_siblings() -> N
     sibling = get_shared_expander("es_NI", context=False)
     locale.add_abbreviation(AbbreviationEntry("LOCALE.", "locale-only", origin="custom"))
 
-    assert locale.expand("LOCALE.") == "locale-only"
+    assert locale.expand("LOCALE.") == "locale-only."
     assert base.expand("LOCALE.") == "LOCALE."
     assert sibling.expand("LOCALE.") == "LOCALE."
 

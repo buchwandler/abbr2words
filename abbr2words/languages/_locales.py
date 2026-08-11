@@ -78,6 +78,14 @@ class SpanishMexicoAbbreviationExpander(SpanishAbbreviationExpander):
 
     def _initialize_abbreviations(self) -> None:
         super()._initialize_abbreviations()
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="Blvd.",
+                expansion="boulevard",
+                case_policy="sentence",
+                description="Mexican Spanish boulevard preference",
+            )
+        )
 
 
 class FrenchBelgiumAbbreviationExpander(FrenchAbbreviationExpander):

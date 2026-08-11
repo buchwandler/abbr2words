@@ -57,11 +57,11 @@ def test_supplied_german_text_remains_abbreviation_only() -> None:
 @pytest.mark.parametrize(
     ("source", "expected"),
     [
-        ("123 N. Main St.", "123 North Main Street"),
-        ("123 S. Main St.", "123 South Main Street"),
-        ("123 E. Main St.", "123 East Main Street"),
-        ("123 W. Main St.", "123 West Main Street"),
-        ("P.S.", "postscript"),
+        ("123 N. Main St.", "123 North Main Street."),
+        ("123 S. Main St.", "123 South Main Street."),
+        ("123 E. Main St.", "123 East Main Street."),
+        ("123 W. Main St.", "123 West Main Street."),
+        ("P.S.", "postscript."),
         ("A.B.S.", "A.B.S."),
     ],
 )
@@ -82,11 +82,11 @@ def test_celsius_and_circa_are_distinct() -> None:
 @pytest.mark.parametrize(
     ("source", "expected"),
     [
-        ("123 Main St.", "123 Main Street"),
+        ("123 Main St.", "123 Main Street."),
         ("456 Oak St. is here", "456 Oak Street is here"),
-        ("100 N. Elm St.", "100 North Elm Street"),
-        ("I live at 5 Park St.", "I live at 5 Park Street"),
-        ("The shop on 5th St.", "The shop on 5th Street"),
+        ("100 N. Elm St.", "100 North Elm Street."),
+        ("I live at 5 Park St.", "I live at 5 Park Street."),
+        ("The shop on 5th St.", "The shop on 5th Street."),
         ("St. Patrick's Day", "Saint Patrick's Day"),
         ("St. Peter was an apostle", "Saint Peter was an apostle"),
         ("The church of St. John", "The church of Saint John"),
@@ -95,7 +95,7 @@ def test_celsius_and_circa_are_distinct() -> None:
         ("123 St. Louis Avenue", "123 Saint Louis Avenue"),
         ("I live on St. Patrick Street", "I live on Saint Patrick Street"),
         ("St. Christopher", "Saint Christopher"),
-        ("Visit St.", "Visit Saint"),
+        ("Visit St.", "Visit Saint."),
         ("Main St. is closed.", "Main Street is closed."),
     ],
 )

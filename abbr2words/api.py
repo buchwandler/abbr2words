@@ -6,7 +6,7 @@ from collections.abc import Iterable, Iterator, Mapping, Set
 from importlib import import_module
 from re import Pattern
 from threading import RLock
-from typing import Final
+from typing import Final, Literal
 
 from .annotations import TokenAnnotation
 from .core import (
@@ -223,6 +223,7 @@ class Expander:
         only_if_followed_by: str | Pattern[str] | None = None,
         only_if_pos: PosConstraints = None,
         not_if_pos: PosConstraints = None,
+        case_policy: Literal["fixed", "sentence"] = "fixed",
     ) -> None:
         """Add or replace an abbreviation, optionally constrained by POS.
 
@@ -256,6 +257,7 @@ class Expander:
                 only_if_followed_by=only_if_followed_by,
                 only_if_pos=only_if_pos,
                 not_if_pos=not_if_pos,
+                case_policy=case_policy,
                 origin="custom",
             )
         )
@@ -270,6 +272,7 @@ class Expander:
         only_if_followed_by: str | Pattern[str] | None = None,
         only_if_pos: PosConstraints = None,
         not_if_pos: PosConstraints = None,
+        case_policy: Literal["fixed", "sentence"] = "fixed",
     ) -> None:
         """Register an entry using string-named context expansions."""
         self._impl.add_custom_abbreviation(
@@ -281,6 +284,7 @@ class Expander:
             only_if_followed_by=only_if_followed_by,
             only_if_pos=only_if_pos,
             not_if_pos=not_if_pos,
+            case_policy=case_policy,
         )
 
     def set_unit(

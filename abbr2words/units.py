@@ -983,10 +983,22 @@ _POLYNORM_UNIT_LABELS = {
 
 _POLYNORM_CURRENCY_LABELS = {
     "en": ("Japanese yen", "Swiss franc", "Indian rupee", "South Korean won", "Mexican peso"),
-    "de": ("japanischer Yen", "Schweizer Franken", "indische Rupie", "südkoreanischer Won", "mexikanischer Peso"),
+    "de": (
+        "japanischer Yen",
+        "Schweizer Franken",
+        "indische Rupie",
+        "südkoreanischer Won",
+        "mexikanischer Peso",
+    ),
     "es": ("yen japonés", "franco suizo", "rupia india", "won surcoreano", "peso mexicano"),
     "fr": ("yen japonais", "franc suisse", "roupie indienne", "won sud-coréen", "peso mexicain"),
-    "it": ("yen giapponese", "franco svizzero", "rupia indiana", "won sudcoreano", "peso messicano"),
+    "it": (
+        "yen giapponese",
+        "franco svizzero",
+        "rupia indiana",
+        "won sudcoreano",
+        "peso messicano",
+    ),
 }
 
 
@@ -1024,6 +1036,7 @@ def _polynorm_currency_entries(language: str) -> tuple[UnitEntry, ...]:
         )
         for index, (symbols, canonical_id, canonical_symbol) in enumerate(definitions)
     )
+
 
 _EXTENDED_TRANSLATION_VALUES = {
     "cs": (
@@ -1294,7 +1307,22 @@ _CONTINUATION = re.compile(rf"[{_HSPACE}]*([/^·⋅*×^])")
 _PREFIX_BOUNDARY = r"(?<![\w./])"
 _CLOSING_SENTENCE_CHARS = frozenset("\"'»”’)]}》」』")
 _EN_PREPOSITION_DETERMINERS = frozenset(
-    {"a", "an", "the", "my", "your", "his", "her", "its", "our", "their", "this", "that", "these", "those"}
+    {
+        "a",
+        "an",
+        "the",
+        "my",
+        "your",
+        "his",
+        "her",
+        "its",
+        "our",
+        "their",
+        "this",
+        "that",
+        "these",
+        "those",
+    }
 )
 
 

@@ -58,7 +58,7 @@ def test_canonical_language_input_and_malformed_tags() -> None:
 
 def test_german_context_for_fr() -> None:
     assert abbr2words("Fr. Klein", lang="de") == "Frau Klein"
-    assert abbr2words("am Fr.", lang="de") == "am Freitag"
+    assert abbr2words("am Fr.", lang="de") == "am Freitag."
 
 
 def test_context_mode_is_respected_independent_of_call_order() -> None:

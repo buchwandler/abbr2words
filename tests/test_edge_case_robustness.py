@@ -7,6 +7,7 @@ import pytest
 from abbr2words import (
     AbbreviationEntry,
     Expander,
+    ExpansionVariant,
     ProtectedSpan,
     abbr2words,
     abbr2words_with_replacements,
@@ -69,6 +70,7 @@ def test_unicode_micro_alias_and_complete_units():
         (lambda: AbbreviationEntry("Dr.", 3), "expansion"),
         (lambda: AbbreviationEntry("Dr.", ""), "expansion"),
         (lambda: AbbreviationEntry("Dr.", "x", case_sensitive=1), "case_sensitive"),
+        (lambda: AbbreviationEntry("Dr.", "x", case_policy="invalid"), "case_policy"),
         (lambda: AbbreviationEntry("Dr.", "x", only_if_preceded_by="("), "regular expression"),
         (lambda: AbbreviationEntry("Dr.", "x", context_expansions={}), "context_expansions"),
         (lambda: AbbreviationEntry("Dr.", "x", context_expansions={"title": "x"}), "keys"),
@@ -77,6 +79,53 @@ def test_unicode_micro_alias_and_complete_units():
 def test_custom_entry_validation_is_eager(factory, message: str):
     with pytest.raises((TypeError, ValueError), match=message):
         factory()
+
+
+def test_sentence_case_policy_is_opt_in_and_composes_with_aliases_and_variants():
+    expander = Expander("en", context=False)
+    expander.add(
+        "P.",
+        "página",
+        case_policy="sentence",
+    )
+    expander.add(
+        "H.",
+        "onor",
+        case_policy="sentence",
+    )
+    expander.add(
+        "Alias.",
+        "alias",
+        case_policy="sentence",
+    )
+    expander._impl.add_abbreviation(
+        AbbreviationEntry(
+            "V.",
+            "vendedor",
+            variants=(ExpansionVariant("vendedora", only_if_preceded_by=r"(?i)la $"),),
+            case_policy="sentence",
+            aliases=("Var.",),
+            origin="custom",
+        )
+    )
+
+    assert expander.expand("P. one. P. two") == "Página one. Página two"
+    assert expander.expand('"P. quoted"') == '"Página quoted"'
+    assert expander.expand("Alias. one") == "Alias one"
+    assert expander.expand("la V. x") == "la vendedora x"
+    assert expander.expand("Var. x") == "Vendedor x"
+
+
+def test_custom_entries_remain_fixed_by_default():
+    expander = Expander("en", context=False)
+    expander.add("Fixed.", "custom")
+    assert expander.expand("Fixed. text") == "custom text"
+
+
+def test_sentence_case_does_not_treat_colon_as_a_boundary():
+    expander = Expander("en", context=False)
+    expander.add("P.", "página", case_policy="sentence")
+    assert expander.expand("Note: P. text") == "Note: página text"
 
 
 def test_custom_context_validation_and_default_fallback_are_deterministic():
@@ -90,7 +139,7 @@ def test_custom_context_validation_and_default_fallback_are_deterministic():
 def test_preceding_guard_is_immediate_not_an_unrestricted_window_search():
     expander = Expander("en", context=False)
     expander.add("ZZ.", "z", only_if_preceded_by="foo")
-    assert expander("foo ZZ.") == "foo z"
+    assert expander("foo ZZ.") == "foo z."
     assert expander("foo long gap ZZ.") == "foo long gap ZZ."
     assert expander("x foo y ZZ.") == "x foo y ZZ."
 
@@ -165,8 +214,8 @@ def test_replacement_result_handles_custom_and_unchanged_input():
     custom = expander.expand_with_replacements("X. X.")
     unchanged = expander.expand_with_replacements("")
 
-    assert [item.text for item in custom.replacements] == ["Example", "Example"]
-    assert custom.text == "Example Example"
+    assert [item.text for item in custom.replacements] == ["Example", "Example."]
+    assert custom.text == "Example Example."
     assert unchanged.source_text == unchanged.text == ""
     assert unchanged.replacements == ()
     assert expander.expand_with_trace("X. X.").replacements == custom.replacements

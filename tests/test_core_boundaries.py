@@ -15,10 +15,10 @@ def reset_shared_registries() -> None:
     [
         ("(Dr.) Smith", "en", "(Doctor) Smith"),
         ("Mrs. Smith", "en", "Missus Smith"),
-        ('He said "etc."', "en", 'He said "et cetera"'),
+        ('He said "etc."', "en", 'He said "et cetera."'),
         ("(Prof.) Klein", "de", "(Professor) Klein"),
-        ('Er sagte "etc."', "de", 'Er sagte "et cetera"'),
-        ('Er sagte "ggf."', "de", 'Er sagte "gegebenenfalls"'),
+        ('Er sagte "etc."', "de", 'Er sagte "et cetera."'),
+        ('Er sagte "ggf."', "de", 'Er sagte "gegebenenfalls."'),
         ("Prof.–Klein", "de", "Professor–Klein"),
     ],
 )
@@ -38,7 +38,7 @@ def test_dotted_abbreviations_reject_attached_words(lang: str) -> None:
     [
         ("J.-P. Sartre", "J.-P. Sartre"),
         ("A.-M. Dupont", "A.-M. Dupont"),
-        ("M. Dupont", "monsieur Dupont"),
+        ("M. Dupont", "Monsieur Dupont"),
         ("p. 12", "page 12"),
     ],
 )

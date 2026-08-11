@@ -10,6 +10,7 @@ from abbr2words.core import AbbreviationContext, AbbreviationEntry, Abbreviation
 
 _NUMBER_AFTER_REFERENCE = r"[ \t]+\d"
 _DIRECTION_LEFT_CONTEXT = r"(?:^|[\s,;(])$"
+_DIRECTION_RIGHT_CONTEXT = r"^[ \t]+(?:\d|[A-ZÀ-ÖØ-Þ])"
 _NUMBER_BEFORE_UNIT = (
     r"(?:^|[^\w.])"
     r"(?:(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?|\.\d+)"
@@ -639,6 +640,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="v.",
                 expansion="versus",
+                case_sensitive=True,
                 description="Versus (alternative)",
             )
         )
@@ -843,6 +845,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
                 expansion="North",
                 description="North",
                 only_if_preceded_by=_DIRECTION_LEFT_CONTEXT,
+                only_if_followed_by=_DIRECTION_RIGHT_CONTEXT,
             )
         )
 
@@ -852,6 +855,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
                 expansion="South",
                 description="South",
                 only_if_preceded_by=_DIRECTION_LEFT_CONTEXT,
+                only_if_followed_by=_DIRECTION_RIGHT_CONTEXT,
             )
         )
 
@@ -861,6 +865,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
                 expansion="East",
                 description="East",
                 only_if_preceded_by=_DIRECTION_LEFT_CONTEXT,
+                only_if_followed_by=_DIRECTION_RIGHT_CONTEXT,
             )
         )
 
@@ -870,6 +875,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
                 expansion="West",
                 description="West",
                 only_if_preceded_by=_DIRECTION_LEFT_CONTEXT,
+                only_if_followed_by=_DIRECTION_RIGHT_CONTEXT,
             )
         )
 

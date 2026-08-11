@@ -229,6 +229,7 @@ class AbbreviationEntry:
     right_boundary: str | None = None
     origin: str = "bundled"
     aliases: tuple[str, ...] = ()
+    case_policy: Literal["fixed", "sentence"] = "fixed"
     _pattern: Pattern[str] = field(init=False, repr=False, compare=False)
     _patterns: tuple[Pattern[str], ...] = field(init=False, repr=False, compare=False)
     _preceding_pattern: Pattern[str] | None = field(init=False, repr=False, compare=False)
@@ -247,6 +248,8 @@ class AbbreviationEntry:
             raise ValueError("expansion must not be empty")
         if type(self.case_sensitive) is not bool:
             raise TypeError("case_sensitive must be a bool")
+        if self.case_policy not in {"fixed", "sentence"}:
+            raise ValueError("case_policy must be 'fixed' or 'sentence'")
         if self.boundary not in {"word", "custom"}:
             raise ValueError("boundary must be 'word' or 'custom'")
         for name in ("left_boundary", "right_boundary"):
@@ -441,11 +444,7 @@ def _guards_match(
         )
         if not_if_pos and any(pos in not_if_pos for pos in lexical_pos):
             return False
-        if (
-            only_if_pos
-            and lexical_pos
-            and not any(pos in only_if_pos for pos in lexical_pos)
-        ):
+        if only_if_pos and lexical_pos and not any(pos in only_if_pos for pos in lexical_pos):
             return False
 
     return True
@@ -546,6 +545,7 @@ class AbbreviationExpander(ABC):
         only_if_followed_by: str | Pattern[str] | None = None,
         only_if_pos: PosConstraints = None,
         not_if_pos: PosConstraints = None,
+        case_policy: Literal["fixed", "sentence"] = "fixed",
     ) -> None:
         """Add or replace an entry using string context names and POS guards.
 
@@ -594,6 +594,7 @@ class AbbreviationExpander(ABC):
                 only_if_followed_by=only_if_followed_by,
                 only_if_pos=only_if_pos,
                 not_if_pos=not_if_pos,
+                case_policy=case_policy,
                 origin="custom",
             )
         )
@@ -915,6 +916,14 @@ class AbbreviationExpander(ABC):
                     context = self.context_detector.detect_context(match.group(), before, after)
                     expansion = entry.get_expansion(context)
 
+                expansion = _apply_case_policy(
+                    expansion,
+                    entry.case_policy,
+                    sentence_start=_is_sentence_start(text, start),
+                )
+                if _should_preserve_sentence_final_period(text, end, match.group(), expansion):
+                    expansion += "."
+
                 yield Replacement(
                     start=start,
                     end=end,
@@ -944,6 +953,64 @@ def _entry_priority(entry: AbbreviationEntry) -> int:
     if entry.origin == "custom":
         return 220 if entry.case_sensitive else 120
     return 210 if entry.case_sensitive else 110
+
+
+def _is_sentence_start(text: str, start: int) -> bool:
+    """Return whether *start* begins a sentence-level lexical phrase."""
+    prefix = text[:start]
+    index = len(prefix) - 1
+    while index >= 0 and prefix[index].isspace():
+        index -= 1
+    if index < 0:
+        return True
+
+    # An opening quote or bracket may wrap a phrase immediately following a
+    # sentence boundary. Do not treat a colon as a sentence boundary here.
+    opening = frozenset("\"'“‘«([{")
+    if prefix[index] in opening:
+        index -= 1
+        while index >= 0 and prefix[index].isspace():
+            index -= 1
+    return index < 0 or prefix[index] in ".!?。！？"
+
+
+def _apply_case_policy(
+    expansion: str,
+    policy: Literal["fixed", "sentence"],
+    *,
+    sentence_start: bool,
+) -> str:
+    """Apply an entry's opt-in sentence casing to the selected expansion."""
+    if policy == "fixed" or not sentence_start:
+        return expansion
+    for index, character in enumerate(expansion):
+        if character.lower() != character.upper():
+            return expansion[:index] + character.upper() + expansion[index + 1 :]
+    return expansion
+
+
+def _should_preserve_sentence_final_period(
+    text: str,
+    end: int,
+    matched_text: str,
+    expansion: str,
+) -> bool:
+    """Return whether a dotted abbreviation consumed sentence punctuation."""
+    if not matched_text.endswith(".") or not expansion or expansion[-1] in ".!?":
+        return False
+
+    suffix = text[end:]
+    index = 0
+    while index < len(suffix) and suffix[index].isspace():
+        index += 1
+
+    closing = frozenset("\"'”’»)]}")
+    while index < len(suffix) and suffix[index] in closing:
+        index += 1
+        while index < len(suffix) and suffix[index].isspace():
+            index += 1
+
+    return index == len(suffix)
 
 
 def _normalize_protected_spans(

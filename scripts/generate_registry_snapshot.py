@@ -24,6 +24,7 @@ def _entry_row(language: str, key: str, entry: Any) -> dict[str, Any]:
         "aliases": list(entry.aliases),
         "context_expansions": contexts,
         "case_sensitive": entry.case_sensitive,
+        "case_policy": entry.case_policy,
         "description": entry.description,
         "only_if_preceded_by": (
             str(entry.only_if_preceded_by) if entry.only_if_preceded_by is not None else None

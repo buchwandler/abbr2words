@@ -30,6 +30,21 @@ expander.add("in.", "inch", only_if_preceded_by=r"\d\s*$")
 expander.add("KI", "Künstliche Intelligenz", case_sensitive=True)
 ```
 
+Entries use fixed expansion text by default. For reviewed lexical phrases that
+should compose with sentence position, opt into sentence casing:
+
+```python
+expander.add("Pág.", "página", case_policy="sentence")
+assert expander("Pág. 12") == "Página 12"
+assert expander("consulte la Pág. 12") == "consulte la página 12"
+```
+
+The `sentence` policy uppercases the first cased character only at input or
+after sentence-ending punctuation, including an opening quote or bracket that
+follows that boundary. A colon is not a sentence boundary. Dotted abbreviation
+matches preserve one final period when their consumed dot is sentence-final;
+commas, semicolons, and internal dots are not added or moved.
+
 Followed-by guards are evaluated against the suffix immediately after the
 candidate abbreviation. In `only_if_followed_by=r"^\s*\d"`, `^` therefore
 means “immediately after this abbreviation,” even when the candidate occurs
@@ -68,6 +83,10 @@ expander.add("Code.", "Code", only_if_pos={"NOUN", "PROPN"}, not_if_pos="PROPN")
 Structural guards and reviewed numeric unit matching run before POS guards. POS
 output is treated as an optional signal; missing labels do not veto an entry,
 and a general tagger cannot disable a valid numeric unit expression.
+
+Abbreviation expansion remains lexical. Number/date/decimal/identifier parsing,
+article contraction, surrounding grammar, and TTS-oriented rendering belong to
+the downstream normalizer, such as `spokenform`.
 
 ## Shared registries
 

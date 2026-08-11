@@ -8,9 +8,9 @@ from abbr2words import abbr2words
 @pytest.mark.parametrize(
     ("lang", "source", "expected"),
     [
-        ("cs", "např.", "například"),
+        ("cs", "např.", "například."),
         ("es", "Sr. García", "Señor García"),
-        ("fr", "M. Dupont", "monsieur Dupont"),
+        ("fr", "M. Dupont", "Monsieur Dupont"),
         ("it", "Dott. Rossi", "Dottor Rossi"),
         ("pt", "Sr. Silva", "Senhor Silva"),
     ],

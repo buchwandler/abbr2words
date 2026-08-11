@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from abbr2words import get_expander, iter_unit_matches
+from abbr2words import abbr2words, get_expander, iter_unit_matches
 
 
 @pytest.mark.parametrize(
@@ -34,12 +34,8 @@ def test_locale_currencies_are_structured_numeric_entries(
 def test_mexican_dollar_overlay_preserves_explicit_us_dollar_forms() -> None:
     assert tuple(iter_unit_matches("$500", "es"))[0].canonical_id == "currency-us-dollar"
     assert tuple(iter_unit_matches("$500", "es_MX"))[0].canonical_id == "currency-mexican-peso"
-    assert tuple(iter_unit_matches("US$25.99", "es_MX"))[0].canonical_id == (
-        "currency-us-dollar"
-    )
-    assert tuple(iter_unit_matches("USD 25.99", "es_MX"))[0].canonical_id == (
-        "currency-us-dollar"
-    )
+    assert tuple(iter_unit_matches("US$25.99", "es_MX"))[0].canonical_id == ("currency-us-dollar")
+    assert tuple(iter_unit_matches("USD 25.99", "es_MX"))[0].canonical_id == ("currency-us-dollar")
 
 
 def test_us_and_gb_overlays_inherit_the_base_english_registry() -> None:
@@ -48,3 +44,10 @@ def test_us_and_gb_overlays_inherit_the_base_english_registry() -> None:
         overlay = get_expander(locale)
         assert overlay.entries.keys() == base.entries.keys()
         assert len(tuple(iter_unit_matches("60 mph", locale))) == 1
+
+
+def test_mexican_spanish_blvd_overlay_is_local_to_es_mx() -> None:
+    assert get_expander("es").get_abbreviation("Blvd.").expansion == "bulevar"
+    assert get_expander("es_MX").get_abbreviation("Blvd.").expansion == "boulevard"
+    assert abbr2words("Blvd. Juárez", lang="es") == "Bulevar Juárez"
+    assert abbr2words("Blvd. Juárez", lang="es_MX") == "Boulevard Juárez"

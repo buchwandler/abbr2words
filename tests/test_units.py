@@ -220,10 +220,11 @@ def test_every_reviewed_unit_requires_numeric_context(language: str) -> None:
             if entry.allow_lexical_overlap:
                 assert language.split("_", 1)[0] == "fr"
                 assert symbol == "min."
-                assert abbr2words(symbol, lang=language) == "minimum"
+                assert abbr2words(symbol, lang=language) == "minimum."
                 continue
             if entry.category == "magnitude":
-                assert abbr2words(symbol, lang=language) == entry.expansion
+                expected = entry.expansion + "." if symbol.endswith(".") else entry.expansion
+                assert abbr2words(symbol, lang=language) == expected
                 continue
             assert abbr2words(symbol, lang=language) == symbol
 
@@ -361,7 +362,14 @@ def test_czech_currency_registry_uses_shared_identities_and_metadata() -> None:
         "currency-japanese-yen": (("¥", "JPY"), "Japanese yen", "¥", "currency", "both", True),
         "currency-swiss-franc": (("CHF",), "Swiss franc", "CHF", "currency", "both", True),
         "currency-indian-rupee": (("₹", "INR"), "Indian rupee", "₹", "currency", "both", True),
-        "currency-south-korean-won": (("₩", "KRW"), "South Korean won", "₩", "currency", "both", True),
+        "currency-south-korean-won": (
+            ("₩", "KRW"),
+            "South Korean won",
+            "₩",
+            "currency",
+            "both",
+            True,
+        ),
         "currency-mexican-peso": (("MXN",), "Mexican peso", "MXN", "currency", "both", True),
     }
 
@@ -402,7 +410,14 @@ def test_portuguese_currency_registry_uses_reviewed_lemmas_and_metadata() -> Non
         "currency-japanese-yen": (("¥", "JPY"), "Japanese yen", "¥", "currency", "both", True),
         "currency-swiss-franc": (("CHF",), "Swiss franc", "CHF", "currency", "both", True),
         "currency-indian-rupee": (("₹", "INR"), "Indian rupee", "₹", "currency", "both", True),
-        "currency-south-korean-won": (("₩", "KRW"), "South Korean won", "₩", "currency", "both", True),
+        "currency-south-korean-won": (
+            ("₩", "KRW"),
+            "South Korean won",
+            "₩",
+            "currency",
+            "both",
+            True,
+        ),
         "currency-mexican-peso": (("MXN",), "Mexican peso", "MXN", "currency", "both", True),
     }
 

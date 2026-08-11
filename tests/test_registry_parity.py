@@ -46,6 +46,7 @@ def test_every_effective_registry_field_matches_its_shard() -> None:
                     "aliases": list(entry.aliases),
                     "context_expansions": contexts,
                     "case_sensitive": entry.case_sensitive,
+                    "case_policy": entry.case_policy,
                     "description": entry.description,
                     "only_if_preceded_by": (
                         str(entry.only_if_preceded_by)

@@ -38,16 +38,16 @@ def test_german_minimum_and_minute_expansion(source: str, expected: str) -> None
 @pytest.mark.parametrize(
     ("source", "expected"),
     [
-        ("Lfd. Nr.", "laufende Nummer"),
-        ("Lfd.Nr.", "laufende Nummer"),
-        ("z.B.", "zum Beispiel"),
-        ("z. B.", "zum Beispiel"),
-        ("z . b .", "zum Beispiel"),
+        ("Lfd. Nr.", "laufende Nummer."),
+        ("Lfd.Nr.", "laufende Nummer."),
+        ("z.B.", "zum Beispiel."),
+        ("z. B.", "zum Beispiel."),
+        ("z . b .", "zum Beispiel."),
         ("zB", "zum Beispiel"),
-        ("d.h.", "das heißt"),
-        ("d. h.", "das heißt"),
-        ("u.a.", "unter anderem"),
-        ("u. a.", "unter anderem"),
+        ("d.h.", "das heißt."),
+        ("d. h.", "das heißt."),
+        ("u.a.", "unter anderem."),
+        ("u. a.", "unter anderem."),
     ],
 )
 def test_german_compound_aliases(source: str, expected: str) -> None:
@@ -62,7 +62,7 @@ def test_german_compound_aliases_preserve_word_boundaries(source: str) -> None:
 def test_german_compound_aliases_work_at_punctuation_and_sentence_boundaries() -> None:
     source = '(z.B.), "d. h."; u. a.! Lfd.Nr.'
     assert abbr2words(source, lang="de") == (
-        '(zum Beispiel), "das heißt"; unter anderem! laufende Nummer'
+        '(zum Beispiel), "das heißt"; unter anderem! laufende Nummer.'
     )
 
 

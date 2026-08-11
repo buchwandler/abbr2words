@@ -38,6 +38,7 @@ class AbbreviationSeed:
         "other",
     ] = "other"
     case_sensitive: bool = False
+    case_policy: Literal["fixed", "sentence"] = "fixed"
     aliases: tuple[str, ...] = ()
     only_if_preceded_by: str | Pattern[str] | None = None
     only_if_followed_by: str | Pattern[str] | None = None

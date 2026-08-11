@@ -33,7 +33,8 @@ class SpanishAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Sr.",
-                expansion="Señor",
+                expansion="señor",
+                case_policy="sentence",
                 description="Title for Mr.",
             )
         )
@@ -41,7 +42,8 @@ class SpanishAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Sra.",
-                expansion="Señora",
+                expansion="señora",
+                case_policy="sentence",
                 description="Title for Mrs.",
             )
         )
@@ -49,7 +51,8 @@ class SpanishAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Srta.",
-                expansion="Señorita",
+                expansion="señorita",
+                case_policy="sentence",
                 description="Title for Miss",
             )
         )
@@ -57,7 +60,8 @@ class SpanishAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Dr.",
-                expansion="Doctor",
+                expansion="doctor",
+                case_policy="sentence",
                 description="Title for Doctor (male)",
             )
         )
@@ -65,7 +69,8 @@ class SpanishAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Dra.",
-                expansion="Doctora",
+                expansion="doctora",
+                case_policy="sentence",
                 description="Title for Doctor (female)",
             )
         )
@@ -73,13 +78,14 @@ class SpanishAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Prof.",
-                expansion="Profesor",
+                expansion="profesor",
                 variants=(
                     ExpansionVariant(
-                        "Profesora",
+                        "profesora",
                         only_if_preceded_by=r"(?i)\bla\s+$",
                     ),
                 ),
+                case_policy="sentence",
                 description="Title for Professor (male)",
             )
         )
@@ -87,7 +93,8 @@ class SpanishAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Profa.",
-                expansion="Profesora",
+                expansion="profesora",
+                case_policy="sentence",
                 description="Title for Professor (female)",
             )
         )
@@ -95,7 +102,8 @@ class SpanishAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Ing.",
-                expansion="Ingeniero",
+                expansion="ingeniero",
+                case_policy="sentence",
                 description="Title for Engineer",
             )
         )
@@ -103,7 +111,8 @@ class SpanishAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Lic.",
-                expansion="Licenciado",
+                expansion="licenciado",
+                case_policy="sentence",
                 description="Title for Licentiate (university graduate)",
             )
         )
@@ -378,6 +387,7 @@ class SpanishAbbreviationExpander(AbbreviationExpander):
                 AbbreviationEntry(
                     abbreviation=abbreviation,
                     expansion=expansion,
+                    case_policy="sentence" if abbreviation == "Blvd." else "fixed",
                     description=description,
                 )
             )
@@ -404,6 +414,7 @@ class SpanishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="pág.",
                 expansion="página",
+                case_policy="sentence",
                 description="Page",
             )
         )
@@ -412,6 +423,7 @@ class SpanishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="págs.",
                 expansion="páginas",
+                case_policy="sentence",
                 description="Pages",
             )
         )

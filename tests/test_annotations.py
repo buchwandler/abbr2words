@@ -74,13 +74,13 @@ def test_annotation_index_returns_overlapping_and_neighboring_tokens() -> None:
 def test_pos_allow_and_deny_guards_are_opt_in() -> None:
     expander = Expander("en")
     expander.add("Ref.", "Reference", only_if_pos={"NOUN"})
-    assert expander.expand("Ref.") == "Reference"
+    assert expander.expand("Ref.") == "Reference."
     assert expander.expand("Ref.", annotations=[TokenAnnotation(0, 4, "ADV")]) == "Ref."
-    assert expander.expand("Ref.", annotations=[TokenAnnotation(0, 4, "NOUN")]) == "Reference"
+    assert expander.expand("Ref.", annotations=[TokenAnnotation(0, 4, "NOUN")]) == "Reference."
 
     expander.add("Code.", "Code", not_if_pos={"PROPN"})
     assert expander.expand("Code.", annotations=[TokenAnnotation(0, 5, "PROPN")]) == "Code."
-    assert expander.expand("Code.", annotations=[TokenAnnotation(0, 5, "NOUN")]) == "Code"
+    assert expander.expand("Code.", annotations=[TokenAnnotation(0, 5, "NOUN")]) == "Code."
 
 
 def test_single_string_pos_constraint_is_one_normalized_label() -> None:
@@ -90,13 +90,13 @@ def test_single_string_pos_constraint_is_one_normalized_label() -> None:
     entry = expander._impl.get_abbreviation("ZZ.")
     assert entry is not None
     assert entry.only_if_pos == frozenset({"NOUN"})
-    assert expander.expand("ZZ.", annotations=[TokenAnnotation(0, 3, "NOUN")]) == "Zed"
+    assert expander.expand("ZZ.", annotations=[TokenAnnotation(0, 3, "NOUN")]) == "Zed."
 
     expander.add("YY.", "Why", not_if_pos="adp")
     denied = [TokenAnnotation(0, 3, "ADP")]
     allowed = [TokenAnnotation(0, 3, "NOUN")]
     assert expander.expand("YY.", annotations=denied) == "YY."
-    assert expander.expand("YY.", annotations=allowed) == "Why"
+    assert expander.expand("YY.", annotations=allowed) == "Why."
 
 
 def test_public_guard_helper_normalizes_annotations() -> None:
@@ -141,9 +141,9 @@ def test_punctuation_and_missing_pos_do_not_veto_allow_guard() -> None:
             "Ref.",
             annotations=[TokenAnnotation(0, 3, "NOUN"), TokenAnnotation(3, 4, "PUNCT")],
         )
-        == "Reference"
+        == "Reference."
     )
-    assert expander.expand("Ref.", annotations=[TokenAnnotation(0, 4)]) == "Reference"
+    assert expander.expand("Ref.", annotations=[TokenAnnotation(0, 4)]) == "Reference."
 
 
 def test_pos_annotations_use_original_offsets_after_an_earlier_replacement() -> None:
@@ -233,7 +233,7 @@ def test_spacy_example_import_is_lazy() -> None:
 
     tokens = [FakeToken("Ref.", 0, "NOUN", "NN")]
     annotations = example.to_token_annotations(tokens)
-    assert abbr2words("Ref.", annotations=annotations) == "reference"
+    assert abbr2words("Ref.", annotations=annotations) == "reference."
     assert example.main is not None
     if "spacy" not in sys.modules:
         assert "spacy" not in sys.modules

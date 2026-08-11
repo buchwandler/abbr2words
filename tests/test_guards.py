@@ -135,7 +135,7 @@ def test_ordered_variants_use_original_source_and_fall_back_to_default() -> None
 
     assert expander.expand("La Prof. García") == "La professor emerita García"
     assert expander.expand("Prof. Smith") == "professor Smith"
-    assert expander.expand("Prof.") == "Professor"
+    assert expander.expand("Prof.") == "Professor."
 
 
 def test_variant_aliases_and_protected_spans_preserve_exact_source_ranges() -> None:
@@ -172,4 +172,4 @@ def test_variant_validation_is_eager_and_pos_guards_follow_entry_policy() -> Non
             variants=(ExpansionVariant("referee", only_if_pos="NOUN", not_if_pos="PROPN"),),
         )
     )
-    assert expander.expand("Ref.") == "referee"
+    assert expander.expand("Ref.") == "referee."

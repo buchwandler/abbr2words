@@ -174,6 +174,13 @@ declarative `ExpansionVariant` values. The first variant whose guards match
 the original source wins, followed by existing context and default expansion
 fallback. Variants do not accept callbacks.
 
+`AbbreviationEntry.case_policy` is `"fixed"` by default. Set it to
+`"sentence"` only for reviewed lexical expansions whose canonical stored form
+is appropriate in mid-sentence text. The matcher applies it after selecting a
+variant or context expansion, and aliases share the entry policy. Dotted
+abbreviations retain one final period when their consumed dot is also
+sentence-final.
+
 ```{autoclass} abbr2words.ExpansionVariant
 :members:
 ```
@@ -182,6 +189,11 @@ fallback. Variants do not accept callbacks.
 as `NOUN`, `PROPN`, and `ADP`. They are evaluated only when annotations are
 provided. `Expander.add()` exposes the same optional `only_if_pos` and
 `not_if_pos` keyword arguments.
+
+The abbreviation stage returns lexical replacements with source-aligned spans;
+it does not interpret following numbers, dates, decimals, structured
+identifiers, article elision, surrounding grammar, or speech rendering. Those
+concerns remain with the consuming normalizer, including `spokenform`.
 
 ```{autoclass} abbr2words.AbbreviationContext
 :members:

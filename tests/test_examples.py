@@ -91,7 +91,7 @@ def test_german_full_text_properties() -> None:
             "spanish",
             "es",
             SPANISH_TEXT,
-            ("Profesor Klein", "kilogramo", "litro", "minuto", "aproximadamente"),
+            ("profesor Klein", "kilogramo", "litro", "minuto", "aproximadamente"),
         ),
         (
             "french",
@@ -103,7 +103,7 @@ def test_german_full_text_properties() -> None:
             "italian",
             "it",
             ITALIAN_TEXT,
-            ("Professore Klein", "chilogrammo", "litro", "minuto", "circa"),
+            ("professore Klein", "chilogrammo", "litro", "minuto", "circa"),
         ),
         (
             "portuguese",

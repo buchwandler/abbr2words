@@ -88,7 +88,7 @@ def test_isolated_expanders_do_not_leak_into_shared_registry() -> None:
     isolated = Expander("en")
     isolated.add("Only.", "Isolated")
 
-    assert isolated("Only.") == "Isolated"
+    assert isolated("Only.") == "Isolated."
     assert abbr2words("Only.", lang="en") == "Only."
     assert not get_shared_expander("en").has_abbreviation("Only.")
 
@@ -105,7 +105,7 @@ def test_get_expander_returns_a_new_isolated_registry() -> None:
 
 def test_reset_removes_shared_custom_entries() -> None:
     get_shared_expander("en").add_custom_abbreviation("Gone.", "Gone")
-    assert abbr2words("Gone.", lang="en") == "Gone"
+    assert abbr2words("Gone.", lang="en") == "Gone."
 
     reset_expanders("en")
 

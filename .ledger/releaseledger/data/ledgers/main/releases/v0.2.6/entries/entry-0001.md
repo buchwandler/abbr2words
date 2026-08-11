@@ -7,17 +7,18 @@ versioning:
 entry_id: entry-0001
 release_version: v0.2.6
 kind: fixed
-summary: Fixed English and German lexical expansions and protected dotted fragments
+summary:
+  Fixed English and German lexical expansions and protected dotted fragments
   in hyphenated initials
 status: accepted
 audience: null
 scopes: []
 source_refs:
-- tl:task-0023
+  - tl:task-0023
 paths:
-- abbr2words/languages/en.py
-- abbr2words/languages/de.py
-- abbr2words/core.py
+  - abbr2words/languages/en.py
+  - abbr2words/languages/de.py
+  - abbr2words/core.py
 issues: []
 prs: []
 sources: []

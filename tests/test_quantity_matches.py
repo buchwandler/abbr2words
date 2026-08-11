@@ -694,7 +694,7 @@ def test_magnitude_structured_match_wins_over_lexical_abbreviation() -> None:
     assert result.text == "1 Millionen"
     assert len(result.replacements) == 1
     assert result.replacements[0].kind == "unit"
-    assert abbr2words("Mio.", lang="de") == "Millionen"
+    assert abbr2words("Mio.", lang="de") == "Millionen."
 
 
 def test_protected_spans_suppress_only_the_protected_quantity() -> None:

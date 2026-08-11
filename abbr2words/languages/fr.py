@@ -27,6 +27,7 @@ class FrenchAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="M.",
                 expansion="monsieur",
+                case_policy="sentence",
                 description="Mister",
             )
         )
@@ -35,6 +36,7 @@ class FrenchAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="MM.",
                 expansion="messieurs",
+                case_policy="sentence",
                 description="Sirs/Gentlemen (plural)",
             )
         )
@@ -43,6 +45,7 @@ class FrenchAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="Mme",
                 expansion="madame",
+                case_policy="sentence",
                 aliases=("Mme.",),
                 description="Mrs/Ms",
             )
@@ -52,6 +55,7 @@ class FrenchAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="Mmes",
                 expansion="mesdames",
+                case_policy="sentence",
                 description="Ladies (plural)",
             )
         )
@@ -60,6 +64,7 @@ class FrenchAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="Mlle",
                 expansion="mademoiselle",
+                case_policy="sentence",
                 aliases=("Mlle.",),
                 description="Miss",
             )
@@ -69,6 +74,7 @@ class FrenchAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="Mlles",
                 expansion="mesdemoiselles",
+                case_policy="sentence",
                 description="Misses (plural)",
             )
         )

@@ -12,6 +12,7 @@ from abbr2words.core import (
     AbbreviationContext,
     AbbreviationEntry,
     AbbreviationExpander,
+    ExpansionVariant,
 )
 
 # Singleton instance
@@ -33,7 +34,8 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Sig.",
-                expansion="Signor",
+                expansion="signor",
+                case_policy="sentence",
                 description="Title for Mr.",
             )
         )
@@ -41,7 +43,8 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Sig.ra",
-                expansion="Signora",
+                expansion="signora",
+                case_policy="sentence",
                 description="Title for Mrs.",
             )
         )
@@ -49,7 +52,8 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Sig.na",
-                expansion="Signorina",
+                expansion="signorina",
+                case_policy="sentence",
                 description="Title for Miss",
             )
         )
@@ -57,7 +61,8 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Dott.",
-                expansion="Dottor",
+                expansion="dottor",
+                case_policy="sentence",
                 description="Title for Doctor (male)",
             )
         )
@@ -65,7 +70,8 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Dott. Mag.",
-                expansion="Dottor Magistrato",
+                expansion="dottor magistrato",
+                case_policy="sentence",
                 description="Professional title for magistrate; longest match wins over Mag.",
             )
         )
@@ -73,7 +79,8 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Dott.ssa",
-                expansion="Dottoressa",
+                expansion="dottoressa",
+                case_policy="sentence",
                 description="Title for Doctor (female)",
             )
         )
@@ -81,7 +88,8 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Dr.",
-                expansion="Dottor",
+                expansion="dottor",
+                case_policy="sentence",
                 description="Title for Doctor (alternate)",
             )
         )
@@ -89,7 +97,8 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Prof.",
-                expansion="Professore",
+                expansion="professore",
+                case_policy="sentence",
                 description="Title for Professor (male)",
             )
         )
@@ -97,7 +106,8 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Prof.ssa",
-                expansion="Professoressa",
+                expansion="professoressa",
+                case_policy="sentence",
                 description="Title for Professor (female)",
             )
         )
@@ -105,7 +115,8 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Ing.",
-                expansion="Ingegnere",
+                expansion="ingegnere",
+                case_policy="sentence",
                 description="Title for Engineer",
             )
         )
@@ -161,7 +172,14 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Rag.",
-                expansion="Ragioniere",
+                expansion="ragioniere",
+                variants=(
+                    ExpansionVariant(
+                        "ragioniera",
+                        only_if_preceded_by=r"(?i)\b(?:la|una)\s+$",
+                    ),
+                ),
+                case_policy="sentence",
                 description="Title for accountant",
             )
         )
@@ -530,6 +548,7 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="n.",
                 expansion="numero",
+                only_if_followed_by=r"^[ \t]+\d",
                 description="Number",
             )
         )
@@ -757,7 +776,8 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="S.p.A.",
-                expansion="Società per Azioni",
+                expansion="società per azioni",
+                case_policy="sentence",
                 description="Corporation (similar to Inc.)",
             )
         )
@@ -765,7 +785,8 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="S.r.l.",
-                expansion="Società a responsabilità limitata",
+                expansion="società a responsabilità limitata",
+                case_policy="sentence",
                 description="Limited Liability Company",
             )
         )
@@ -773,7 +794,8 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="S.n.c.",
-                expansion="Società in nome collettivo",
+                expansion="società in nome collettivo",
+                case_policy="sentence",
                 description="General Partnership",
             )
         )
@@ -781,7 +803,8 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="S.a.s.",
-                expansion="Società in accomandita semplice",
+                expansion="società in accomandita semplice",
+                case_policy="sentence",
                 description="Limited Partnership",
             )
         )

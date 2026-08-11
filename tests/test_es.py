@@ -88,7 +88,7 @@ def test_spanish_currency_matching_is_numeric_context_only(source: str) -> None:
 def test_spanish_lexical_collision_and_numeric_duration_policy_are_preserved() -> None:
     entry = get_shared_expander("es").get_abbreviation("mar.", case_sensitive=True)
     assert entry.expansion == "marzo"
-    assert abbr2words("mar.", lang="es") == "marzo"
+    assert abbr2words("mar.", lang="es") == "marzo."
     assert [
         (match.value, match.symbol, match.canonical_id)
         for match in iter_unit_matches("5 min. y 5 seg.", "es")
@@ -122,7 +122,7 @@ def test_existing_spanish_unit_identities_remain_stable(source: str, expected: s
 @pytest.mark.parametrize(
     ("source", "expected"),
     [
-        ("Blvd. Juárez", "bulevar Juárez"),
+        ("Blvd. Juárez", "Bulevar Juárez"),
         ("Mtro. López", "maestro López"),
         ("Gral. Díaz", "general Díaz"),
         ("Fís. 2", "físico 2"),

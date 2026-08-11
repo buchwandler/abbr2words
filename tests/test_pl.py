@@ -12,7 +12,7 @@ def test_polish_ambiguous_short_forms_are_guarded_or_omitted() -> None:
     assert abbr2words("siostra s. Anna; por. Kowalski", lang="pl") == (
         "siostra s. Anna; por. Kowalski"
     )
-    assert abbr2words("2026 r.", lang="pl") == "2026 rok"
+    assert abbr2words("2026 r.", lang="pl") == "2026 rok."
 
 
 def test_polish_units_are_canonical_lemmas() -> None:
