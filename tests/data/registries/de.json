@@ -230,7 +230,9 @@
       "key": "d.h.",
       "abbreviation": "d.h.",
       "expansion": "das heißt",
-      "aliases": ["d. h."],
+      "aliases": [
+        "d. h."
+      ],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
@@ -286,7 +288,9 @@
       "key": "dipl.-kfm.",
       "abbreviation": "Dipl.-Kfm.",
       "expansion": "Diplom-Kaufmann",
-      "aliases": ["Dipl. - Kfm."],
+      "aliases": [
+        "Dipl. - Kfm."
+      ],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
@@ -577,7 +581,9 @@
       "key": "lfd. nr.",
       "abbreviation": "Lfd. Nr.",
       "expansion": "laufende Nummer",
-      "aliases": ["Lfd.Nr."],
+      "aliases": [
+        "Lfd.Nr."
+      ],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
@@ -881,7 +887,10 @@
       "key": "tel. nr.",
       "abbreviation": "Tel. Nr.",
       "expansion": "Telefonnummer",
-      "aliases": ["Tel.Nr.", "Tel.-Nr."],
+      "aliases": [
+        "Tel.Nr.",
+        "Tel.-Nr."
+      ],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
@@ -909,7 +918,9 @@
       "key": "u.a.",
       "abbreviation": "u.a.",
       "expansion": "unter anderem",
-      "aliases": ["u. a."],
+      "aliases": [
+        "u. a."
+      ],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
@@ -951,7 +962,11 @@
       "key": "z.b.",
       "abbreviation": "z.B.",
       "expansion": "zum Beispiel",
-      "aliases": ["z. B.", "z . b .", "zB"],
+      "aliases": [
+        "z. B.",
+        "z . b .",
+        "zB"
+      ],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",

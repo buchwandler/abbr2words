@@ -120,7 +120,8 @@ class SpanishAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Arq.",
-                expansion="Arquitecto",
+                expansion="arquitecto",
+                case_policy="sentence",
                 description="Title for Architect",
             )
         )
@@ -318,7 +319,8 @@ class SpanishAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Av.",
-                expansion="Avenida",
+                expansion="avenida",
+                case_policy="sentence",
                 description="Avenue (short form)",
             )
         )
@@ -448,6 +450,7 @@ class SpanishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="vol.",
                 expansion="volumen",
+                case_policy="sentence",
                 description="Volume",
             )
         )
@@ -456,6 +459,7 @@ class SpanishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="cap.",
                 expansion="capítulo",
+                case_policy="sentence",
                 description="Chapter",
             )
         )
@@ -520,6 +524,16 @@ class SpanishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="ej.",
                 expansion="ejemplo",
+                variants=(
+                    ExpansionVariant(
+                        "ejercicio",
+                        only_if_followed_by=(
+                            r"^\s+\d+\s+"
+                            r"(?:resuelto|resuelta|resueltos|resueltas)\b"
+                        ),
+                    ),
+                ),
+                case_policy="sentence",
                 description="Example",
             )
         )

@@ -1,0 +1,10 @@
+{"id":"es-MX:abbr-av-initial","language":"es_MX","source":"Av. Reforma","expected_abbr2words":"Avenida Reforma","reason":"sentence-initial avenue expansion","owner":"owned-abbr"}
+{"id":"es-MX:abbr-av-mid","language":"es_MX","source":"Vivo en Av. Reforma","expected_abbr2words":"Vivo en avenida Reforma","reason":"mid-sentence avenue casing","owner":"owned-abbr"}
+{"id":"es-MX:abbr-vol-mid","language":"es_MX","source":"véase vol. 2","expected_abbr2words":"véase volumen 2","reason":"mid-sentence volume expansion","owner":"owned-abbr"}
+{"id":"es-MX:abbr-ej-exercise","language":"es_MX","source":"Ej. 5 resuelto.","expected_abbr2words":"Ejercicio 5 resuelto.","reason":"narrow exercise-context sense","owner":"owned-abbr"}
+{"id":"es-MX:abbr-ej-example","language":"es_MX","source":"ej. 5","expected_abbr2words":"ejemplo 5","reason":"default example sense remains conservative","owner":"owned-abbr"}
+{"id":"it-IT:abbr-avv-mid","language":"it_IT","source":"con l'Avv. Rossi","expected_abbr2words":"con l'avvocato Rossi","reason":"mid-sentence professional-title casing","owner":"owned-abbr"}
+{"id":"fr-FR:abbr-st-proper","language":"fr_FR","source":"rue St. Michel","expected_abbr2words":"rue Saint Michel","reason":"proper-name saint expansion","owner":"owned-abbr"}
+{"id":"en-US:unit-kilowatt","language":"en_US","source":"50 kW","expected_abbr2words":"50 kilowatt","reason":"typed scientific unit identity","owner":"owned-unit-identity"}
+{"id":"de-DE:downstream-number","language":"de_DE","source":"Die Abb. zeigt Tab. 2.","expected_abbr2words":"Die Abbildung zeigt Tabelle 2.","reason":"abbreviations expand while number rendering remains downstream","owner":"spokenform-number"}
+{"id":"fr-FR:questionable-row","language":"fr_FR","source":"J.-P. Sartre","expected_abbr2words":"J.-P. Sartre","reason":"person initials must not be expanded as entities","owner":"benchmark-questionable"}

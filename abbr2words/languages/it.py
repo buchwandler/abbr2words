@@ -124,7 +124,8 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Avv.",
-                expansion="Avvocato",
+                expansion="avvocato",
+                case_policy="sentence",
                 description="Title for Lawyer",
             )
         )
@@ -132,7 +133,8 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Arch.",
-                expansion="Architetto",
+                expansion="architetto",
+                case_policy="sentence",
                 description="Title for Architect",
             )
         )
@@ -141,6 +143,7 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="M°",
                 expansion="maestro",
+                case_policy="sentence",
                 description="Maestro title",
             )
         )
@@ -157,6 +160,7 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="Cav.",
                 expansion="cavaliere",
+                case_policy="sentence",
                 description="Cavaliere title",
             )
         )
@@ -164,7 +168,8 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="On.",
-                expansion="Onorevole",
+                expansion="onorevole",
+                case_policy="sentence",
                 description="Title for Honorable (member of parliament)",
             )
         )

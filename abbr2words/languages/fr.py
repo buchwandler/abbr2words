@@ -125,17 +125,18 @@ class FrenchAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="St",
-                expansion="saint",
+                expansion="Saint",
                 aliases=("St.",),
-                description="Saint (male)",
+                description="Proper-name Saint (male)",
             )
         )
 
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Ste",
-                expansion="sainte",
-                description="Saint (female)",
+                expansion="Sainte",
+                aliases=("Ste.",),
+                description="Proper-name Saint (female)",
             )
         )
 

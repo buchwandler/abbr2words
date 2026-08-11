@@ -48,7 +48,11 @@
       "key": "bd.",
       "abbreviation": "Bd.",
       "expansion": "boulevard",
-      "aliases": ["Bd", "bd", "bd."],
+      "aliases": [
+        "Bd",
+        "bd",
+        "bd."
+      ],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
@@ -118,7 +122,9 @@
       "key": "dr",
       "abbreviation": "Dr",
       "expansion": "docteur",
-      "aliases": ["Dr."],
+      "aliases": [
+        "Dr."
+      ],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
@@ -496,7 +502,9 @@
       "key": "mlle",
       "abbreviation": "Mlle",
       "expansion": "mademoiselle",
-      "aliases": ["Mlle."],
+      "aliases": [
+        "Mlle."
+      ],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "sentence",
@@ -552,7 +560,9 @@
       "key": "mme",
       "abbreviation": "Mme",
       "expansion": "madame",
-      "aliases": ["Mme."],
+      "aliases": [
+        "Mme."
+      ],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "sentence",
@@ -664,7 +674,9 @@
       "key": "pr",
       "abbreviation": "Pr",
       "expansion": "professeur",
-      "aliases": ["Pr."],
+      "aliases": [
+        "Pr."
+      ],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
@@ -678,7 +690,9 @@
       "key": "prof.",
       "abbreviation": "Prof.",
       "expansion": "professeur",
-      "aliases": ["Prof"],
+      "aliases": [
+        "Prof"
+      ],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
@@ -747,12 +761,14 @@
       "language": "fr",
       "key": "st",
       "abbreviation": "St",
-      "expansion": "saint",
-      "aliases": ["St."],
+      "expansion": "Saint",
+      "aliases": [
+        "St."
+      ],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
-      "description": "Saint (male)",
+      "description": "Proper-name Saint (male)",
       "only_if_preceded_by": null,
       "only_if_followed_by": null,
       "variants": []
@@ -761,12 +777,14 @@
       "language": "fr",
       "key": "ste",
       "abbreviation": "Ste",
-      "expansion": "sainte",
-      "aliases": [],
+      "expansion": "Sainte",
+      "aliases": [
+        "Ste."
+      ],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
-      "description": "Saint (female)",
+      "description": "Proper-name Saint (female)",
       "only_if_preceded_by": null,
       "only_if_followed_by": null,
       "variants": []

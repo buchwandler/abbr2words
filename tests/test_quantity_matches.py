@@ -113,6 +113,55 @@ def test_required_german_inventory_and_case_variants(
 
 
 @pytest.mark.parametrize(
+    ("source", "value", "symbol", "canonical_id"),
+    [
+        ("50 kW", "50", "kW", "power-kilowatt"),
+        ("550 nm", "550", "nm", "length-nanometer"),
+        ("60 Hz", "60", "Hz", "frequency-hertz"),
+        ("750 W", "750", "W", "power-watt"),
+        ("5 A", "5", "A", "current-ampere"),
+        ("1000 kWh", "1000", "kWh", "energy-kilowatt-hour"),
+        ("1000 lm", "1000", "lm", "luminous-flux-lumen"),
+        ("20 N", "20", "N", "force-newton"),
+        ("500 J", "500", "J", "energy-joule"),
+        ("760 mmHg", "760", "mmHg", "pressure-millimeter-mercury"),
+        ("3 mol", "3", "mol", "amount-mole"),
+        ("0.01 M", "0.01", "M", "concentration-molar"),
+        ("150 lbs", "150", "lbs", "customary-pound"),
+    ],
+)
+def test_reviewed_scientific_units_preserve_identity_metadata(
+    source: str, value: str, symbol: str, canonical_id: str
+) -> None:
+    match = only_match(source, "en")
+    assert source[match.start : match.end] == source
+    assert source[match.value_start : match.value_end] == value
+    assert match.value == value
+    assert match.symbol == symbol
+    assert match.canonical_id == canonical_id
+
+
+@pytest.mark.parametrize("language", ["de", "es", "fr", "it"])
+def test_reviewed_pound_aliases_are_localized_without_changing_identity(language: str) -> None:
+    match = only_match("150 lbs", language)
+    assert match.canonical_id == "customary-pound"
+    assert match.symbol == "lbs"
+
+
+@pytest.mark.parametrize(
+    "source",
+    ["A plan", "Plan A", "N. meningitidis", "Vitamin M", "model W"],
+)
+def test_ambiguous_single_letter_units_require_numeric_context(source: str) -> None:
+    assert list(iter_unit_matches(source, "en")) == []
+
+
+def test_directional_periods_are_left_for_english_abbreviations() -> None:
+    assert list(iter_unit_matches("20 N.", "en")) == []
+    assert only_match("20 N", "en").canonical_id == "force-newton"
+
+
+@pytest.mark.parametrize(
     ("source", "value", "symbol", "canonical_id", "canonical_symbol"),
     [
         ("$12.50", "12.50", "$", "currency-us-dollar", "$"),

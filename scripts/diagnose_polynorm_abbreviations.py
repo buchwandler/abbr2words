@@ -17,6 +17,18 @@ from typing import Any
 
 from abbr2words import abbr2words_with_replacements
 
+OWNERSHIP_CLASSES = frozenset(
+    {
+        "owned-abbr",
+        "owned-unit-identity",
+        "spokenform-number",
+        "spokenform-structured-collision",
+        "grammar-out-of-scope",
+        "entity-resolution-out-of-scope",
+        "benchmark-questionable",
+    }
+)
+
 
 def _classification(record: Mapping[str, Any], actual: str, replacements: tuple[Any, ...]) -> str:
     expected_lexical = record.get("expected_abbr2words", record.get("expected_lexical"))
@@ -33,6 +45,20 @@ def _classification(record: Mapping[str, Any], actual: str, replacements: tuple[
     return "unsupported-benchmark-specific/entity"
 
 
+def _ownership_metadata(record: Mapping[str, Any]) -> tuple[str | None, str | None]:
+    """Read reviewed fixture metadata and fail closed for lexical expectations."""
+    expected_lexical = record.get("expected_abbr2words", record.get("expected_lexical"))
+    reason = record.get("reason")
+    owner = record.get("owner")
+    if expected_lexical is not None:
+        if not isinstance(reason, str) or not reason.strip():
+            raise ValueError("lexical fixture cases require a non-empty 'reason'")
+        if not isinstance(owner, str) or owner not in OWNERSHIP_CLASSES:
+            allowed = ", ".join(sorted(OWNERSHIP_CLASSES))
+            raise ValueError(f"lexical fixture cases require owner in: {allowed}")
+    return reason if isinstance(reason, str) else None, owner if isinstance(owner, str) else None
+
+
 def diagnose(record: Mapping[str, Any]) -> dict[str, Any]:
     """Return one JSON-serializable abbreviation-stage diagnostic row."""
     text = record.get("text", record.get("source"))
@@ -40,6 +66,7 @@ def diagnose(record: Mapping[str, Any]) -> dict[str, Any]:
     if not isinstance(text, str) or not isinstance(language, str):
         raise ValueError("each case requires string fields 'text' and 'lang' (or their aliases)")
 
+    reason, owner = _ownership_metadata(record)
     result = abbr2words_with_replacements(text, lang=language)
     replacements = tuple(result.replacements)
     return {
@@ -49,6 +76,8 @@ def diagnose(record: Mapping[str, Any]) -> dict[str, Any]:
         "source": text,
         "abbr2words": result.text,
         "classification": _classification(record, result.text, replacements),
+        "reason": reason,
+        "owner": owner,
         "replacements": [
             {
                 "start": item.start,

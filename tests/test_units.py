@@ -237,6 +237,27 @@ def test_case_sensitive_near_misses_and_attached_words() -> None:
     assert abbr2words("Plan B", lang="en") == "Plan B"
 
 
+@pytest.mark.parametrize(
+    "source",
+    ["A plan", "Plan A", "N. meningitidis", "Vitamin M", "model W"],
+)
+def test_scientific_single_letter_symbols_do_not_claim_lexical_text(source: str) -> None:
+    assert abbr2words(source, lang="en") == source
+
+
+@pytest.mark.parametrize(
+    ("source", "expected"),
+    [
+        ("123 N. Main St.", "123 North Main Street."),
+        ("123 W. Main St.", "123 West Main Street."),
+    ],
+)
+def test_directional_abbreviations_win_over_periodic_unit_symbols(
+    source: str, expected: str
+) -> None:
+    assert abbr2words(source, lang="en") == expected
+
+
 def test_inventory_contains_expected_symbols() -> None:
     assert {"g", "m", "ml", "mL", "L", "km/h", "m/s", "°C"} <= unit_symbols("en")
     assert {"€", "EUR", "$", "USD", "£", "GBP"} <= unit_symbols("en")

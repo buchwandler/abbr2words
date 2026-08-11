@@ -63,6 +63,7 @@ class UnitEntry:
     quantity_position: str = "suffix"
     allow_lexical_overlap: bool = False
     preserve_sentence_final_period: bool = False
+    reject_following_period: bool = False
 
     def __post_init__(self) -> None:
         if not self.symbols or any(
@@ -93,6 +94,8 @@ class UnitEntry:
             raise TypeError("unit allow_lexical_overlap must be a bool")
         if type(self.preserve_sentence_final_period) is not bool:
             raise TypeError("unit preserve_sentence_final_period must be a bool")
+        if type(self.reject_following_period) is not bool:
+            raise TypeError("unit reject_following_period must be a bool")
 
 
 @dataclass(frozen=True, slots=True)
@@ -117,6 +120,7 @@ class _UnitDefinition:
     canonical_id: str
     symbols: tuple[str, ...]
     description: str
+    reject_following_period: bool = False
 
 
 def _entry(
@@ -132,6 +136,7 @@ def _entry(
     quantity_position: str = "suffix",
     allow_lexical_overlap: bool = False,
     preserve_sentence_final_period: bool = False,
+    reject_following_period: bool = False,
 ) -> UnitEntry:
     if isinstance(symbols, str):
         symbols = (symbols,)
@@ -147,6 +152,7 @@ def _entry(
         quantity_position=quantity_position,
         allow_lexical_overlap=allow_lexical_overlap,
         preserve_sentence_final_period=preserve_sentence_final_period,
+        reject_following_period=reject_following_period,
     )
 
 
@@ -833,16 +839,6 @@ _FRENCH_DOTTED_DURATION_ENTRIES = (
 )
 
 _GERMAN_REQUIRED_ENTRIES = (
-    _entry("kWh", "Kilowattstunde", "Energy", canonical_id="energy-kilowatt-hour"),
-    _entry("Wh", "Wattstunde", "Energy", canonical_id="energy-watt-hour"),
-    _entry("mAh", "Milliampere-Stunde", "Electric charge", canonical_id="charge-milliampere-hour"),
-    _entry("mA", "Milliampere", "Electric current", canonical_id="current-milliampere"),
-    _entry("GHz", "Gigahertz", "Frequency", canonical_id="frequency-gigahertz"),
-    _entry("MHz", "Megahertz", "Frequency", canonical_id="frequency-megahertz"),
-    _entry("kHz", "Kilohertz", "Frequency", canonical_id="frequency-kilohertz"),
-    _entry("Hz", "Hertz", "Frequency", canonical_id="frequency-hertz"),
-    _entry("W", "Watt", "Power", canonical_id="power-watt"),
-    _entry("V", "Volt", "Electric potential", canonical_id="voltage-volt"),
     _entry(
         "Stck.",
         "Stück",
@@ -916,6 +912,25 @@ _POLYNORM_DEFINITIONS = (
         "Fuel consumption",
     ),
     _UnitDefinition("flow-cubic-meter-per-second", ("m³/s", "m3/s"), "Flow"),
+    _UnitDefinition("power-watt", ("W",), "Power", reject_following_period=True),
+    _UnitDefinition("power-kilowatt", ("kW",), "Power"),
+    _UnitDefinition("energy-watt-hour", ("Wh",), "Energy"),
+    _UnitDefinition("energy-kilowatt-hour", ("kWh",), "Energy"),
+    _UnitDefinition("frequency-hertz", ("Hz",), "Frequency"),
+    _UnitDefinition("frequency-kilohertz", ("kHz",), "Frequency"),
+    _UnitDefinition("frequency-megahertz", ("MHz",), "Frequency"),
+    _UnitDefinition("frequency-gigahertz", ("GHz",), "Frequency"),
+    _UnitDefinition("length-nanometer", ("nm",), "Length"),
+    _UnitDefinition("current-ampere", ("A",), "Electric current"),
+    _UnitDefinition("current-milliampere", ("mA",), "Electric current"),
+    _UnitDefinition("charge-milliampere-hour", ("mAh",), "Electric charge"),
+    _UnitDefinition("voltage-volt", ("V",), "Electric potential"),
+    _UnitDefinition("luminous-flux-lumen", ("lm",), "Luminous flux"),
+    _UnitDefinition("force-newton", ("N",), "Force", reject_following_period=True),
+    _UnitDefinition("energy-joule", ("J",), "Energy"),
+    _UnitDefinition("pressure-millimeter-mercury", ("mmHg",), "Pressure"),
+    _UnitDefinition("amount-mole", ("mol",), "Amount of substance"),
+    _UnitDefinition("concentration-molar", ("M",), "Molar concentration"),
 )
 
 _POLYNORM_UNIT_LABELS = {
@@ -930,6 +945,25 @@ _POLYNORM_UNIT_LABELS = {
         "gigabyte",
         "liter per 100 kilometers",
         "cubic meter per second",
+        "watt",
+        "kilowatt",
+        "watt-hour",
+        "kilowatt-hour",
+        "hertz",
+        "kilohertz",
+        "megahertz",
+        "gigahertz",
+        "nanometer",
+        "ampere",
+        "milliampere",
+        "milliampere-hour",
+        "volt",
+        "lumen",
+        "newton",
+        "joule",
+        "millimeter of mercury",
+        "mole",
+        "molar",
     ),
     "de": (
         "Meile pro Stunde",
@@ -942,6 +976,25 @@ _POLYNORM_UNIT_LABELS = {
         "Gigabyte",
         "Liter pro 100 Kilometer",
         "Kubikmeter pro Sekunde",
+        "Watt",
+        "Kilowatt",
+        "Wattstunde",
+        "Kilowattstunde",
+        "Hertz",
+        "Kilohertz",
+        "Megahertz",
+        "Gigahertz",
+        "Nanometer",
+        "Ampere",
+        "Milliampere",
+        "Milliampere-Stunde",
+        "Volt",
+        "Lumen",
+        "Newton",
+        "Joule",
+        "Millimeter Quecksilbersäule",
+        "Mol",
+        "molar",
     ),
     "es": (
         "milla por hora",
@@ -954,6 +1007,25 @@ _POLYNORM_UNIT_LABELS = {
         "gigabyte",
         "litro por 100 kilómetros",
         "metro cúbico por segundo",
+        "vatio",
+        "kilovatio",
+        "vatio-hora",
+        "kilovatio-hora",
+        "hercio",
+        "kilohercio",
+        "megahercio",
+        "gigahercio",
+        "nanómetro",
+        "amperio",
+        "miliamperio",
+        "miliamperio-hora",
+        "voltio",
+        "lumen",
+        "newton",
+        "julio",
+        "milímetro de mercurio",
+        "mol",
+        "molar",
     ),
     "fr": (
         "mille par heure",
@@ -966,6 +1038,25 @@ _POLYNORM_UNIT_LABELS = {
         "gigaoctet",
         "litre aux 100 kilomètres",
         "mètre cube par seconde",
+        "watt",
+        "kilowatt",
+        "watt-heure",
+        "kilowatt-heure",
+        "hertz",
+        "kilohertz",
+        "mégahertz",
+        "gigahertz",
+        "nanomètre",
+        "ampère",
+        "milliampère",
+        "milliampère-heure",
+        "volt",
+        "lumen",
+        "newton",
+        "joule",
+        "millimètre de mercure",
+        "mole",
+        "molaire",
     ),
     "it": (
         "miglio all'ora",
@@ -978,6 +1069,25 @@ _POLYNORM_UNIT_LABELS = {
         "gigabyte",
         "litro per 100 chilometri",
         "metro cubo al secondo",
+        "watt",
+        "chilowatt",
+        "wattora",
+        "chilowattora",
+        "hertz",
+        "kilohertz",
+        "megahertz",
+        "gigahertz",
+        "nanometro",
+        "ampere",
+        "milliampere",
+        "milliampere-ora",
+        "volt",
+        "lumen",
+        "newton",
+        "joule",
+        "millimetro di mercurio",
+        "mole",
+        "molare",
     ),
 }
 
@@ -1010,8 +1120,31 @@ def _polynorm_unit_entries(language: str) -> tuple[UnitEntry, ...]:
             labels[index],
             definition.description,
             canonical_id=definition.canonical_id,
+            reject_following_period=definition.reject_following_period,
         )
         for index, definition in enumerate(_POLYNORM_DEFINITIONS)
+    )
+
+
+_POLYNORM_POUND_LABELS = {
+    "de": "Pfund",
+    "es": "libra",
+    "fr": "livre",
+    "it": "libbra",
+}
+
+
+def _polynorm_pound_entries(language: str) -> tuple[UnitEntry, ...]:
+    """Return reviewed non-English customary-pound aliases."""
+    if language == "en" or language not in _POLYNORM_POUND_LABELS:
+        return ()
+    return (
+        _entry(
+            ("lb", "lbs"),
+            _POLYNORM_POUND_LABELS[language],
+            "Customary mass",
+            canonical_id="customary-pound",
+        ),
     )
 
 
@@ -1202,6 +1335,7 @@ for _lang, _currency_entries in _STRUCTURED_CURRENCY_ENTRIES.items():
 
 for _lang in tuple(UNIT_ENTRIES):
     UNIT_ENTRIES[_lang] += _polynorm_unit_entries(_lang)
+    UNIT_ENTRIES[_lang] += _polynorm_pound_entries(_lang)
     UNIT_ENTRIES[_lang] += _polynorm_currency_entries(_lang)
 
 UNIT_ENTRIES["fr"] += _FRENCH_DOTTED_DURATION_ENTRIES
@@ -1509,6 +1643,8 @@ def iter_unit_matches(
         if end < len(text) and (text[end].isalnum() or text[end] == "_"):
             continue
         if _unit_continuation_is_unsupported(text, end):
+            continue
+        if entry.reject_following_period and text[end : end + 1] == ".":
             continue
         if entry.reject_following_apostrophe and text[end : end + 1] in {"'", "’"}:
             continue

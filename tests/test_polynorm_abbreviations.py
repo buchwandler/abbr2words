@@ -35,7 +35,46 @@ def test_spanish_professor_variant_is_local_and_parentheticals_survive() -> None
     assert abbr2words("La Prof. García (fábrica)", lang="es") == ("La profesora García (fábrica)")
     assert abbr2words("El Prof. García", lang="es") == "El profesor García"
     assert abbr2words("Prof. García", lang="es") == "Profesor García"
-    assert abbr2words("Ej. 4", lang="es") == "ejemplo 4"
+    assert abbr2words("Ej. 4", lang="es") == "Ejemplo 4"
+
+
+@pytest.mark.parametrize(
+    ("source", "expected", "language"),
+    [
+        ("Av. Reforma", "Avenida Reforma", "es"),
+        ("Vivo en Av. Reforma", "Vivo en avenida Reforma", "es"),
+        ("Vol. 2", "Volumen 2", "es"),
+        ("véase vol. 2", "véase volumen 2", "es"),
+        ("Cap. 10", "Capítulo 10", "es"),
+        ("véase cap. 10", "véase capítulo 10", "es"),
+        ("Avv. Rossi", "Avvocato Rossi", "it"),
+        ("con l'Avv. Rossi", "con l'avvocato Rossi", "it"),
+        ("Arch. Rossi", "Architetto Rossi", "it"),
+        ("con l'Arch. Rossi", "con l'architetto Rossi", "it"),
+        ("rue St. Michel", "rue Saint Michel", "fr"),
+        ("rue Ste. Anne", "rue Sainte Anne", "fr"),
+    ],
+)
+def test_reviewed_sentence_and_proper_name_casing(
+    source: str, expected: str, language: str
+) -> None:
+    assert abbr2words(source, lang=language) == expected
+
+
+@pytest.mark.parametrize(
+    ("source", "expected"),
+    [
+        ("Ej. 5 resuelto.", "Ejercicio 5 resuelto."),
+        ("véase ej. 5 resuelto", "véase ejercicio 5 resuelto"),
+        ("véase ej. 5", "véase ejemplo 5"),
+        ("p.ej. 5", "por ejemplo 5"),
+        ("p.ej. 5 resuelto", "por ejemplo 5 resuelto"),
+    ],
+)
+def test_spanish_ejercicio_variant_is_narrow_and_longest_match_wins(
+    source: str, expected: str
+) -> None:
+    assert abbr2words(source, lang="es") == expected
 
 
 @pytest.mark.parametrize(
@@ -80,9 +119,14 @@ def test_italian_number_marker_requires_numeric_following_context(source: str) -
     assert abbr2words(source, lang="it") == source.replace("n.", "numero")
 
 
-@pytest.mark.parametrize("source", ["20 N.", "30 N", "N. meningitidis"])
-def test_italian_number_marker_does_not_steal_units_or_biological_initials(source: str) -> None:
-    assert abbr2words(source, lang="it") == source
+@pytest.mark.parametrize(
+    ("source", "expected"),
+    [("20 N.", "20 N."), ("30 N", "30 newton"), ("N. meningitidis", "N. meningitidis")],
+)
+def test_italian_number_marker_does_not_steal_units_or_biological_initials(
+    source: str, expected: str
+) -> None:
+    assert abbr2words(source, lang="it") == expected
 
 
 @pytest.mark.parametrize(
