@@ -112,3 +112,23 @@ def test_existing_spanish_unit_identities_remain_stable(source: str, expected: s
     assert len(matches) == 1
     assert matches[0].canonical_id == expected
     assert matches[0].language == "es"
+
+
+@pytest.mark.parametrize(
+    ("source", "expected"),
+    [
+        ("Blvd. Juárez", "bulevar Juárez"),
+        ("Mtro. López", "maestro López"),
+        ("Gral. Díaz", "general Díaz"),
+        ("Fís. 2", "físico 2"),
+        ("Pte. Fox", "presidente Fox"),
+        ("Fca. 4", "fábrica 4"),
+        ("No. 12", "número 12"),
+        ("N.º 12", "número 12"),
+        ("No. idea", "No. idea"),
+    ],
+)
+def test_high_confidence_spanish_entries_and_numeric_number_marker(
+    source: str, expected: str
+) -> None:
+    assert abbr2words(source, lang="es") == expected

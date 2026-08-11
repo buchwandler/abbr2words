@@ -175,6 +175,10 @@ class GermanContextProfile(DefaultContextProfile):
     """German title/date disambiguation with Unicode name evidence."""
 
     def detect_context(self, abbreviation: str, before: str, after: str) -> Any:
+        if abbreviation.casefold() in {"st.", "st"}:
+            if after and _name_evidence(after):
+                return _context("place")
+            return _context("default")
         if abbreviation.casefold() == "fr.":
             if after and _name_evidence(after):
                 return _context("title")
@@ -186,12 +190,31 @@ class GermanContextProfile(DefaultContextProfile):
         return super().detect_context(abbreviation, before, after)
 
 
+class ItalianContextProfile(DefaultContextProfile):
+    """Bounded date, title, and professional evidence for Italian collisions."""
+
+    def detect_context(self, abbreviation: str, before: str, after: str) -> Any:
+        spelling = abbreviation.casefold()
+        if spelling in {"gen.", "mag."}:
+            if _DATE_BEFORE.search(before) or _DATE_AFTER.search(after):
+                return _context("date")
+            if spelling == "gen." and after and _name_evidence(after):
+                return _context("title")
+            if spelling == "mag." and after and _name_evidence(after):
+                if re.search(r"(?:^|\s)(?:dott\.|dottor|dott\.ssa)\s*$", before, re.IGNORECASE):
+                    return _context("academic")
+            return _context("default")
+        return super().detect_context(abbreviation, before, after)
+
+
 def profile_for(language: str) -> ContextProfile:
     base = language.split("_", 1)[0]
     if base == "en":
         return EnglishContextProfile()
     if base == "de":
         return GermanContextProfile()
+    if base == "it":
+        return ItalianContextProfile()
     return DefaultContextProfile()
 
 
@@ -200,5 +223,6 @@ __all__ = [
     "DefaultContextProfile",
     "EnglishContextProfile",
     "GermanContextProfile",
+    "ItalianContextProfile",
     "profile_for",
 ]

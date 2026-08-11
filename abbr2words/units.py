@@ -1165,6 +1165,9 @@ _EN_VALUE_PATTERN = re.compile(rf"(?<![\w./,٬])(?P<value>{_EN_VALUE})(?P<spacin
 _CONTINUATION = re.compile(rf"[{_HSPACE}]*([/^·⋅*×^])")
 _PREFIX_BOUNDARY = r"(?<![\w./])"
 _CLOSING_SENTENCE_CHARS = frozenset("\"'»”’)]}》」』")
+_EN_PREPOSITION_DETERMINERS = frozenset(
+    {"a", "an", "the", "my", "your", "his", "her", "its", "our", "their", "this", "that", "these", "those"}
+)
 
 
 def _unit_text_matches(text: str, offset: int, symbol: str, case_sensitive: bool) -> bool:
@@ -1298,6 +1301,12 @@ def _currency_is_embedded_in_lexical_material(text: str, start: int, end: int) -
     return "://" in token or ("@" in token and "." in token)
 
 
+def _inch_alias_is_prepositional(text: str, end: int) -> bool:
+    """Reject obvious English prepositions mistaken for the ``in`` unit."""
+    match = re.match(rf"[{_HSPACE}]+(?P<word>[A-Za-z]+)(?![\w-])", text[end:])
+    return bool(match and match.group("word").casefold() in _EN_PREPOSITION_DETERMINERS)
+
+
 def _canonical_symbol(entry: UnitEntry, symbol: str) -> str:
     if entry.canonical_id is not None:
         for definition in _BASE_DEFINITIONS + _EXTENDED_DEFINITIONS:
@@ -1346,6 +1355,13 @@ def iter_unit_matches(
         if _unit_continuation_is_unsupported(text, end):
             continue
         if entry.reject_following_apostrophe and text[end : end + 1] in {"'", "’"}:
+            continue
+        if (
+            language == "en"
+            and entry.canonical_id == "customary-inch"
+            and symbol.casefold() in {"in", "in."}
+            and _inch_alias_is_prepositional(text, end)
+        ):
             continue
         start = value_match.start()
         if entry.category == "currency" and _currency_is_embedded_in_lexical_material(

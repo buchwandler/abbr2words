@@ -143,6 +143,19 @@ def test_numeric_forms_expand(source: str) -> None:
 
 @pytest.mark.parametrize(
     ("source", "expected"),
+    [
+        ("12 in long", "12 inch long"),
+        ("a 12 in pipe", "a 12 inch pipe"),
+        ("911 in an emergency", "911 in an emergency"),
+        ("3 in the box", "3 in the box"),
+    ],
+)
+def test_english_in_unit_and_preposition_collision(source: str, expected: str) -> None:
+    assert abbr2words(source, lang="en") == expected
+
+
+@pytest.mark.parametrize(
+    ("source", "expected"),
     (
         ("30,000.10 in.", "30,000.10 inch"),
         ("30,000.10 ft.", "30,000.10 foot"),

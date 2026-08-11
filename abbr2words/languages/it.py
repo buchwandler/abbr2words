@@ -9,6 +9,7 @@ from __future__ import annotations
 import warnings
 
 from abbr2words.core import (
+    AbbreviationContext,
     AbbreviationEntry,
     AbbreviationExpander,
 )
@@ -119,6 +120,30 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
 
         self.add_abbreviation(
             AbbreviationEntry(
+                abbreviation="M°",
+                expansion="maestro",
+                description="Maestro title",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="Coop.",
+                expansion="cooperativa",
+                description="Cooperative organization",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="Cav.",
+                expansion="cavaliere",
+                description="Cavaliere title",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
                 abbreviation="On.",
                 expansion="Onorevole",
                 description="Title for Honorable (member of parliament)",
@@ -209,6 +234,10 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="gen.",
                 expansion="gennaio",
+                context_expansions={
+                    AbbreviationContext.DATE: "gennaio",
+                    AbbreviationContext.TITLE: "Generale",
+                },
                 description="January",
             )
         )
@@ -257,6 +286,10 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="mag.",
                 expansion="maggio",
+                context_expansions={
+                    AbbreviationContext.DATE: "maggio",
+                    AbbreviationContext.ACADEMIC: "Magistrato",
+                },
                 description="May",
             )
         )

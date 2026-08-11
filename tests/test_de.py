@@ -64,3 +64,25 @@ def test_german_compound_aliases_work_at_punctuation_and_sentence_boundaries() -
     assert abbr2words(source, lang="de") == (
         '(zum Beispiel), "das heißt"; unter anderem! laufende Nummer'
     )
+
+
+@pytest.mark.parametrize(
+    ("source", "expected"),
+    [
+        ("Abschn. 2", "Abschnitt 2"),
+        ("Univ. Berlin", "Universität Berlin"),
+        ("Fa. Müller", "Firma Müller"),
+        ("Dipl.-Kfm. Weber", "Diplom-Kaufmann Weber"),
+        ("Tab. 3", "Tabelle 3"),
+        ("Tel. Nr. 12", "Telefonnummer 12"),
+        ("Tel.Nr. 12", "Telefonnummer 12"),
+        ("Tel.-Nr. 12", "Telefonnummer 12"),
+    ],
+)
+def test_german_high_confidence_entries_and_compounds(source: str, expected: str) -> None:
+    assert abbr2words(source, lang="de") == expected
+
+
+def test_german_st_is_guarded_by_name_context() -> None:
+    assert abbr2words("St. Pauli", lang="de") == "Sankt Pauli"
+    assert abbr2words("St. ist eine Abkürzung", lang="de") == "St. ist eine Abkürzung"

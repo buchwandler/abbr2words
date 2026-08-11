@@ -6,7 +6,13 @@ from pathlib import Path
 
 import pytest
 
-from abbr2words import Expander, TokenAnnotation, abbr2words, abbreviation_guards_match
+from abbr2words import (
+    Expander,
+    TokenAnnotation,
+    abbr2words,
+    abbr2words_with_replacements,
+    abbreviation_guards_match,
+)
 from abbr2words.annotations import AnnotationIndex, normalize_annotations
 from abbr2words.core import AbbreviationEntry
 
@@ -151,6 +157,16 @@ def test_pos_annotations_use_original_offsets_after_an_earlier_replacement() -> 
         TokenAnnotation(8, 9, "NUM"),
     ]
     assert expander.expand(text, annotations=annotations) == "Alpha Reference 8"
+
+
+def test_compound_alias_replacement_preserves_original_source_span() -> None:
+    source = "Tel.Nr. 12"
+    result = abbr2words_with_replacements(source, lang="de")
+    assert result.text == "Telefonnummer 12"
+    assert len(result.replacements) == 1
+    replacement = result.replacements[0]
+    assert source[replacement.start : replacement.end] == "Tel.Nr."
+    assert replacement.abbreviation == "Tel. Nr."
 
 
 @pytest.mark.parametrize(

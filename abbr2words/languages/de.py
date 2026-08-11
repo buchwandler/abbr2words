@@ -315,7 +315,7 @@ class GermanAbbreviationExpander(AbbreviationExpander):
         )
 
         for abbreviation, expansion, description in (
-            ("etc.", "ezetera", "Et cetera"),
+            ("etc.", "et cetera", "Et cetera"),
             ("zzgl.", "zuzüglich", "Plus/additional"),
             ("Abk.", "Abkürzung", "Abbreviation"),
             ("Abb.", "Abbildung", "Illustration"),
@@ -324,6 +324,10 @@ class GermanAbbreviationExpander(AbbreviationExpander):
             ("ggü.", "gegenüber", "Opposite"),
             ("Kap.", "Kapitel", "Chapter"),
             ("Abs.", "Absatz", "Paragraph"),
+            ("Abschn.", "Abschnitt", "Section"),
+            ("Univ.", "Universität", "University"),
+            ("Fa.", "Firma", "Company"),
+            ("Tab.", "Tabelle", "Table"),
             ("Tsd.", "Tausend", "Thousand"),
             ("Mio.", "Millionen", "Millions"),
             ("Mrd.", "Milliarden", "Billions"),
@@ -335,6 +339,33 @@ class GermanAbbreviationExpander(AbbreviationExpander):
                     description=description,
                 )
             )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="Dipl.-Kfm.",
+                expansion="Diplom-Kaufmann",
+                aliases=("Dipl. - Kfm.",),
+                description="Diploma business economist",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="Tel. Nr.",
+                expansion="Telefonnummer",
+                aliases=("Tel.Nr.", "Tel.-Nr."),
+                description="Telephone number",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="St.",
+                expansion="St.",
+                context_expansions={AbbreviationContext.PLACE: "Sankt"},
+                description="Sankt before a proper name",
+            )
+        )
 
         self.add_abbreviation(
             AbbreviationEntry(

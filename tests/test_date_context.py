@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from abbr2words import AbbreviationContext, AbbreviationEntry, get_expander
+from abbr2words import AbbreviationContext, AbbreviationEntry, abbr2words, get_expander
 
 
 def test_generic_date_context_uses_bounded_numeric_evidence() -> None:
@@ -37,3 +37,14 @@ def test_context_names_report_all_enum_values() -> None:
     else:  # pragma: no cover - defensive assertion
         raise AssertionError("unknown context was accepted")
     assert "date" in message
+
+
+def test_italian_month_and_title_contexts_use_one_canonical_entry() -> None:
+    assert abbr2words("12 gen. 2024", lang="it") == "12 gennaio 2024"
+    assert abbr2words("Gen. Rossi", lang="it") == "Generale Rossi"
+    assert abbr2words("5 mag. 2024", lang="it") == "5 maggio 2024"
+    assert abbr2words("Dott. Mag. Bianchi", lang="it") == "Dottor Magistrato Bianchi"
+
+    expander = get_expander("it")
+    assert expander.get_abbreviation("gen.").context_expansions
+    assert expander.get_abbreviation("mag.").context_expansions

@@ -39,7 +39,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Mrs.",
-                expansion="Misses",
+                expansion="Missus",
                 description="Married female honorific",
             )
         )
@@ -680,6 +680,22 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
                 abbreviation="approx.",
                 expansion="approximately",
                 description="Approximately",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="incl.",
+                expansion="including",
+                description="Including",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="Rm.",
+                expansion="Room",
+                description="Room",
             )
         )
 

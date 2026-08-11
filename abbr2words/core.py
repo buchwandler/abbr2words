@@ -377,6 +377,18 @@ def abbreviation_guards_match(
     return True
 
 
+def _is_hyphenated_initial_fragment(text: str, start: int, match_text: str) -> bool:
+    """Return whether a one-letter dotted match belongs to an initial chain."""
+    if not re.fullmatch(r"[^\W\d_]\.", match_text, re.UNICODE):
+        return False
+    return (
+        start >= 3
+        and text[start - 3].isalpha()
+        and text[start - 2] == "."
+        and text[start - 1] == "-"
+    )
+
+
 class ContextDetector:
     """Compatibility wrapper around the language-specific context profile."""
 
@@ -784,6 +796,9 @@ class AbbreviationExpander(ABC):
                     and text[start - 2].isalnum()
                     and "." in match.group()
                 ):
+                    continue
+
+                if _is_hyphenated_initial_fragment(text, start, match.group()):
                     continue
 
                 if not abbreviation_guards_match(

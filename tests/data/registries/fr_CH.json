@@ -114,7 +114,9 @@
       "key": "dr",
       "abbreviation": "Dr",
       "expansion": "docteur",
-      "aliases": [],
+      "aliases": [
+        "Dr."
+      ],
       "context_expansions": null,
       "case_sensitive": false,
       "description": "Doctor",
@@ -438,7 +440,9 @@
       "key": "mlle",
       "abbreviation": "Mlle",
       "expansion": "mademoiselle",
-      "aliases": [],
+      "aliases": [
+        "Mlle."
+      ],
       "context_expansions": null,
       "case_sensitive": false,
       "description": "Miss",
@@ -486,7 +490,9 @@
       "key": "mme",
       "abbreviation": "Mme",
       "expansion": "madame",
-      "aliases": [],
+      "aliases": [
+        "Mme."
+      ],
       "context_expansions": null,
       "case_sensitive": false,
       "description": "Mrs/Ms",
@@ -582,7 +588,23 @@
       "key": "pr",
       "abbreviation": "Pr",
       "expansion": "professeur",
-      "aliases": [],
+      "aliases": [
+        "Pr."
+      ],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Professor",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "fr_CH",
+      "key": "prof.",
+      "abbreviation": "Prof.",
+      "expansion": "professeur",
+      "aliases": [
+        "Prof"
+      ],
       "context_expansions": null,
       "case_sensitive": false,
       "description": "Professor",
@@ -642,7 +664,9 @@
       "key": "st",
       "abbreviation": "St",
       "expansion": "saint",
-      "aliases": [],
+      "aliases": [
+        "St."
+      ],
       "context_expansions": null,
       "case_sensitive": false,
       "description": "Saint (male)",

@@ -87,6 +87,18 @@
     },
     {
       "language": "es_CO",
+      "key": "blvd.",
+      "abbreviation": "Blvd.",
+      "expansion": "bulevar",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Boulevard",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "es_CO",
       "key": "c/",
       "abbreviation": "C/",
       "expansion": "Calle",
@@ -267,6 +279,18 @@
     },
     {
       "language": "es_CO",
+      "key": "fca.",
+      "abbreviation": "Fca.",
+      "expansion": "fábrica",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Factory",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "es_CO",
       "key": "feb.",
       "abbreviation": "feb.",
       "expansion": "febrero",
@@ -274,6 +298,18 @@
       "context_expansions": null,
       "case_sensitive": false,
       "description": "February",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "es_CO",
+      "key": "fís.",
+      "abbreviation": "Fís.",
+      "expansion": "físico",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Physical/science abbreviation",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
     },
@@ -287,6 +323,18 @@
       "case_sensitive": true,
       "description": "Gram(s)",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
+      "only_if_followed_by": null
+    },
+    {
+      "language": "es_CO",
+      "key": "gral.",
+      "abbreviation": "Gral.",
+      "expansion": "general",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "General",
+      "only_if_preceded_by": null,
       "only_if_followed_by": null
     },
     {
@@ -531,6 +579,33 @@
     },
     {
       "language": "es_CO",
+      "key": "mtro.",
+      "abbreviation": "Mtro.",
+      "expansion": "maestro",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Maestro",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "es_CO",
+      "key": "no.",
+      "abbreviation": "No.",
+      "expansion": "número",
+      "aliases": [
+        "N.º",
+        "N°"
+      ],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Number marker before a numeric reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^\\s*\\d"
+    },
+    {
+      "language": "es_CO",
       "key": "nov.",
       "abbreviation": "nov.",
       "expansion": "noviembre",
@@ -670,6 +745,18 @@
       "context_expansions": null,
       "case_sensitive": false,
       "description": "Promenade (alternate)",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "es_CO",
+      "key": "pte.",
+      "abbreviation": "Pte.",
+      "expansion": "presidente",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "President",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
     },

@@ -123,6 +123,18 @@
     },
     {
       "language": "it",
+      "key": "cav.",
+      "abbreviation": "Cav.",
+      "expansion": "cavaliere",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Cavaliere title",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "it",
       "key": "cf.",
       "abbreviation": "cf.",
       "expansion": "confronta",
@@ -167,6 +179,18 @@
       "case_sensitive": true,
       "description": "Centimeter(s)",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
+      "only_if_followed_by": null
+    },
+    {
+      "language": "it",
+      "key": "coop.",
+      "abbreviation": "Coop.",
+      "expansion": "cooperativa",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Cooperative organization",
+      "only_if_preceded_by": null,
       "only_if_followed_by": null
     },
     {
@@ -319,7 +343,10 @@
       "abbreviation": "gen.",
       "expansion": "gennaio",
       "aliases": [],
-      "context_expansions": null,
+      "context_expansions": {
+        "date": "gennaio",
+        "title": "Generale"
+      },
       "case_sensitive": false,
       "description": "January",
       "only_if_preceded_by": null,
@@ -499,7 +526,10 @@
       "abbreviation": "mag.",
       "expansion": "maggio",
       "aliases": [],
-      "context_expansions": null,
+      "context_expansions": {
+        "date": "maggio",
+        "academic": "Magistrato"
+      },
       "case_sensitive": false,
       "description": "May",
       "only_if_preceded_by": null,
@@ -611,6 +641,18 @@
       "case_sensitive": true,
       "description": "Millimeter(s)",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
+      "only_if_followed_by": null
+    },
+    {
+      "language": "it",
+      "key": "m°",
+      "abbreviation": "M°",
+      "expansion": "maestro",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Maestro title",
+      "only_if_preceded_by": null,
       "only_if_followed_by": null
     },
     {

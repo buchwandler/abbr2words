@@ -359,6 +359,32 @@ class SpanishAbbreviationExpander(AbbreviationExpander):
         # COMMON ABBREVIATIONS
         # =====================================================================
 
+        for abbreviation, expansion, description in (
+            ("Blvd.", "bulevar", "Boulevard"),
+            ("Mtro.", "maestro", "Maestro"),
+            ("Gral.", "general", "General"),
+            ("Fís.", "físico", "Physical/science abbreviation"),
+            ("Pte.", "presidente", "President"),
+            ("Fca.", "fábrica", "Factory"),
+        ):
+            self.add_abbreviation(
+                AbbreviationEntry(
+                    abbreviation=abbreviation,
+                    expansion=expansion,
+                    description=description,
+                )
+            )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="No.",
+                expansion="número",
+                aliases=("N.º", "N°"),
+                only_if_followed_by=r"^\s*\d",
+                description="Number marker before a numeric reference",
+            )
+        )
+
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="etc.",

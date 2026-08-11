@@ -870,6 +870,18 @@
     },
     {
       "language": "en_NG",
+      "key": "incl.",
+      "abbreviation": "incl.",
+      "expansion": "including",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Including",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en_NG",
       "key": "jan.",
       "abbreviation": "Jan.",
       "expansion": "January",
@@ -1196,7 +1208,7 @@
       "language": "en_NG",
       "key": "mrs.",
       "abbreviation": "Mrs.",
-      "expansion": "Misses",
+      "expansion": "Missus",
       "aliases": [],
       "context_expansions": null,
       "case_sensitive": false,
@@ -1561,6 +1573,18 @@
       "context_expansions": null,
       "case_sensitive": false,
       "description": "Reverend (religious title)",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "en_NG",
+      "key": "rm.",
+      "abbreviation": "Rm.",
+      "expansion": "Room",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Room",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
     },

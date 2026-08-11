@@ -43,6 +43,7 @@ class FrenchAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="Mme",
                 expansion="madame",
+                aliases=("Mme.",),
                 description="Mrs/Ms",
             )
         )
@@ -59,6 +60,7 @@ class FrenchAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="Mlle",
                 expansion="mademoiselle",
+                aliases=("Mlle.",),
                 description="Miss",
             )
         )
@@ -75,6 +77,7 @@ class FrenchAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="Dr",
                 expansion="docteur",
+                aliases=("Dr.",),
                 description="Doctor",
             )
         )
@@ -83,6 +86,16 @@ class FrenchAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="Pr",
                 expansion="professeur",
+                aliases=("Pr.",),
+                description="Professor",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="Prof.",
+                expansion="professeur",
+                aliases=("Prof",),
                 description="Professor",
             )
         )
@@ -107,6 +120,7 @@ class FrenchAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="St",
                 expansion="saint",
+                aliases=("St.",),
                 description="Saint (male)",
             )
         )
