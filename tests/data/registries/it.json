@@ -6,10 +6,7 @@
       "key": "ONLUS",
       "abbreviation": "ONLUS",
       "expansion": "organizzazione non lucrativa di utilità sociale",
-      "aliases": [
-        "Onlus",
-        "onlus"
-      ],
+      "aliases": ["Onlus", "onlus"],
       "context_expansions": null,
       "case_sensitive": true,
       "case_policy": "fixed",

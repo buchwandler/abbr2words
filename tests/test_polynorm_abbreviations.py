@@ -95,9 +95,7 @@ def test_german_initialisms_use_source_graphemes_and_preserve_context() -> None:
     assert expander.expand("Dipl.-Ing. Weber") == "Diplom Ingenieur Weber"
     assert expander.expand("GmbH") == "G m b H"
     assert expander.expand("AG") == "A G"
-    assert expander.expand("Die GmbH meldet Insolvenz an.") == (
-        "Die G m b H meldet Insolvenz an."
-    )
+    assert expander.expand("Die GmbH meldet Insolvenz an.") == ("Die G m b H meldet Insolvenz an.")
     assert expander.expand("Muster GmbH.") == "Muster G m b H."
     assert expander.expand("Die AG wächst.") == "Die A G wächst."
 

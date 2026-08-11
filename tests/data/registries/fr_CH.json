@@ -48,11 +48,7 @@
       "key": "bd.",
       "abbreviation": "Bd.",
       "expansion": "boulevard",
-      "aliases": [
-        "Bd",
-        "bd",
-        "bd."
-      ],
+      "aliases": ["Bd", "bd", "bd."],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
@@ -136,9 +132,7 @@
       "key": "dr",
       "abbreviation": "Dr",
       "expansion": "docteur",
-      "aliases": [
-        "Dr."
-      ],
+      "aliases": ["Dr."],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
@@ -516,9 +510,7 @@
       "key": "mlle",
       "abbreviation": "Mlle",
       "expansion": "mademoiselle",
-      "aliases": [
-        "Mlle."
-      ],
+      "aliases": ["Mlle."],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "sentence",
@@ -574,9 +566,7 @@
       "key": "mme",
       "abbreviation": "Mme",
       "expansion": "madame",
-      "aliases": [
-        "Mme."
-      ],
+      "aliases": ["Mme."],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "sentence",
@@ -688,9 +678,7 @@
       "key": "pr",
       "abbreviation": "Pr",
       "expansion": "professeur",
-      "aliases": [
-        "Pr."
-      ],
+      "aliases": ["Pr."],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
@@ -704,9 +692,7 @@
       "key": "prof.",
       "abbreviation": "Prof.",
       "expansion": "professeur",
-      "aliases": [
-        "Prof"
-      ],
+      "aliases": ["Prof"],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
@@ -776,9 +762,7 @@
       "key": "st",
       "abbreviation": "St",
       "expansion": "Saint",
-      "aliases": [
-        "St."
-      ],
+      "aliases": ["St."],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
@@ -792,9 +776,7 @@
       "key": "ste",
       "abbreviation": "Ste",
       "expansion": "Sainte",
-      "aliases": [
-        "Ste."
-      ],
+      "aliases": ["Ste."],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
