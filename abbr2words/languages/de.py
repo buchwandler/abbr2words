@@ -505,18 +505,18 @@ class GermanAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="GmbH",
-                expansion="Geh Em Beh Hah",
+                expansion="G m b H",
                 case_sensitive=True,
-                description="Letter-name reading of limited liability company",
+                description="Source-grapheme spelling of limited liability company initialism",
             )
         )
 
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="AG",
-                expansion="Ah Geh",
+                expansion="A G",
                 case_sensitive=True,
-                description="Letter-name reading of stock corporation",
+                description="Source-grapheme spelling of stock corporation initialism",
             )
         )
 

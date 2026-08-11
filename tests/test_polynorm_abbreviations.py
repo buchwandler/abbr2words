@@ -90,10 +90,16 @@ def test_german_attributive_variants_are_conservative(source: str, expected: str
     assert abbr2words(source, lang="de") == expected
 
 
-def test_existing_german_longest_and_gmbh_policies_remain_stable() -> None:
+def test_german_initialisms_use_source_graphemes_and_preserve_context() -> None:
     expander = get_expander("de")
     assert expander.expand("Dipl.-Ing. Weber") == "Diplom Ingenieur Weber"
-    assert expander.expand("GmbH") == "Geh Em Beh Hah"
+    assert expander.expand("GmbH") == "G m b H"
+    assert expander.expand("AG") == "A G"
+    assert expander.expand("Die GmbH meldet Insolvenz an.") == (
+        "Die G m b H meldet Insolvenz an."
+    )
+    assert expander.expand("Muster GmbH.") == "Muster G m b H."
+    assert expander.expand("Die AG wächst.") == "Die A G wächst."
 
 
 @pytest.mark.parametrize(

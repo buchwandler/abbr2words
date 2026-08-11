@@ -14,6 +14,10 @@
 
 ```
 
+```{autofunction} abbr2words.iter_unit_diagnostics
+
+```
+
 `abbr2words(..., annotations=...)` accepts an iterable of source-aligned
 `TokenAnnotation` objects. Their offsets refer to the original input text;
 labels are normalized and overlapping or invalid spans raise `ValueError`.
@@ -110,7 +114,11 @@ The matcher is maximal and fail-closed: larger unsupported expressions such as
 `5 km / h`, `1 m^2`, and `2kg-rated` remain unchanged instead of being
 partially rewritten. Reviewed aliases include both `µg` and `μg`; unrelated
 source characters are not Unicode-normalized. Unit metadata controls case
-sensitivity and whether a numeric value is required.
+sensitivity, whether a numeric value is required, and whether a separator is
+required between a numeric value and an ambiguous one-letter symbol. The
+separator requirement defaults to false for compatibility; reviewed `B`, `A`,
+and `K` candidates require spacing so compact identifier-like forms are not
+claimed as units.
 
 Unit replacements have `kind="unit"` in the exact replacement result. This
 layer expands unit symbols/abbreviations lexically; it does not verbalize the
@@ -146,6 +154,12 @@ original numeric lexeme exactly. Matches are deterministic, maximal, and
 non-overlapping. `protected_spans=[(start, end), ...]` suppresses caller-owned
 ranges such as markup, URLs, or code. `overrides` and `suppressed` accept unit
 symbols; suppression also accepts a canonical ID.
+
+`iter_unit_diagnostics()` returns the same accepted decisions plus compact
+separator-policy rejections with `status="rejected"` and
+`reason="requires_separator"`. Each record retains the symbol, locale, and
+canonical identity so downstream ownership diagnostics do not need to infer
+decisions from replacement text.
 
 The matcher recognizes and identifies quantity symbols. It does not decide how
 the complete quantity is spoken: number-to-words conversion, singular/plural

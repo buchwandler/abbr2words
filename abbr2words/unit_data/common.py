@@ -15,6 +15,7 @@ class UnitDefinition:
     canonical_id: str
     symbols: tuple[str, ...]
     canonical_symbol: str
+    requires_separator: bool = False
 
 
 COMMON_UNIT_DEFINITIONS = (
@@ -33,7 +34,7 @@ COMMON_UNIT_DEFINITIONS = (
     UnitDefinition("mass-gram", ("g",), "g"),
     UnitDefinition("mass-kilogram", ("kg",), "kg"),
     UnitDefinition("mass-tonne", ("t",), "t"),
-    UnitDefinition("temperature-kelvin", ("K",), "K"),
+    UnitDefinition("temperature-kelvin", ("K",), "K", requires_separator=True),
     UnitDefinition("temperature-celsius", ("°C", "℃"), "°C"),
     UnitDefinition("temperature-fahrenheit", ("°F", "℉"), "°F"),
     UnitDefinition("speed-meter-per-second", ("m/s",), "m/s"),
@@ -42,7 +43,7 @@ COMMON_UNIT_DEFINITIONS = (
     UnitDefinition("pressure-pascal", ("Pa",), "Pa"),
     UnitDefinition("pressure-kilopascal", ("kPa",), "kPa"),
     UnitDefinition("pressure-atmosphere", ("atm",), "atm"),
-    UnitDefinition("data-byte", ("B",), "B"),
+    UnitDefinition("data-byte", ("B",), "B", requires_separator=True),
     UnitDefinition("data-kilobyte", ("kB",), "kB"),
     UnitDefinition("data-megabyte", ("MB",), "MB"),
     UnitDefinition("data-gigabyte", ("GB",), "GB"),
@@ -303,6 +304,7 @@ def common_unit_entries(language: str, *, expansion_prefix: str = "") -> tuple[o
             description=f"Reviewed common unit ({language})",
             canonical_symbol=definition.canonical_symbol,
             canonical_id=definition.canonical_id,
+            requires_separator=definition.requires_separator,
         )
         for definition in COMMON_UNIT_DEFINITIONS
     )

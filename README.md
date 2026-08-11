@@ -124,6 +124,14 @@ or currency realization. Unit support is not universal UCUM support. Use the
 public `iter_unit_matches()` API when a downstream semantic normalizer needs the
 original numeric lexeme, source span, and stable canonical quantity identity.
 
+Reviewed initialisms that represent spelling are rendered with source graphemes,
+including German `GmbH` as `G m b H` and `AG` as `A G`. A small set of ambiguous
+one-letter unit symbols (`B`, `A`, and `K`) requires separation from the numeric
+value, so identifier-like forms such as `7B`, `3A`, and `5K` remain available to
+downstream structured-code handling while `7 B`, `3 A`, and `300 K` remain units.
+Use `iter_unit_diagnostics()` when a caller needs to distinguish an accepted unit
+claim from a compact candidate rejected by that policy.
+
 `abbr2words` recognizes and identifies quantity symbols; it does not decide how
 a complete numeric quantity is spoken. Number words, grammatical number,
 currency major/minor decomposition, and locale-specific spoken decimal policy

@@ -23,7 +23,8 @@ from .language_registry import (
     resolve_language,
     supported_language_keys,
 )
-from .units import UnitEntry, UnitMatch
+from .units import UnitDiagnostic, UnitEntry, UnitMatch
+from .units import iter_unit_diagnostics as _iter_unit_diagnostics
 from .units import iter_unit_matches as _iter_unit_matches
 
 _LANGUAGE_CLASSES: Final[dict[str, tuple[str, str]]] = {
@@ -59,6 +60,24 @@ def iter_unit_matches(
 ) -> Iterator[UnitMatch]:
     """Yield structured source-aligned matches for numeric quantity symbols."""
     return _iter_unit_matches(
+        text,
+        normalize_language(language),
+        overrides=overrides,
+        suppressed=suppressed,
+        protected_spans=protected_spans,
+    )
+
+
+def iter_unit_diagnostics(
+    text: str,
+    language: str,
+    *,
+    overrides: Mapping[str, UnitEntry] | None = None,
+    suppressed: Set[str] | None = None,
+    protected_spans: Iterable[tuple[int, int]] = (),
+) -> Iterator[UnitDiagnostic]:
+    """Yield accepted unit matches and policy rejections for compact candidates."""
+    return _iter_unit_diagnostics(
         text,
         normalize_language(language),
         overrides=overrides,

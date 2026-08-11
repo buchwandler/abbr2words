@@ -10,6 +10,7 @@ from abbr2words import (
     UnitMatch,
     abbr2words,
     abbr2words_with_replacements,
+    iter_unit_diagnostics,
     iter_unit_matches,
 )
 
@@ -139,6 +140,35 @@ def test_reviewed_scientific_units_preserve_identity_metadata(
     assert match.value == value
     assert match.symbol == symbol
     assert match.canonical_id == canonical_id
+
+
+@pytest.mark.parametrize("source", ["7B", "2B", "45B", "3A", "5K"])
+def test_separator_required_units_do_not_claim_compact_identifier_codes(source: str) -> None:
+    assert list(iter_unit_matches(source, "en")) == []
+    assert abbr2words(source, lang="en") == source
+
+
+@pytest.mark.parametrize(
+    ("source", "expected_symbol", "expected_canonical_id"),
+    [
+        ("7 B", "B", "data-byte"),
+        ("3 A", "A", "current-ampere"),
+        ("300 K", "K", "temperature-kelvin"),
+    ],
+)
+def test_separator_required_units_remain_supported_when_spaced(
+    source: str, expected_symbol: str, expected_canonical_id: str
+) -> None:
+    match = only_match(source, "en")
+    assert (match.symbol, match.canonical_id) == (expected_symbol, expected_canonical_id)
+
+
+def test_unit_diagnostics_explain_compact_rejection_without_changing_matches() -> None:
+    diagnostics = list(iter_unit_diagnostics("Stamm 7B and 7 B", "en"))
+    assert [(item.status, item.symbol, item.canonical_id, item.reason) for item in diagnostics] == [
+        ("rejected", "B", "data-byte", "requires_separator"),
+        ("accepted", "B", "data-byte", None),
+    ]
 
 
 @pytest.mark.parametrize("language", ["de", "es", "fr", "it"])

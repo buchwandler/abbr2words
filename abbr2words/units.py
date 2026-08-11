@@ -64,6 +64,7 @@ class UnitEntry:
     allow_lexical_overlap: bool = False
     preserve_sentence_final_period: bool = False
     reject_following_period: bool = False
+    requires_separator: bool = False
 
     def __post_init__(self) -> None:
         if not self.symbols or any(
@@ -96,6 +97,8 @@ class UnitEntry:
             raise TypeError("unit preserve_sentence_final_period must be a bool")
         if type(self.reject_following_period) is not bool:
             raise TypeError("unit reject_following_period must be a bool")
+        if type(self.requires_separator) is not bool:
+            raise TypeError("unit requires_separator must be a bool")
 
 
 @dataclass(frozen=True, slots=True)
@@ -115,12 +118,27 @@ class UnitMatch:
     category: str = "unit"
 
 
+@dataclass(frozen=True, slots=True)
+class UnitDiagnostic:
+    """A concise decision record for one reviewed numeric unit candidate."""
+
+    start: int
+    end: int
+    value: str
+    symbol: str
+    canonical_id: str | None
+    language: str
+    status: Literal["accepted", "rejected"]
+    reason: str | None = None
+
+
 @dataclass(frozen=True)
 class _UnitDefinition:
     canonical_id: str
     symbols: tuple[str, ...]
     description: str
     reject_following_period: bool = False
+    requires_separator: bool = False
 
 
 def _entry(
@@ -137,6 +155,7 @@ def _entry(
     allow_lexical_overlap: bool = False,
     preserve_sentence_final_period: bool = False,
     reject_following_period: bool = False,
+    requires_separator: bool = False,
 ) -> UnitEntry:
     if isinstance(symbols, str):
         symbols = (symbols,)
@@ -153,6 +172,7 @@ def _entry(
         allow_lexical_overlap=allow_lexical_overlap,
         preserve_sentence_final_period=preserve_sentence_final_period,
         reject_following_period=reject_following_period,
+        requires_separator=requires_separator,
     )
 
 
@@ -193,7 +213,7 @@ _EN: tuple[UnitEntry, ...] = (
         case_sensitive=False,
         preserve_sentence_final_period=True,
     ),
-    _entry("K", "kelvin", "Temperature"),
+    _entry("K", "kelvin", "Temperature", requires_separator=True),
     _entry("m/s", "meter per second", "Speed"),
     _entry("km/h", "kilometer per hour", "Speed"),
     _entry(("s", "sec", "sec."), "second", "Duration"),
@@ -278,7 +298,7 @@ _BASE_DEFINITIONS = (
     _UnitDefinition("mass-gram", ("g",), "Mass"),
     _UnitDefinition("mass-kilogram", ("kg",), "Mass"),
     _UnitDefinition("mass-tonne", ("t",), "Mass"),
-    _UnitDefinition("temperature-kelvin", ("K",), "Temperature"),
+    _UnitDefinition("temperature-kelvin", ("K",), "Temperature", requires_separator=True),
     _UnitDefinition("temperature-celsius", ("°C",), "Temperature"),
     _UnitDefinition("temperature-fahrenheit", ("°F",), "Temperature"),
     _UnitDefinition("speed-meter-per-second", ("m/s",), "Speed"),
@@ -902,7 +922,7 @@ _POLYNORM_DEFINITIONS = (
     _UnitDefinition("pressure-pascal", ("Pa",), "Pressure"),
     _UnitDefinition("pressure-kilopascal", ("kPa",), "Pressure"),
     _UnitDefinition("pressure-atmosphere", ("atm",), "Pressure"),
-    _UnitDefinition("data-byte", ("B",), "Data"),
+    _UnitDefinition("data-byte", ("B",), "Data", requires_separator=True),
     _UnitDefinition("data-kilobyte", ("kB",), "Data"),
     _UnitDefinition("data-megabyte", ("MB",), "Data"),
     _UnitDefinition("data-gigabyte", ("GB",), "Data"),
@@ -921,7 +941,7 @@ _POLYNORM_DEFINITIONS = (
     _UnitDefinition("frequency-megahertz", ("MHz",), "Frequency"),
     _UnitDefinition("frequency-gigahertz", ("GHz",), "Frequency"),
     _UnitDefinition("length-nanometer", ("nm",), "Length"),
-    _UnitDefinition("current-ampere", ("A",), "Electric current"),
+    _UnitDefinition("current-ampere", ("A",), "Electric current", requires_separator=True),
     _UnitDefinition("current-milliampere", ("mA",), "Electric current"),
     _UnitDefinition("charge-milliampere-hour", ("mAh",), "Electric charge"),
     _UnitDefinition("voltage-volt", ("V",), "Electric potential"),
@@ -1121,6 +1141,7 @@ def _polynorm_unit_entries(language: str) -> tuple[UnitEntry, ...]:
             definition.description,
             canonical_id=definition.canonical_id,
             reject_following_period=definition.reject_following_period,
+            requires_separator=definition.requires_separator,
         )
         for index, definition in enumerate(_POLYNORM_DEFINITIONS)
     )
@@ -1303,6 +1324,7 @@ for _lang, _names in _LOCALIZED_UNIT_NAMES.items():
             _names[_definition.canonical_id],
             _definition.description,
             canonical_id=_definition.canonical_id,
+            requires_separator=_definition.requires_separator,
         )
         for _definition in _BASE_DEFINITIONS
     ]
@@ -1639,6 +1661,9 @@ def iter_unit_matches(
         if not candidates:
             continue
         symbol, entry = max(candidates, key=lambda item: len(item[0]))
+        spacing = value_match.group("spacing")
+        if entry.requires_separator and not spacing:
+            continue
         end = unit_start + len(symbol)
         if end < len(text) and (text[end].isalnum() or text[end] == "_"):
             continue
@@ -1685,6 +1710,8 @@ def iter_unit_matches(
             0 if entry.case_sensitive else re.IGNORECASE,
         )
         for value_match in pattern.finditer(text):
+            if entry.requires_separator and not value_match.group("spacing"):
+                continue
             start = value_match.start("symbol")
             end = value_match.end("value")
             if _unit_continuation_is_unsupported(text, end):
@@ -1717,6 +1744,81 @@ def iter_unit_matches(
             continue
         selected.append(match)
     yield from selected
+
+
+def iter_unit_diagnostics(
+    text: str,
+    language: str,
+    *,
+    overrides: Mapping[str, UnitEntry] | None = None,
+    suppressed: Set[str] | None = None,
+    protected_spans: Iterable[tuple[int, int]] = (),
+) -> Iterator[UnitDiagnostic]:
+    """Yield accepted matches and compact candidates rejected by unit policy.
+
+    Accepted records mirror :func:`iter_unit_matches`; rejected records are
+    intentionally limited to reviewed candidates whose metadata requires a
+    separator. This keeps diagnostics useful for ownership triage without
+    exposing the matcher implementation as a tracing framework.
+    """
+    diagnostics = [
+        UnitDiagnostic(
+            start=match.start,
+            end=match.end,
+            value=match.value,
+            symbol=match.symbol,
+            canonical_id=match.canonical_id,
+            language=match.language,
+            status="accepted",
+        )
+        for match in iter_unit_matches(
+            text,
+            language,
+            overrides=overrides,
+            suppressed=suppressed,
+            protected_spans=protected_spans,
+        )
+    ]
+    inventory = _unit_inventory(language, overrides, suppressed)
+    value_pattern = _EN_VALUE_PATTERN if language == "en" else _VALUE_PATTERN
+    protected = _normalize_protected_spans(text, protected_spans)
+    for value_match in value_pattern.finditer(text):
+        value = value_match.group("value")
+        unit_start = value_match.end()
+        spacing = value_match.group("spacing")
+        candidates = [
+            (symbol, entry)
+            for symbol, entry in inventory
+            if entry.quantity_position in {"suffix", "both"}
+            and entry.requires_numeric_value
+            and entry.requires_separator
+            and not spacing
+            and _unit_text_matches(text, unit_start, symbol, entry.case_sensitive)
+        ]
+        if not candidates:
+            continue
+        symbol, entry = max(candidates, key=lambda item: len(item[0]))
+        start = value_match.start()
+        end = unit_start + len(symbol)
+        if end < len(text) and (text[end].isalnum() or text[end] == "_"):
+            continue
+        if _unit_continuation_is_unsupported(text, end):
+            continue
+        if _overlaps_protected(start, end, protected):
+            continue
+        diagnostics.append(
+            UnitDiagnostic(
+                start=start,
+                end=end,
+                value=value,
+                symbol=text[unit_start:end],
+                canonical_id=entry.canonical_id,
+                language=language,
+                status="rejected",
+                reason="requires_separator",
+            )
+        )
+    yield from sorted(diagnostics, key=lambda item: (item.start, item.end, item.status))
 
 
 def iter_unit_replacements(
@@ -1792,9 +1894,11 @@ __all__ = [
     "NumericFormatProfile",
     "UNIT_ENTRIES",
     "UnitEntry",
+    "UnitDiagnostic",
     "UnitMatch",
     "expand_units",
     "iter_unit_matches",
+    "iter_unit_diagnostics",
     "iter_unit_replacements",
     "numeric_format_profile",
     "unit_entries",

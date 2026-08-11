@@ -37,6 +37,11 @@ benchmark ground-truth override.
   expansions.
 - Scientific unit identities such as `50 kW`, `550 nm`, `60 Hz`, and `0.01 M`
   when a numeric value and the reviewed symbol are present.
+- German organization initialisms whose entries represent spelling, such as
+  `GmbH` → `G m b H` and `AG` → `A G`; source case is preserved.
+- Explicitly spaced ambiguous one-letter units such as `7 B`, `3 A`, and
+  `300 K`. Compact `7B`, `3A`, and `5K` are deliberately left for downstream
+  structured-code handling because their unit metadata requires a separator.
 
 ### Spokenform or structured-stage ownership
 
@@ -75,3 +80,12 @@ represented by a reviewed abbreviation or unit span.
 Compound unit expressions may be recognized compositionally by downstream
 logic. This package is not a general UCUM parser and should only add a complete
 compound when it is specifically reviewed and represented by the unit registry.
+
+## Compact unit diagnostics
+
+The separator policy is metadata-driven and defaults to allowing compact forms,
+so it does not disable all compact units. For the reviewed collision symbols,
+`iter_unit_diagnostics()` reports the source symbol, locale, canonical identity,
+and `requires_separator` rejection reason alongside accepted unit decisions.
+This makes ownership triage inspectable without moving numeric or structured
+normalization into `abbr2words`.
