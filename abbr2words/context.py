@@ -8,6 +8,8 @@ from typing import Any
 
 _LEXICAL_TOKEN = re.compile(r"[^\W\d_][\w'’\-]*", re.UNICODE)
 _TIME = re.compile(r"\b\d{1,2}(?::\d{2})?\s*$")
+_DATE_BEFORE = re.compile(r"(?:^|\D)\d{1,2}[.\-/\s\u00a0\u202f]*$")
+_DATE_AFTER = re.compile(r"^[.\-/\s\u00a0\u202f]*\d{1,4}(?:\D|$)")
 _HOUSE_AND_STREET = re.compile(
     r"(?:^|[\s,;(])\d+\s+(?:[NSEW]\.?\s+)?[\w'’\-]+(?:\s+[\w'’\-]+)*\s*$",
     re.UNICODE | re.IGNORECASE,
@@ -101,6 +103,10 @@ class ContextProfile(ABC):
 
 class DefaultContextProfile(ContextProfile):
     def detect_context(self, abbreviation: str, before: str, after: str) -> Any:
+        # This is evidence detection, not date parsing: inspect only the
+        # bounded caller-provided windows and require a nearby numeric token.
+        if _DATE_BEFORE.search(before) or _DATE_AFTER.search(after):
+            return _context("date")
         if _TIME.search(before):
             return _context("time")
         if _HOUSE_AND_STREET.search(before):
@@ -140,6 +146,8 @@ class EnglishContextProfile(DefaultContextProfile):
     }
 
     def detect_context(self, abbreviation: str, before: str, after: str) -> Any:
+        if _DATE_BEFORE.search(before) or _DATE_AFTER.search(after):
+            return _context("date")
         if _TIME.search(before):
             return _context("time")
         if abbreviation.casefold() in {"st.", "st"}:

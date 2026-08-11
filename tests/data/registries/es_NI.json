@@ -3,18 +3,6 @@
   "entries": [
     {
       "language": "es_NI",
-      "key": "C$",
-      "abbreviation": "C$",
-      "expansion": "córdoba nicaragüense",
-      "aliases": [],
-      "context_expansions": null,
-      "case_sensitive": true,
-      "description": "",
-      "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
-    },
-    {
-      "language": "es_NI",
       "key": "abr.",
       "abbreviation": "abr.",
       "expansion": "abril",

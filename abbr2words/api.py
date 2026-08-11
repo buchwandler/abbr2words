@@ -108,10 +108,6 @@ def reset_expanders(lang: str | None = None) -> None:
                 if key[0] == code:
                     del _SHARED_EXPANDERS[key]
 
-            # Preserve cleanup for callers importing language modules directly.
-            module_name = language_spec(code).module
-            import_module(module_name).reset_expander()
-
 
 def abbr2words(
     text: str,

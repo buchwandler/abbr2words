@@ -3,6 +3,30 @@
   "entries": [
     {
       "language": "sk",
+      "key": "napr.",
+      "abbreviation": "napr.",
+      "expansion": "napríklad",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Example marker",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "sk",
+      "key": "s.",
+      "abbreviation": "s.",
+      "expansion": "strana",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Page reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+    },
+    {
+      "language": "sk",
       "key": "č.",
       "abbreviation": "č.",
       "expansion": "číslo",

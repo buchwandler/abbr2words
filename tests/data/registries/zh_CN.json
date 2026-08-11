@@ -11,19 +11,31 @@
       "case_sensitive": true,
       "description": "Number sign",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
     },
     {
       "language": "zh_CN",
-      "key": "人民币",
-      "abbreviation": "人民币",
-      "expansion": "人民币",
+      "key": "号",
+      "abbreviation": "号",
+      "expansion": "号码",
       "aliases": [],
       "context_expansions": null,
       "case_sensitive": true,
-      "description": "",
+      "description": "Number marker",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+    },
+    {
+      "language": "zh_CN",
+      "key": "页",
+      "abbreviation": "页",
+      "expansion": "页码",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Page marker",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
     }
   ]
 }

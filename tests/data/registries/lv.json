@@ -3,6 +3,18 @@
   "entries": [
     {
       "language": "lv",
+      "key": "lpp.",
+      "abbreviation": "lpp.",
+      "expansion": "lappuse",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Page reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+    },
+    {
+      "language": "lv",
       "key": "nr.",
       "abbreviation": "Nr.",
       "expansion": "numurs",
@@ -10,6 +22,18 @@
       "context_expansions": null,
       "case_sensitive": false,
       "description": "Number reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "lv",
+      "key": "piem.",
+      "abbreviation": "piem.",
+      "expansion": "piemēram",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Example marker",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
     }

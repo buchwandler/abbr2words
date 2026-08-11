@@ -83,10 +83,23 @@ cents are not lost.
 
 The stable API keeps the numeric value and expands only supported unit symbols:
 
-```python
+````python
 abbr2words("500 g", lang="en")  # "500 gram"
 abbr2words("section g", lang="en")  # "section g"
-```
+
+Baseline-language examples remain intentionally explicit:
+
+```python
+abbr2words("ص. 12", lang="ar")    # "صفحة 12"
+abbr2words("стр. 12", lang="sr")  # "страна 12"
+abbr2words("עמ׳ 12", lang="he")  # "עמוד 12"
+````
+
+These demonstrate guarded references, not full number morphology. For a
+semantic quantity use `iter_unit_matches()` rather than treating a neutral
+surface label as grammatically complete.
+
+````
 
 The unit inventory is explicit and reviewed; it is not complete UCUM or arbitrary
 scientific-expression parsing. The optional speech example may use `num2words`
@@ -118,7 +131,7 @@ dependencies:
 python -m pip install spacy
 python -m spacy download en_core_web_sm
 python examples/spacy_pos.py
-```
+````
 
 The example converts `token.idx`, token length, `token.pos_`, and `token.tag_`
 to `TokenAnnotation`. A trained spaCy pipeline is required for POS labels;

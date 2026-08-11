@@ -5,3 +5,7 @@ Copyright 2026 abbr2words contributors
 
 This product includes abbreviation-expansion software and language data
 originally developed for the kokorog2p project.
+
+Development tooling can import selected locale fields from Unicode CLDR
+release 48.2.1. Any generated CLDR-derived tables distributed with a release
+must retain the Unicode Terms of Use attribution: https://www.unicode.org/terms_of_use.html

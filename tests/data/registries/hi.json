@@ -12,6 +12,30 @@
       "description": "Number reference",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
+    },
+    {
+      "language": "hi",
+      "key": "डॉ.",
+      "abbreviation": "डॉ.",
+      "expansion": "डॉक्टर",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Title",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "hi",
+      "key": "पृ.",
+      "abbreviation": "पृ.",
+      "expansion": "पृष्ठ",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Page reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
     }
   ]
 }

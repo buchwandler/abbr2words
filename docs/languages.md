@@ -3,22 +3,22 @@
 The bundled base-language registries are the 49 base keys in the pinned
 num2words parity contract:
 
-| Codes |
-| ----- |
+| Codes                                                            |
+| ---------------------------------------------------------------- |
 | `am` `ar` `az` `be` `bn` `ca` `ce` `cs` `cy` `da` `de` `en` `eo` |
 | `es` `fa` `fi` `fr` `he` `hi` `hu` `hy` `id` `is` `it` `ja` `kn` |
 | `ko` `kz` `lt` `lv` `mn` `nl` `no` `pl` `pt` `ro` `ru` `sk` `sl` |
-| `sr` `sv` `te` `tet` `tg` `th` `tr` `uk` `vi` `zh` |
+| `sr` `sv` `te` `tet` `tg` `th` `tr` `uk` `vi` `zh`               |
 
 Explicit locale overlays inherit a base registry and are independently keyed:
 
-| Base | Locale overlays | num2words parity |
-| ---- | --------------- | ---------------- |
-| `en` | `en_IN`, `en_NG` | v0.5.14 |
-| `es` | `es_CO`, `es_CR`, `es_GT`, `es_NI`, `es_VE` | v0.5.14 |
-| `fr` | `fr_BE`, `fr_CH`, `fr_DZ` | v0.5.14 |
-| `pt` | `pt_BR` | v0.5.14 |
-| `zh` | `zh_CN`, `zh_HK`, `zh_TW` | current master only |
+| Base | Locale overlays                             | num2words parity    |
+| ---- | ------------------------------------------- | ------------------- |
+| `en` | `en_IN`, `en_NG`                            | v0.5.14             |
+| `es` | `es_CO`, `es_CR`, `es_GT`, `es_NI`, `es_VE` | v0.5.14             |
+| `fr` | `fr_BE`, `fr_CH`, `fr_DZ`                   | v0.5.14             |
+| `pt` | `pt_BR`                                     | v0.5.14             |
+| `zh` | `zh_CN`, `zh_HK`, `zh_TW`                   | current master only |
 
 Language input is normalized by trimming whitespace, accepting both hyphens and
 underscores, canonicalizing base/region casing, and trying the exact registered
@@ -77,3 +77,26 @@ Uppercase undotted initialisms such as English time zones, `BCE`, `CE`, and
 `MIT` are case-sensitive. This prevents ordinary lowercase words from being
 rewritten; reviewed title-case and lexical abbreviations retain their own
 registry policy.
+
+## Coverage tiers and generated inventory
+
+Coverage metadata is checked in with the language bundles and registry shards.
+Run `python scripts/generate_registry_snapshot.py` after an intentional data
+change and inspect the shard diff.
+
+| Tier              | Base keys                                                                                                         | Content contract                                                                                                   |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Reviewed extended | `cs de en es fr it nl pl pt ru sv tr`                                                                             | Mature lexical inventories migrated through declarative bundles with parity snapshots                              |
+| Reviewed baseline | `am ar az be bn ca ce cy da eo fa fi he hi hu hy id is ja kn ko kz lt lv mn no ro sk sl sr te tet tg th uk vi zh` | Source-tagged references/titles, bounded numeric guards, localized neutral unit labels, and script-safe boundaries |
+| Locale overlay    | 14 explicit locale keys                                                                                           | Base inheritance plus structured numeric identities; no identity lexical currency rules                            |
+
+The detailed generated count table is maintained in
+[`docs/language-coverage.md`](language-coverage.md).
+
+Baseline unit labels are neutral surface labels, not plural/case/gender or
+numeral-government realization. Consumers that need semantic quantities should
+use `iter_unit_matches()` and perform locale grammar downstream.
+
+`DATE` requires nearby numeric date evidence and is deliberately not an
+unrestricted parser. Uncased scripts remain conservative without the cased
+letter title heuristic; CJK entries do not rely on Latin `\b` behavior.

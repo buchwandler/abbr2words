@@ -1,7 +1,7 @@
 from ..unit_data.common import locale_currency, register_locale_units
 from ._locales import SpanishGuatemalaAbbreviationExpander
 
-register_locale_units("es_GT", "es", (locale_currency("Q", "quetzal", "currency-guatemalan-quetzal"),))
+register_locale_units("es_GT", "es", (locale_currency(("Q", "Q."), "quetzal", "currency-guatemalan-quetzal"),))
 
 
 def get_expander(enable_context_detection: bool = True) -> SpanishGuatemalaAbbreviationExpander:

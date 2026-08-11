@@ -12,6 +12,30 @@
       "description": "Doctor",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
+    },
+    {
+      "language": "he",
+      "key": "מס׳",
+      "abbreviation": "מס׳",
+      "expansion": "מספר",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Number reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+    },
+    {
+      "language": "he",
+      "key": "עמ׳",
+      "abbreviation": "עמ׳",
+      "expansion": "עמוד",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Page reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
     }
   ]
 }

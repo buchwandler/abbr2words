@@ -3,6 +3,18 @@
   "entries": [
     {
       "language": "ro",
+      "key": "ex.",
+      "abbreviation": "ex.",
+      "expansion": "exemplu",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Example marker",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "ro",
       "key": "nr.",
       "abbreviation": "nr.",
       "expansion": "număr",
@@ -12,6 +24,18 @@
       "description": "Number reference",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
+    },
+    {
+      "language": "ro",
+      "key": "pag.",
+      "abbreviation": "pag.",
+      "expansion": "pagină",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Page reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
     }
   ]
 }

@@ -11,7 +11,7 @@ This module provides the infrastructure for expanding abbreviations during text 
 import re
 from abc import ABC, abstractmethod
 from collections.abc import Collection, Iterable, Iterator
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from enum import Enum
 from re import Pattern
 from typing import Literal, TypeAlias
@@ -19,6 +19,7 @@ from typing import Literal, TypeAlias
 from ._replacements import Replacement, apply_replacements, resolve_replacements
 from .annotations import AnnotationIndex, TokenAnnotation, normalize_annotations
 from .context import profile_for
+from .registry_keys import normalize_entry_key
 from .units import (
     NUMBER_BEFORE_UNIT,
     UnitEntry,
@@ -39,6 +40,7 @@ class AbbreviationContext(Enum):
     TITLE = "title"  # Title/honorific (Dr. Smith)
     PLACE = "place"  # Place name (Main St.)
     TIME = "time"  # Time-related (3 P.M.)
+    DATE = "date"  # Bounded numeric date evidence (5 Mar. 2026)
     ACADEMIC = "academic"  # Academic degree (Ph.D.)
     RELIGIOUS = "religious"  # Religious context (St. Peter)
 
@@ -403,6 +405,14 @@ class AbbreviationExpander(ABC):
         language = getattr(self, "UNIT_LANGUAGE", "en")
         self.unit_entries = unit_entries(language)
         self._unit_symbols = unit_symbols(language)
+        self._unit_by_symbol = {
+            symbol: entry for entry in self.unit_entries for symbol in entry.symbols
+        }
+        self._unit_by_canonical_id = {
+            entry.canonical_id: entry
+            for entry in self.unit_entries
+            if entry.canonical_id is not None
+        }
         self._unit_overrides: dict[str, UnitEntry] = {}
         self._suppressed_units: set[str] = set()
         self.enable_context_detection = enable_context_detection
@@ -422,10 +432,7 @@ class AbbreviationExpander(ABC):
         Args:
             entry: The abbreviation entry to add
         """
-        unit_entry = next(
-            (item for item in self.unit_entries if entry.abbreviation in item.symbols),
-            None,
-        )
+        unit_entry = self._unit_by_symbol.get(entry.abbreviation)
         if unit_entry is not None and entry.origin == "custom":
             raise ValueError(
                 f"{entry.abbreviation!r} is a unit symbol; use set_unit() for unit customization"
@@ -435,16 +442,12 @@ class AbbreviationExpander(ABC):
             and unit_entry.category != "magnitude"
             and not unit_entry.allow_lexical_overlap
         ):
-            entry.case_sensitive = True
-            entry.only_if_preceded_by = entry.only_if_preceded_by or NUMBER_BEFORE_UNIT
-            # Rebuild the compiled fields if a legacy language registry supplied a
-            # unit entry with the default case-insensitive setting.
-            entry._pattern = _entry_pattern(entry)
-            entry._patterns = (entry._pattern,)
-            entry._preceding_pattern = _compile_guard(
-                entry.only_if_preceded_by, "only_if_preceded_by"
+            entry = replace(
+                entry,
+                case_sensitive=True,
+                only_if_preceded_by=entry.only_if_preceded_by or NUMBER_BEFORE_UNIT,
             )
-        key = entry.abbreviation if entry.case_sensitive else entry.abbreviation.lower()
+        key = normalize_entry_key(entry.abbreviation, case_sensitive=entry.case_sensitive)
         self.entries[key] = entry
 
     def add_custom_abbreviation(
@@ -485,7 +488,7 @@ class AbbreviationExpander(ABC):
                         continue
                     raise ValueError(
                         f"Unknown context '{key}'. Valid contexts are: "
-                        "default, title, place, time, academic, religious"
+                        f"{', '.join(item.value for item in AbbreviationContext)}"
                     ) from None
                 if context is AbbreviationContext.DEFAULT:
                     default_expansion = value
@@ -529,14 +532,8 @@ class AbbreviationExpander(ABC):
         if type(case_sensitive) is not bool:
             raise TypeError("case_sensitive must be a bool")
         if canonical_id is None:
-            canonical_id = next(
-                (
-                    entry.canonical_id
-                    for entry in self.unit_entries
-                    if symbol in entry.symbols and entry.canonical_id is not None
-                ),
-                None,
-            )
+            unit_entry = self._unit_by_symbol.get(symbol)
+            canonical_id = unit_entry.canonical_id if unit_entry is not None else None
         self._unit_overrides[symbol] = UnitEntry(
             (symbol,),
             expansion,
@@ -607,7 +604,7 @@ class AbbreviationExpander(ABC):
         """
         if abbreviation in self._unit_symbols:
             raise ValueError("unit symbols must be changed with set_unit() or remove_unit()")
-        key = abbreviation if case_sensitive else abbreviation.lower()
+        key = normalize_entry_key(abbreviation, case_sensitive=case_sensitive)
         if key in self.entries:
             del self.entries[key]
             return True
@@ -623,7 +620,7 @@ class AbbreviationExpander(ABC):
         Returns:
             True if the abbreviation exists, False otherwise
         """
-        key = abbreviation if case_sensitive else abbreviation.lower()
+        key = normalize_entry_key(abbreviation, case_sensitive=case_sensitive)
         return key in self.entries
 
     def get_abbreviation(
@@ -638,7 +635,7 @@ class AbbreviationExpander(ABC):
         Returns:
             The abbreviation entry if found, None otherwise
         """
-        key = abbreviation if case_sensitive else abbreviation.lower()
+        key = normalize_entry_key(abbreviation, case_sensitive=case_sensitive)
         return self.entries.get(key)
 
     def expand(
@@ -721,10 +718,7 @@ class AbbreviationExpander(ABC):
         # Process all abbreviations against the original source. The resolver
         # preserves longest-first behavior while giving reviewed units priority.
         for entry in entries:
-            unit_entry = next(
-                (item for item in self.unit_entries if entry.abbreviation in item.symbols),
-                None,
-            )
+            unit_entry = self._unit_by_symbol.get(entry.abbreviation)
             if (
                 unit_entry is not None
                 and unit_entry.category != "magnitude"

@@ -3,18 +3,6 @@
   "entries": [
     {
       "language": "es_GT",
-      "key": "Q.",
-      "abbreviation": "Q.",
-      "expansion": "quetzal",
-      "aliases": [],
-      "context_expansions": null,
-      "case_sensitive": true,
-      "description": "",
-      "only_if_preceded_by": null,
-      "only_if_followed_by": null
-    },
-    {
-      "language": "es_GT",
       "key": "abr.",
       "abbreviation": "abr.",
       "expansion": "abril",

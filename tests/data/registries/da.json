@@ -3,6 +3,18 @@
   "entries": [
     {
       "language": "da",
+      "key": "fig.",
+      "abbreviation": "fig.",
+      "expansion": "figur",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Figure reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+    },
+    {
+      "language": "da",
       "key": "nr.",
       "abbreviation": "nr.",
       "expansion": "nummer",
@@ -12,6 +24,18 @@
       "description": "Number reference",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
+    },
+    {
+      "language": "da",
+      "key": "s.",
+      "abbreviation": "s.",
+      "expansion": "side",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Page reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
     }
   ]
 }

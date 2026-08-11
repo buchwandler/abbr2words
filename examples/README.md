@@ -158,3 +158,15 @@ to `num2words`.
 need replacement spans and metadata. Unit records are marked with
 `kind="unit"`; the package expands those symbols but does not spell the number
 or select singular/plural grammar.
+
+The abbreviation-only API also covers baseline scripts without requiring a
+tokenizer:
+
+```console
+python examples/full_text_demo.py --lang ar --text "ص. 12" --stage abbr
+python examples/full_text_demo.py --lang sr --text "стр. 12" --stage abbr
+python examples/full_text_demo.py --lang zh --text "页 12" --stage abbr
+```
+
+RTL, Indic, and CJK rules use explicit source boundaries and guarded context;
+the examples do not claim full locale-specific morphology.

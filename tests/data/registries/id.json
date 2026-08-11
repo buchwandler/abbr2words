@@ -3,6 +3,18 @@
   "entries": [
     {
       "language": "id",
+      "key": "hal.",
+      "abbreviation": "hal.",
+      "expansion": "halaman",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Page reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+    },
+    {
+      "language": "id",
       "key": "no.",
       "abbreviation": "No.",
       "expansion": "nomor",
@@ -10,6 +22,18 @@
       "context_expansions": null,
       "case_sensitive": false,
       "description": "Number reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "id",
+      "key": "yth.",
+      "abbreviation": "yth.",
+      "expansion": "yang terhormat",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Honorific",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
     }

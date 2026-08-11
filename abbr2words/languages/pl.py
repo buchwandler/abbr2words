@@ -92,4 +92,16 @@ def reset_expander() -> None:
     """Retained for compatibility with the package reset hook."""
 
 
+from abbr2words.language_data.mature import bundle_from_legacy  # noqa: E402
+from abbr2words.languages._bundled import BundledLanguageExpander  # noqa: E402
+
+_LegacyPolishAbbreviationExpander = PolishAbbreviationExpander
+POLISH_BUNDLE = bundle_from_legacy("pl", _LegacyPolishAbbreviationExpander)
+
+
+class PolishAbbreviationExpander(BundledLanguageExpander):  # type: ignore[no-redef]
+    UNIT_LANGUAGE = "pl"
+    BUNDLE = POLISH_BUNDLE
+
+
 __all__ = ["PolishAbbreviationExpander", "get_expander", "reset_expander"]

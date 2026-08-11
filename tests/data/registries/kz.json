@@ -3,6 +3,30 @@
   "entries": [
     {
       "language": "kz",
+      "key": "бет.",
+      "abbreviation": "бет.",
+      "expansion": "бет",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Page reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+    },
+    {
+      "language": "kz",
+      "key": "мырз.",
+      "abbreviation": "мырз.",
+      "expansion": "мырза",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Title",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "kz",
       "key": "№",
       "abbreviation": "№",
       "expansion": "нөмір",
@@ -11,7 +35,7 @@
       "case_sensitive": true,
       "description": "Number sign",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
     }
   ]
 }

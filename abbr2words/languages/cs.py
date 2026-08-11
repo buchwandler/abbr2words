@@ -618,3 +618,17 @@ def reset_expander() -> None:
     global _expander_instance, _expander_context_detection
     _expander_instance = None
     _expander_context_detection = None
+
+
+# Behavior-neutral declarative migration.  Keep the legacy class private only
+# long enough to materialize its effective, ordered registry.
+from abbr2words.language_data.mature import bundle_from_legacy  # noqa: E402
+from abbr2words.languages._bundled import BundledLanguageExpander  # noqa: E402
+
+_LegacyCzechAbbreviationExpander = CzechAbbreviationExpander
+CZECH_BUNDLE = bundle_from_legacy("cs", _LegacyCzechAbbreviationExpander)
+
+
+class CzechAbbreviationExpander(BundledLanguageExpander):  # type: ignore[no-redef]
+    UNIT_LANGUAGE = "cs"
+    BUNDLE = CZECH_BUNDLE

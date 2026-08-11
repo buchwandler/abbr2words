@@ -3,6 +3,30 @@
   "entries": [
     {
       "language": "th",
+      "key": "ม.",
+      "abbreviation": "ม.",
+      "expansion": "มหาวิทยาลัย",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Institution marker",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "th",
+      "key": "หน้า.",
+      "abbreviation": "หน้า.",
+      "expansion": "หน้า",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Page marker",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+    },
+    {
+      "language": "th",
       "key": "№",
       "abbreviation": "№",
       "expansion": "หมายเลข",
@@ -11,7 +35,7 @@
       "case_sensitive": true,
       "description": "Number sign",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
     }
   ]
 }

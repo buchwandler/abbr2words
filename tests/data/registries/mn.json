@@ -3,6 +3,30 @@
   "entries": [
     {
       "language": "mn",
+      "key": "док.",
+      "abbreviation": "док.",
+      "expansion": "доктор",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Title",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "mn",
+      "key": "х.",
+      "abbreviation": "х.",
+      "expansion": "хуудас",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Page reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+    },
+    {
+      "language": "mn",
       "key": "№",
       "abbreviation": "№",
       "expansion": "дугаар",
@@ -11,7 +35,7 @@
       "case_sensitive": true,
       "description": "Number sign",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
     }
   ]
 }

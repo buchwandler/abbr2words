@@ -3,6 +3,18 @@
   "entries": [
     {
       "language": "am",
+      "key": "ቁ.",
+      "abbreviation": "ቁ.",
+      "expansion": "ቁጥር",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Number reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+    },
+    {
+      "language": "am",
       "key": "№",
       "abbreviation": "№",
       "expansion": "ቁጥር",
@@ -11,7 +23,7 @@
       "case_sensitive": true,
       "description": "Number sign",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
     }
   ]
 }

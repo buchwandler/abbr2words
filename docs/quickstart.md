@@ -30,6 +30,10 @@ abbr2words("Fr. Klein", lang="de", context=False)  # Freitag Klein
 
 The `context` choice applies to each call and is independent of earlier calls.
 
+The generic `DATE` context is bounded: a custom date-sensitive rule can use
+numeric evidence such as `5 X. 2026`, but the package does not parse or
+normalize complete dates.
+
 The package expands abbreviations and reviewed unit symbols after numeric
 quantities. Ordinary numeric values are preserved, while unit symbols such as
 `500 g` can become `500 gram`. Complete number wording, dates, times, currency

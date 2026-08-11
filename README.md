@@ -31,6 +31,23 @@ Thus `pt-BR` resolves to `pt_BR`, `fr_FR` to `fr`, and `en_GB` to `en`.
 `eo` and `es_NI` are explicit registry keys; `eu` is unsupported. Use
 `base_language()` when a caller needs the resolved base key.
 
+Coverage is intentionally tiered rather than uniform:
+
+- **Reviewed extended registries** retain mature bespoke inventories for Czech,
+  Dutch, English, French, German, Italian, Polish, Portuguese, Russian,
+  Spanish, Swedish, and Turkish.
+- **Reviewed baseline registries** provide source-tagged references/titles,
+  guarded numeric markers, localized neutral unit labels, and script-specific
+  boundaries for the remaining base languages.
+- **Locale overlays** inherit their base and add structured numeric identities;
+  they do not create ordinary-prose currency rewrites.
+
+`DATE` is a bounded context mode for numeric evidence such as `5 Mar. 2026`,
+not a date parser. Uncased scripts do not receive the Latin uppercase-name
+heuristic, and CJK lexical rules use explicit boundaries. CLDR 48.2.1 and BIPM
+are development/source inputs only; the installed package has no CLDR, Babel,
+spaCy, or network runtime dependency.
+
 This is abbreviation and unit support. Optional `num2words` remains a separate
 number-verbalization component, and installed releases may support fewer keys
 than this registry. No num2words code or runtime dependency is copied here.
@@ -117,7 +134,7 @@ for Czech, English, French, Italian, Portuguese, and Spanish. Czech recognizes
 `R$`/`BRL` as `currency-brazilian-real`; English, French, Italian, and Spanish
 recognize the shared `currency-euro`, `currency-us-dollar`, and
 `currency-pound-sterling` identities for EUR/USD/GBP. The other listed
-languages do not currently expose structured currency identities.
+other locales keep locale-specific identities numeric-context-only where provided.
 These identities are recognized when a numeric value is adjacent in either
 prefix or suffix position:
 

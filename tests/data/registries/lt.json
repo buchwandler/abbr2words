@@ -12,6 +12,30 @@
       "description": "Number reference",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
+    },
+    {
+      "language": "lt",
+      "key": "p.",
+      "abbreviation": "p.",
+      "expansion": "puslapis",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Page reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+    },
+    {
+      "language": "lt",
+      "key": "pvz.",
+      "abbreviation": "pvz.",
+      "expansion": "pavyzdžiui",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Example marker",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
     }
   ]
 }

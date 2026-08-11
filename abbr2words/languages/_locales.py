@@ -15,7 +15,6 @@ class EnglishIndiaAbbreviationExpander(EnglishAbbreviationExpander):
 
     def _initialize_abbreviations(self) -> None:
         super()._initialize_abbreviations()
-        self.add_abbreviation(AbbreviationEntry("Rs.", "rupees", case_sensitive=True))
 
 
 class EnglishNigeriaAbbreviationExpander(EnglishAbbreviationExpander):
@@ -23,7 +22,6 @@ class EnglishNigeriaAbbreviationExpander(EnglishAbbreviationExpander):
 
     def _initialize_abbreviations(self) -> None:
         super()._initialize_abbreviations()
-        self.add_abbreviation(AbbreviationEntry("₦", "naira", case_sensitive=True))
 
 
 class SpanishColombiaAbbreviationExpander(SpanishAbbreviationExpander):
@@ -31,7 +29,6 @@ class SpanishColombiaAbbreviationExpander(SpanishAbbreviationExpander):
 
     def _initialize_abbreviations(self) -> None:
         super()._initialize_abbreviations()
-        self.add_abbreviation(AbbreviationEntry("COP", "peso colombiano", case_sensitive=True))
 
 
 class SpanishCostaRicaAbbreviationExpander(SpanishAbbreviationExpander):
@@ -39,7 +36,6 @@ class SpanishCostaRicaAbbreviationExpander(SpanishAbbreviationExpander):
 
     def _initialize_abbreviations(self) -> None:
         super()._initialize_abbreviations()
-        self.add_abbreviation(AbbreviationEntry("₡", "colón costarricense", case_sensitive=True))
 
 
 class SpanishGuatemalaAbbreviationExpander(SpanishAbbreviationExpander):
@@ -47,7 +43,6 @@ class SpanishGuatemalaAbbreviationExpander(SpanishAbbreviationExpander):
 
     def _initialize_abbreviations(self) -> None:
         super()._initialize_abbreviations()
-        self.add_abbreviation(AbbreviationEntry("Q.", "quetzal", case_sensitive=True))
 
 
 class SpanishNicaraguaAbbreviationExpander(SpanishAbbreviationExpander):
@@ -55,7 +50,6 @@ class SpanishNicaraguaAbbreviationExpander(SpanishAbbreviationExpander):
 
     def _initialize_abbreviations(self) -> None:
         super()._initialize_abbreviations()
-        self.add_abbreviation(AbbreviationEntry("C$", "córdoba nicaragüense", case_sensitive=True))
 
 
 class SpanishVenezuelaAbbreviationExpander(SpanishAbbreviationExpander):
@@ -63,7 +57,6 @@ class SpanishVenezuelaAbbreviationExpander(SpanishAbbreviationExpander):
 
     def _initialize_abbreviations(self) -> None:
         super()._initialize_abbreviations()
-        self.add_abbreviation(AbbreviationEntry("Bs.", "bolívar", case_sensitive=True))
 
 
 class FrenchBelgiumAbbreviationExpander(FrenchAbbreviationExpander):
@@ -103,7 +96,6 @@ class ChineseMainlandAbbreviationExpander(ChineseAbbreviationExpander):
 
     def _initialize_abbreviations(self) -> None:
         super()._initialize_abbreviations()
-        self.add_abbreviation(AbbreviationEntry("人民币", "人民币", case_sensitive=True))
 
 
 class ChineseHongKongAbbreviationExpander(ChineseAbbreviationExpander):
@@ -111,7 +103,6 @@ class ChineseHongKongAbbreviationExpander(ChineseAbbreviationExpander):
 
     def _initialize_abbreviations(self) -> None:
         super()._initialize_abbreviations()
-        self.add_abbreviation(AbbreviationEntry("港元", "港元", case_sensitive=True))
 
 
 class ChineseTaiwanAbbreviationExpander(ChineseAbbreviationExpander):
@@ -119,7 +110,6 @@ class ChineseTaiwanAbbreviationExpander(ChineseAbbreviationExpander):
 
     def _initialize_abbreviations(self) -> None:
         super()._initialize_abbreviations()
-        self.add_abbreviation(AbbreviationEntry("新台幣", "新台幣", case_sensitive=True))
 
 
 __all__ = [

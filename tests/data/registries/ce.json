@@ -3,6 +3,30 @@
   "entries": [
     {
       "language": "ce",
+      "key": "им.",
+      "abbreviation": "им.",
+      "expansion": "имени",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Named-after reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+    },
+    {
+      "language": "ce",
+      "key": "стр.",
+      "abbreviation": "стр.",
+      "expansion": "страница",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Page reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+    },
+    {
+      "language": "ce",
       "key": "№",
       "abbreviation": "№",
       "expansion": "номер",
@@ -11,7 +35,7 @@
       "case_sensitive": true,
       "description": "Number sign",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
     }
   ]
 }

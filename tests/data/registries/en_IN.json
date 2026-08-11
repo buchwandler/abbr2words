@@ -183,18 +183,6 @@
     },
     {
       "language": "en_IN",
-      "key": "Rs.",
-      "abbreviation": "Rs.",
-      "expansion": "rupees",
-      "aliases": [],
-      "context_expansions": null,
-      "case_sensitive": true,
-      "description": "",
-      "only_if_preceded_by": null,
-      "only_if_followed_by": null
-    },
-    {
-      "language": "en_IN",
       "key": "UTC",
       "abbreviation": "UTC",
       "expansion": "U T C",

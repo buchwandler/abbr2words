@@ -6,6 +6,16 @@
 
 - Added the pinned 63-key num2words language/locale parity registry with exact-locale-first resolution and base fallback.
 - Added inherited locale unit inventories, conservative Unicode-aware language registries, and sharded deterministic registry snapshots.
+- Added typed source-traceable language bundles and migrated mature registries through a behavior-neutral declarative path.
+- Added meaningful guarded baseline behavior for former one-seed languages, localized neutral unit labels, bounded `DATE` context, CLDR import/audit tooling, and structured locale currency identities.
+
+### Changed
+
+- Unified shared-cache reset behavior, Unicode casefold registry keys, immutable unit collision adjustments, and compact numeric-marker boundaries.
+
+### Documentation
+
+- Documented coverage tiers, provenance/review status, script-specific limitations, neutral unit semantics, and the dependency-free runtime policy.
 
 ## [v0.2.5] - 2026-08-10
 

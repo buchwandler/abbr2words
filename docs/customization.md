@@ -2,6 +2,12 @@
 
 There are three ways to work with an expander registry.
 
+Bundled entries come from checked-in `LanguageBundle` data with source IDs and
+review notes. Custom entries are instance-local application policy and do not
+need to follow the bundled source ledger. A custom context expansion may use
+`DATE`, but ambiguous spellings should still receive an explicit guard;
+bundled date detection remains bounded and provider-neutral.
+
 ## Isolated registries
 
 `Expander(...)` is a small mutable facade around a new, isolated registry:

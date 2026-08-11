@@ -676,3 +676,15 @@ def reset_expander() -> None:
     global _expander_instance, _expander_context_detection
     _expander_instance = None
     _expander_context_detection = None
+
+
+from abbr2words.language_data.mature import bundle_from_legacy  # noqa: E402
+from abbr2words.languages._bundled import BundledLanguageExpander  # noqa: E402
+
+_LegacySpanishAbbreviationExpander = SpanishAbbreviationExpander
+SPANISH_BUNDLE = bundle_from_legacy("es", _LegacySpanishAbbreviationExpander)
+
+
+class SpanishAbbreviationExpander(BundledLanguageExpander):  # type: ignore[no-redef]
+    UNIT_LANGUAGE = "es"
+    BUNDLE = SPANISH_BUNDLE

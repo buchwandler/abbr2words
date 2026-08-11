@@ -20,6 +20,12 @@ labels are normalized and overlapping or invalid spans raise `ValueError`.
 Missing lexical POS evidence fails open, and numeric unit guards remain
 authoritative.
 
+The context enum includes `DEFAULT`, `TITLE`, `PLACE`, `TIME`, `DATE`,
+`ACADEMIC`, and `RELIGIOUS`. `DATE` is selected only by bounded numeric or
+date-punctuation evidence in the local source window; it does not parse dates.
+Language profiles may add stricter policies, and uncased scripts do not use the
+cased-letter title heuristic.
+
 Abbreviation boundaries use symmetric Unicode word-character lookarounds:
 registered spellings may start or end with punctuation, but cannot attach to a
 surrounding `\w` character. Optional `protected_spans=[(start, end), ...]`
@@ -50,6 +56,12 @@ The bundled language registry follows the 63-key current-master parity snapshot:
 key when registered and otherwise its base key. Turkish unit symbols followed by straight or
 curly apostrophe suffixes are intentionally not expanded until suffix
 realization is implemented.
+
+Bundled identity lexical rules are rejected. Locale currencies and similar
+structured identities are recognized only in numeric quantity context, while
+`iter_unit_matches()` remains the semantic API for canonical IDs and exact
+source offsets. Non-English baseline unit replacement text is a localized
+neutral label, not a complete quantity grammar.
 
 ```{autofunction} abbr2words.expand
 

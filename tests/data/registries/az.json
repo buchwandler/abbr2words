@@ -3,6 +3,30 @@
   "entries": [
     {
       "language": "az",
+      "key": "dr.",
+      "abbreviation": "dr.",
+      "expansion": "doktor",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Title",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "az",
+      "key": "səh.",
+      "abbreviation": "səh.",
+      "expansion": "səhifə",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Page reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+    },
+    {
+      "language": "az",
       "key": "№",
       "abbreviation": "№",
       "expansion": "nömrə",
@@ -11,7 +35,7 @@
       "case_sensitive": true,
       "description": "Number sign",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
     }
   ]
 }

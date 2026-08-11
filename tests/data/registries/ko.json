@@ -3,6 +3,18 @@
   "entries": [
     {
       "language": "ko",
+      "key": "p.",
+      "abbreviation": "p.",
+      "expansion": "페이지",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Page reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+    },
+    {
+      "language": "ko",
       "key": "№",
       "abbreviation": "№",
       "expansion": "번호",
@@ -11,7 +23,19 @@
       "case_sensitive": true,
       "description": "Number sign",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+    },
+    {
+      "language": "ko",
+      "key": "번",
+      "abbreviation": "번",
+      "expansion": "번호",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Number marker",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
     }
   ]
 }

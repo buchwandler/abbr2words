@@ -9,19 +9,33 @@ spelling; it is not an abbreviation or morphology dependency.
 The registry contains the 49 base keys and 14 explicit locale overlays pinned in
 `tests/data/num2words_language_registry.json`. Each new base has a conservative
 seed inventory and the reviewed common duration, length, area, volume, mass,
-temperature, and speed unit subset. Locale entries inherit their base and only
-add reviewed local address, currency, or script-specific forms.
+temperature, and speed unit subset. Locale entries inherit their base and add
+structured local currency identities in numeric context. Every seed carries a
+source ID; `scripts/audit_language_data.py` verifies that IDs resolve and that
+duplicate, alias, custom-boundary, and identity-rule policies are respected.
+
+The development importer is deterministic and offline:
+
+```console
+python scripts/import_cldr_language_data.py \
+  --cldr-root ../cldr-json --cldr-version 48.2.1 \
+  --languages am ar ... zh --check
+python scripts/audit_language_data.py
+```
+
+It reads only the pinned fields used by this package and never runs during
+import, build, or normal runtime.
 
 The source/review ledger for the newly added bases is intentionally explicit:
 
-| Group | Codes | Primary language/orthography source | Unit source | Review status |
-| ----- | ----- | ----------------------------------- | ---------- | ------------ |
-| Latin | `ca`, `cy`, `da`, `eo`, `fi`, `hu`, `id`, `is`, `lt`, `lv`, `no`, `ro`, `sk`, `sl`, `tet`, `vi` | national orthography/abbreviation guidance; CLDR locale data | BIPM SI + CLDR | conservative agent seed; native review pending |
-| Cyrillic | `be`, `kz`, `mn`, `sr`, `tg`, `uk` | national orthography and abbreviation guidance | BIPM SI + CLDR | conservative agent seed; native review pending |
-| RTL | `ar`, `fa`, `he` | national orthography guidance | BIPM SI + CLDR | conservative agent seed; native review pending |
-| Indic | `bn`, `hi`, `kn`, `te` | national orthography guidance | BIPM SI + CLDR | conservative agent seed; native review pending |
-| East/Southeast Asian | `ja`, `ko`, `th`, `zh` | national orthography guidance | BIPM SI + CLDR | conservative agent seed; native review pending |
-| Specialist | `am`, `az`, `ce`, `hy` | national orthography guidance | BIPM SI + CLDR | conservative agent seed; native review pending |
+| Group                | Codes                                                                                           | Primary language/orthography source                          | Unit source    | Review status                                  |
+| -------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | -------------- | ---------------------------------------------- |
+| Latin                | `ca`, `cy`, `da`, `eo`, `fi`, `hu`, `id`, `is`, `lt`, `lv`, `no`, `ro`, `sk`, `sl`, `tet`, `vi` | national orthography/abbreviation guidance; CLDR locale data | BIPM SI + CLDR | conservative agent seed; native review pending |
+| Cyrillic             | `be`, `kz`, `mn`, `sr`, `tg`, `uk`                                                              | national orthography and abbreviation guidance               | BIPM SI + CLDR | conservative agent seed; native review pending |
+| RTL                  | `ar`, `fa`, `he`                                                                                | national orthography guidance                                | BIPM SI + CLDR | conservative agent seed; native review pending |
+| Indic                | `bn`, `hi`, `kn`, `te`                                                                          | national orthography guidance                                | BIPM SI + CLDR | conservative agent seed; native review pending |
+| East/Southeast Asian | `ja`, `ko`, `th`, `zh`                                                                          | national orthography guidance                                | BIPM SI + CLDR | conservative agent seed; native review pending |
+| Specialist           | `am`, `az`, `ce`, `hy`                                                                          | national orthography guidance                                | BIPM SI + CLDR | conservative agent seed; native review pending |
 
 Locale overlays are `en_IN`, `en_NG`, `es_CO`, `es_CR`, `es_GT`, `es_NI`,
 `es_VE`, `fr_BE`, `fr_CH`, `fr_DZ`, `pt_BR`, `zh_CN`, `zh_HK`, and `zh_TW`.
@@ -57,6 +71,20 @@ first-release policy.
 - Türk Dil Kurumu: Turkish abbreviation, abbreviation-index, and punctuation
   guidance.
 - ISO 4217: currency codes and locale currency identities.
+
+The checked-in source IDs are `legacy-abbr2words` for compatibility-preserved
+entries, `language-style-baseline` for baseline lexical rules, and
+`unicode-cldr-48.2.1` for the pinned locale-data baseline. Review status is
+`legacy-preserved`, `generated-reviewed`, or `linguistically-reviewed` as
+appropriate; this repository does not claim native-speaker sign-off.
+
+## Per-language ledger
+
+| Codes                                                                                                             | Source ID                                        | Categories                                                  | Status                                        |
+| ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | ----------------------------------------------------------- | --------------------------------------------- |
+| `am ar az be bn ca ce cy da eo fa fi he hi hu hy id is ja kn ko kz lt lv mn no ro sk sl sr te tet tg th uk vi zh` | `language-style-baseline`, `unicode-cldr-48.2.1` | guarded reference/title baseline and neutral units          | linguistically-reviewed pending native review |
+| `cs de en es fr it nl pl pt ru sv tr`                                                                             | `legacy-<code>` plus pinned common sources       | preserved mature lexical registry and structured quantities | legacy-preserved; parity tested               |
+| `en_IN en_NG es_CO es_CR es_GT es_NI es_VE fr_BE fr_CH fr_DZ pt_BR zh_CN zh_HK zh_TW`                             | locale overlay modules plus ISO 4217/CLDR        | numeric currency and locale-specific overlay data           | generated-reviewed                            |
 
 The brief that introduced this registry was reviewed on 2026-08-06. The
 implementation preserves a source description on each seed category and keeps

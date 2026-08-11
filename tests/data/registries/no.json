@@ -3,6 +3,18 @@
   "entries": [
     {
       "language": "no",
+      "key": "f.eks.",
+      "abbreviation": "f.eks.",
+      "expansion": "for eksempel",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Example marker",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "no",
       "key": "nr.",
       "abbreviation": "nr.",
       "expansion": "nummer",
@@ -12,6 +24,18 @@
       "description": "Number reference",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
+    },
+    {
+      "language": "no",
+      "key": "s.",
+      "abbreviation": "s.",
+      "expansion": "side",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Page reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
     }
   ]
 }

@@ -3,6 +3,18 @@
   "entries": [
     {
       "language": "hy",
+      "key": "էջ.",
+      "abbreviation": "էջ.",
+      "expansion": "էջ",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Page reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+    },
+    {
+      "language": "hy",
       "key": "հ.",
       "abbreviation": "հ.",
       "expansion": "համար",
@@ -10,6 +22,18 @@
       "context_expansions": null,
       "case_sensitive": true,
       "description": "Number reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "hy",
+      "key": "պ.",
+      "abbreviation": "պ.",
+      "expansion": "պարոն",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Title",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
     }

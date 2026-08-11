@@ -3,6 +3,30 @@
   "entries": [
     {
       "language": "tg",
+      "key": "мис.",
+      "abbreviation": "мис.",
+      "expansion": "мисол",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Example marker",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "tg",
+      "key": "саҳ.",
+      "abbreviation": "саҳ.",
+      "expansion": "саҳифа",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Page reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+    },
+    {
+      "language": "tg",
       "key": "№",
       "abbreviation": "№",
       "expansion": "рақам",
@@ -11,7 +35,7 @@
       "case_sensitive": true,
       "description": "Number sign",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
     }
   ]
 }

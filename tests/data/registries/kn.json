@@ -3,6 +3,18 @@
   "entries": [
     {
       "language": "kn",
+      "key": "ಡಾ.",
+      "abbreviation": "ಡಾ.",
+      "expansion": "ಡಾಕ್ಟರ್",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Title",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "kn",
       "key": "ನಂ.",
       "abbreviation": "ನಂ.",
       "expansion": "ಸಂಖ್ಯೆ",
@@ -12,6 +24,18 @@
       "description": "Number reference",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
+    },
+    {
+      "language": "kn",
+      "key": "ಪು.",
+      "abbreviation": "ಪು.",
+      "expansion": "ಪುಟ",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Page reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
     }
   ]
 }

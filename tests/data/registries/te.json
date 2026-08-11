@@ -3,6 +3,18 @@
   "entries": [
     {
       "language": "te",
+      "key": "డా.",
+      "abbreviation": "డా.",
+      "expansion": "డాక్టర్",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Title",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "te",
       "key": "నం.",
       "abbreviation": "నం.",
       "expansion": "నంబరు",
@@ -12,6 +24,18 @@
       "description": "Number reference",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
+    },
+    {
+      "language": "te",
+      "key": "పు.",
+      "abbreviation": "పు.",
+      "expansion": "పుట",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Page reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
     }
   ]
 }

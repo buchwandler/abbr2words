@@ -12,6 +12,30 @@
       "description": "Doctor",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
+    },
+    {
+      "language": "fa",
+      "key": "ص.",
+      "abbreviation": "ص.",
+      "expansion": "صفحه",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Page reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+    },
+    {
+      "language": "fa",
+      "key": "مه.",
+      "abbreviation": "مه.",
+      "expansion": "مهندس",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Professional title",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
     }
   ]
 }

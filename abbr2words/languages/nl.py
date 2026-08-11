@@ -78,4 +78,16 @@ def reset_expander() -> None:
     """Retained for compatibility with the package reset hook."""
 
 
+from abbr2words.language_data.mature import bundle_from_legacy  # noqa: E402
+from abbr2words.languages._bundled import BundledLanguageExpander  # noqa: E402
+
+_LegacyDutchAbbreviationExpander = DutchAbbreviationExpander
+DUTCH_BUNDLE = bundle_from_legacy("nl", _LegacyDutchAbbreviationExpander)
+
+
+class DutchAbbreviationExpander(BundledLanguageExpander):  # type: ignore[no-redef]
+    UNIT_LANGUAGE = "nl"
+    BUNDLE = DUTCH_BUNDLE
+
+
 __all__ = ["DutchAbbreviationExpander", "get_expander", "reset_expander"]

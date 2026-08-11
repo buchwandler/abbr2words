@@ -3,15 +3,27 @@
   "entries": [
     {
       "language": "vi",
-      "key": "số",
-      "abbreviation": "số",
-      "expansion": "số",
+      "key": "tr.",
+      "abbreviation": "tr.",
+      "expansion": "trang",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Page reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+    },
+    {
+      "language": "vi",
+      "key": "ĐT.",
+      "abbreviation": "ĐT.",
+      "expansion": "điện thoại",
       "aliases": [],
       "context_expansions": null,
       "case_sensitive": true,
-      "description": "Number word",
+      "description": "Telephone marker",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
     }
   ]
 }

@@ -3,6 +3,18 @@
   "entries": [
     {
       "language": "is",
+      "key": "bls.",
+      "abbreviation": "bls.",
+      "expansion": "blaðsíða",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Page reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+    },
+    {
+      "language": "is",
       "key": "nr.",
       "abbreviation": "nr.",
       "expansion": "númer",
@@ -10,6 +22,18 @@
       "context_expansions": null,
       "case_sensitive": false,
       "description": "Number reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "is",
+      "key": "t.d.",
+      "abbreviation": "t.d.",
+      "expansion": "til dæmis",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Example marker",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
     }

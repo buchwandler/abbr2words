@@ -1962,18 +1962,6 @@
       "description": "Years after a numeric token",
       "only_if_preceded_by": "(?:^|[^\\w.])(?:(?:\\d{1,3}(?:,\\d{3})+|\\d+)(?:\\.\\d+)?|\\.\\d+)[ \\t]*\\Z",
       "only_if_followed_by": null
-    },
-    {
-      "language": "en_NG",
-      "key": "₦",
-      "abbreviation": "₦",
-      "expansion": "naira",
-      "aliases": [],
-      "context_expansions": null,
-      "case_sensitive": true,
-      "description": "",
-      "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
     }
   ]
 }

@@ -3,6 +3,30 @@
   "entries": [
     {
       "language": "ca",
+      "key": "núm.",
+      "abbreviation": "núm.",
+      "expansion": "número",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Number reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+    },
+    {
+      "language": "ca",
+      "key": "pàg.",
+      "abbreviation": "pàg.",
+      "expansion": "pàgina",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "description": "Page reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+    },
+    {
+      "language": "ca",
       "key": "sr.",
       "abbreviation": "Sr.",
       "expansion": "Senyor",

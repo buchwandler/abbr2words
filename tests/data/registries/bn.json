@@ -3,6 +3,18 @@
   "entries": [
     {
       "language": "bn",
+      "key": "ডা.",
+      "abbreviation": "ডা.",
+      "expansion": "ডাক্তার",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Title",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null
+    },
+    {
+      "language": "bn",
       "key": "নং",
       "abbreviation": "নং",
       "expansion": "নম্বর",
@@ -12,6 +24,18 @@
       "description": "Number sign",
       "only_if_preceded_by": null,
       "only_if_followed_by": null
+    },
+    {
+      "language": "bn",
+      "key": "পৃ.",
+      "abbreviation": "পৃ.",
+      "expansion": "পৃষ্ঠা",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "description": "Page reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
     }
   ]
 }
