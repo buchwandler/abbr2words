@@ -3,7 +3,7 @@ schema_version: 2
 object_type: release_entry
 versioning:
   schema_version: 1
-  revision: 1
+  revision: 2
 entry_id: entry-0005
 release_version: v0.2.6
 kind: docs
@@ -11,7 +11,8 @@ summary: Documented the v0.2.6 release handoff and Spokenform dependency baselin
 status: accepted
 audience: null
 scopes: []
-source_refs: []
+source_refs:
+  - git:6031332c4cd733f65cbade7b5fff1b7d51182362
 paths:
   - docs/changelog.md
 issues: []

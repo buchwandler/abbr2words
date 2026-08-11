@@ -3,7 +3,7 @@ schema_version: 2
 object_type: release_entry
 versioning:
   schema_version: 1
-  revision: 1
+  revision: 2
 entry_id: entry-0002
 release_version: v0.2.6
 kind: added
@@ -13,7 +13,10 @@ summary:
 status: accepted
 audience: null
 scopes: []
-source_refs: []
+source_refs:
+  - git:423dcf838b004aedc2f38b63b8088067d944806e
+  - git:b94b4e4726f8492828a2648c0e40dba9bf92cee4
+  - git:f20cff06261cc04ba77a54c2d9cd6e04ed8fad2b
 paths:
   - abbr2words/languages/de.py
   - abbr2words/languages/fr.py
