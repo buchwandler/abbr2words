@@ -11,7 +11,8 @@
       "case_sensitive": true,
       "description": "Number sign",
       "only_if_preceded_by": null,
-      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d",
+      "variants": []
     },
     {
       "language": "zh_TW",
@@ -23,7 +24,8 @@
       "case_sensitive": true,
       "description": "Number marker",
       "only_if_preceded_by": null,
-      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d",
+      "variants": []
     },
     {
       "language": "zh_TW",
@@ -35,7 +37,8 @@
       "case_sensitive": true,
       "description": "Page marker",
       "only_if_preceded_by": null,
-      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d",
+      "variants": []
     }
   ]
 }

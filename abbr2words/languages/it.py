@@ -64,6 +64,14 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
 
         self.add_abbreviation(
             AbbreviationEntry(
+                abbreviation="Dott. Mag.",
+                expansion="Dottor Magistrato",
+                description="Professional title for magistrate; longest match wins over Mag.",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
                 abbreviation="Dott.ssa",
                 expansion="Dottoressa",
                 description="Title for Doctor (female)",
@@ -81,7 +89,7 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Prof.",
-                expansion="Professor",
+                expansion="Professore",
                 description="Title for Professor (male)",
             )
         )
@@ -97,7 +105,7 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="Ing.",
-                expansion="Ingegner",
+                expansion="Ingegnere",
                 description="Title for Engineer",
             )
         )
@@ -147,6 +155,14 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
                 abbreviation="On.",
                 expansion="Onorevole",
                 description="Title for Honorable (member of parliament)",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="Rag.",
+                expansion="Ragioniere",
+                description="Title for accountant",
             )
         )
 
@@ -767,6 +783,16 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
                 abbreviation="S.a.s.",
                 expansion="Società in accomandita semplice",
                 description="Limited Partnership",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="ONLUS",
+                aliases=("Onlus", "onlus"),
+                expansion="organizzazione non lucrativa di utilità sociale",
+                case_sensitive=True,
+                description="Non-profit social utility organization",
             )
         )
 

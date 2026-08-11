@@ -11,7 +11,8 @@
       "case_sensitive": false,
       "description": "",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "ru",
@@ -23,7 +24,8 @@
       "case_sensitive": false,
       "description": "",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "ru",
@@ -35,7 +37,8 @@
       "case_sensitive": false,
       "description": "",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "ru",
@@ -47,7 +50,8 @@
       "case_sensitive": false,
       "description": "",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "ru",
@@ -59,7 +63,8 @@
       "case_sensitive": false,
       "description": "",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "ru",
@@ -71,7 +76,8 @@
       "case_sensitive": false,
       "description": "",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "ru",
@@ -83,7 +89,8 @@
       "case_sensitive": false,
       "description": "",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "ru",
@@ -95,7 +102,8 @@
       "case_sensitive": false,
       "description": "",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "ru",
@@ -107,7 +115,8 @@
       "case_sensitive": false,
       "description": "Name-context abbreviation",
       "only_if_preceded_by": null,
-      "only_if_followed_by": "\\s+[А-ЯЁA-Z]"
+      "only_if_followed_by": "\\s+[А-ЯЁA-Z]",
+      "variants": []
     },
     {
       "language": "ru",
@@ -119,7 +128,8 @@
       "case_sensitive": false,
       "description": "",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "ru",
@@ -131,7 +141,8 @@
       "case_sensitive": false,
       "description": "Place-context abbreviation",
       "only_if_preceded_by": null,
-      "only_if_followed_by": "\\s+[А-ЯЁA-Z]"
+      "only_if_followed_by": "\\s+[А-ЯЁA-Z]",
+      "variants": []
     },
     {
       "language": "ru",
@@ -143,7 +154,8 @@
       "case_sensitive": false,
       "description": "",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "ru",
@@ -155,7 +167,8 @@
       "case_sensitive": false,
       "description": "Numeric reference abbreviation",
       "only_if_preceded_by": null,
-      "only_if_followed_by": "\\s*(?:\\d|№)"
+      "only_if_followed_by": "\\s*(?:\\d|№)",
+      "variants": []
     },
     {
       "language": "ru",
@@ -167,7 +180,8 @@
       "case_sensitive": false,
       "description": "Numeric reference abbreviation",
       "only_if_preceded_by": null,
-      "only_if_followed_by": "\\s*(?:\\d|№)"
+      "only_if_followed_by": "\\s*(?:\\d|№)",
+      "variants": []
     },
     {
       "language": "ru",
@@ -179,7 +193,8 @@
       "case_sensitive": false,
       "description": "Reference abbreviation",
       "only_if_preceded_by": null,
-      "only_if_followed_by": "\\s*\\d"
+      "only_if_followed_by": "\\s*\\d",
+      "variants": []
     },
     {
       "language": "ru",
@@ -191,7 +206,8 @@
       "case_sensitive": false,
       "description": "",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     }
   ]
 }

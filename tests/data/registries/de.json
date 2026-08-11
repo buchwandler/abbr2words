@@ -11,7 +11,8 @@
       "case_sensitive": true,
       "description": "Letter-name reading of stock corporation",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -23,7 +24,8 @@
       "case_sensitive": true,
       "description": "Letter-name reading of limited liability company",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -35,7 +37,8 @@
       "case_sensitive": true,
       "description": "Minute",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -47,7 +50,8 @@
       "case_sensitive": true,
       "description": "Page, only before a page number",
       "only_if_preceded_by": null,
-      "only_if_followed_by": "^\\s*\\d"
+      "only_if_followed_by": "^\\s*\\d",
+      "variants": []
     },
     {
       "language": "de",
@@ -59,7 +63,8 @@
       "case_sensitive": true,
       "description": "Second",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -71,7 +76,8 @@
       "case_sensitive": true,
       "description": "Hour",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -83,7 +89,8 @@
       "case_sensitive": false,
       "description": "Illustration",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -95,7 +102,8 @@
       "case_sensitive": false,
       "description": "Abbreviation",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -107,7 +115,8 @@
       "case_sensitive": false,
       "description": "Paragraph",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -119,7 +128,8 @@
       "case_sensitive": false,
       "description": "Section",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -131,7 +141,8 @@
       "case_sensitive": false,
       "description": "Avenue (not typically abbreviated)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -143,7 +154,8 @@
       "case_sensitive": false,
       "description": "April",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -155,7 +167,8 @@
       "case_sensitive": false,
       "description": "August",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -167,7 +180,8 @@
       "case_sensitive": false,
       "description": "For example",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -179,7 +193,8 @@
       "case_sensitive": false,
       "description": "Respectively/or rather",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -191,7 +206,8 @@
       "case_sensitive": false,
       "description": "Approximately",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -205,7 +221,8 @@
       "case_sensitive": false,
       "description": "That is",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -217,7 +234,8 @@
       "case_sensitive": false,
       "description": "December",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -229,7 +247,8 @@
       "case_sensitive": false,
       "description": "Tuesday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -241,7 +260,8 @@
       "case_sensitive": false,
       "description": "Diploma Engineer",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -255,7 +275,8 @@
       "case_sensitive": false,
       "description": "Diploma business economist",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -267,7 +288,8 @@
       "case_sensitive": false,
       "description": "Thursday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -279,7 +301,8 @@
       "case_sensitive": false,
       "description": "Doctor",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -291,7 +314,8 @@
       "case_sensitive": false,
       "description": "Registered association",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -303,7 +327,8 @@
       "case_sensitive": false,
       "description": "Et cetera",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -315,7 +340,16 @@
       "case_sensitive": false,
       "description": "Possibly",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": [
+        {
+          "expansion": "eventuelle",
+          "only_if_preceded_by": "(?i)\\bdie\\s+$",
+          "only_if_followed_by": "^\\s+[^\\W\\d_]",
+          "only_if_pos": null,
+          "not_if_pos": null
+        }
+      ]
     },
     {
       "language": "de",
@@ -327,7 +361,8 @@
       "case_sensitive": false,
       "description": "Excluding",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -339,7 +374,8 @@
       "case_sensitive": false,
       "description": "Company",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -351,7 +387,8 @@
       "case_sensitive": false,
       "description": "Fax (not abbreviated)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -363,7 +400,8 @@
       "case_sensitive": false,
       "description": "February",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -378,7 +416,8 @@
       "case_sensitive": false,
       "description": "Friday or Frau (context-dependent)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -390,7 +429,8 @@
       "case_sensitive": false,
       "description": "Born",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -402,7 +442,8 @@
       "case_sensitive": false,
       "description": "If necessary",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -414,7 +455,8 @@
       "case_sensitive": false,
       "description": "Opposite",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -426,7 +468,8 @@
       "case_sensitive": false,
       "description": "Mister (male honorific)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -438,7 +481,8 @@
       "case_sensitive": false,
       "description": "Including",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -450,7 +494,8 @@
       "case_sensitive": false,
       "description": "January",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -462,7 +507,8 @@
       "case_sensitive": false,
       "description": "July",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -474,7 +520,8 @@
       "case_sensitive": false,
       "description": "June",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -486,7 +533,8 @@
       "case_sensitive": false,
       "description": "Chapter",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -500,7 +548,8 @@
       "case_sensitive": false,
       "description": "Consecutive number, including compact spelling",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -512,7 +561,16 @@
       "case_sensitive": false,
       "description": "Maximum",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": [
+        {
+          "expansion": "maximale",
+          "only_if_preceded_by": "(?i)\\bdie\\s+$",
+          "only_if_followed_by": "^\\s+[^\\W\\d_]",
+          "only_if_pos": null,
+          "not_if_pos": null
+        }
+      ]
     },
     {
       "language": "de",
@@ -524,7 +582,8 @@
       "case_sensitive": false,
       "description": "Wednesday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -536,7 +595,8 @@
       "case_sensitive": true,
       "description": "Minimum",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -548,7 +608,8 @@
       "case_sensitive": false,
       "description": "Millions",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -560,7 +621,8 @@
       "case_sensitive": false,
       "description": "Monday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -572,7 +634,8 @@
       "case_sensitive": false,
       "description": "Billions",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -584,7 +647,8 @@
       "case_sensitive": false,
       "description": "March",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -596,7 +660,8 @@
       "case_sensitive": false,
       "description": "November",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -608,7 +673,8 @@
       "case_sensitive": false,
       "description": "Number",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -620,7 +686,8 @@
       "case_sensitive": false,
       "description": "October",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -632,7 +699,8 @@
       "case_sensitive": false,
       "description": "Square/Place",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -644,7 +712,8 @@
       "case_sensitive": false,
       "description": "Professor",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -656,7 +725,8 @@
       "case_sensitive": false,
       "description": "Saturday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -668,7 +738,8 @@
       "case_sensitive": false,
       "description": "September",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -680,7 +751,8 @@
       "case_sensitive": false,
       "description": "September (alternative)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -692,7 +764,8 @@
       "case_sensitive": false,
       "description": "Sunday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -706,7 +779,8 @@
       "case_sensitive": false,
       "description": "Sankt before a proper name",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -718,7 +792,8 @@
       "case_sensitive": false,
       "description": "Street",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -730,7 +805,8 @@
       "case_sensitive": false,
       "description": "Table",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -742,7 +818,8 @@
       "case_sensitive": false,
       "description": "Telephone",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -757,7 +834,8 @@
       "case_sensitive": false,
       "description": "Telephone number",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -769,7 +847,8 @@
       "case_sensitive": false,
       "description": "Thousand",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -783,7 +862,8 @@
       "case_sensitive": false,
       "description": "Among other things",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -795,7 +875,8 @@
       "case_sensitive": false,
       "description": "University",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -807,7 +888,8 @@
       "case_sensitive": false,
       "description": "And so forth (et cetera)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -823,7 +905,8 @@
       "case_sensitive": false,
       "description": "For example",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "de",
@@ -835,7 +918,8 @@
       "case_sensitive": false,
       "description": "Plus/additional",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     }
   ]
 }

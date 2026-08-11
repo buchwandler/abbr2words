@@ -11,7 +11,8 @@
       "case_sensitive": true,
       "description": "Doctor",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "ar",
@@ -23,7 +24,8 @@
       "case_sensitive": true,
       "description": "Page reference",
       "only_if_preceded_by": null,
-      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d"
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d",
+      "variants": []
     },
     {
       "language": "ar",
@@ -35,7 +37,8 @@
       "case_sensitive": true,
       "description": "Professional title",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     }
   ]
 }

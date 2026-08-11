@@ -26,7 +26,7 @@ def test_source_fallback_version_is_neutral() -> None:
 
 
 def test_supported_languages() -> None:
-    assert len(supported_languages()) == 63
+    assert len(supported_languages()) == 66
     assert len(supported_languages(include_locales=False)) == 49
     assert set(supported_languages(include_locales=False)) <= set(supported_languages())
 
@@ -44,7 +44,7 @@ def test_locale_alias() -> None:
 
 def test_locale_resolution_falls_back_to_base() -> None:
     assert normalize_language("fr_FR") == "fr"
-    assert normalize_language("en_GB") == "en"
+    assert normalize_language("en_GB") == "en_GB"
     assert normalize_language("DE-de") == "de"
     assert base_language("de-DE") == "de"
 

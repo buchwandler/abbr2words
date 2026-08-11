@@ -16,6 +16,7 @@ def register_bundle(expander: AbbreviationExpander, bundle: LanguageBundle) -> N
                 context_expansions=(
                     dict(seed.context_expansions) if seed.context_expansions is not None else None
                 ),
+                variants=seed.variants,
                 case_sensitive=seed.case_sensitive,
                 description=seed.description,
                 aliases=seed.aliases,

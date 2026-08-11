@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from re import Pattern
 from typing import Literal
 
-from abbr2words.core import AbbreviationContext
+from abbr2words.core import AbbreviationContext, ExpansionVariant
 
 
 @dataclass(frozen=True, slots=True)
@@ -44,6 +44,7 @@ class AbbreviationSeed:
     only_if_pos: str | Collection[str] | None = None
     not_if_pos: str | Collection[str] | None = None
     context_expansions: Mapping[AbbreviationContext, str] | None = None
+    variants: tuple[ExpansionVariant, ...] = ()
     boundary: Literal["word", "custom"] = "word"
     left_boundary: str | None = None
     right_boundary: str | None = None

@@ -25,7 +25,7 @@ def test_effective_registry_counts_match_sharded_contract() -> None:
     actual = {lang: len(get_shared_expander(lang).entries) for lang in supported_languages()}
     expected = {lang: metadata["count"] for lang, metadata in INDEX["languages"].items()}
     assert actual == expected
-    assert len(actual) == 63
+    assert len(actual) == 66
 
 
 def test_every_effective_registry_field_matches_its_shard() -> None:
@@ -57,6 +57,28 @@ def test_every_effective_registry_field_matches_its_shard() -> None:
                         if entry.only_if_followed_by is not None
                         else None
                     ),
+                    "variants": [
+                        {
+                            "expansion": variant.expansion,
+                            "only_if_preceded_by": (
+                                str(variant.only_if_preceded_by)
+                                if variant.only_if_preceded_by is not None
+                                else None
+                            ),
+                            "only_if_followed_by": (
+                                str(variant.only_if_followed_by)
+                                if variant.only_if_followed_by is not None
+                                else None
+                            ),
+                            "only_if_pos": sorted(variant.only_if_pos)
+                            if variant.only_if_pos
+                            else None,
+                            "not_if_pos": sorted(variant.not_if_pos)
+                            if variant.not_if_pos
+                            else None,
+                        }
+                        for variant in entry.variants
+                    ],
                 }
             )
         actual.sort(key=lambda row: row["key"])

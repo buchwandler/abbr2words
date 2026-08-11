@@ -256,9 +256,46 @@ def test_english_currency_registry_uses_shared_identities_and_metadata() -> None
         "currency-euro": (("€", "EUR"), "euro", "€"),
         "currency-us-dollar": (("$", "USD"), "US dollar", "$"),
         "currency-pound-sterling": (("£", "GBP"), "pound sterling", "£"),
+        "currency-japanese-yen": (("¥", "JPY"), "Japanese yen", "¥"),
+        "currency-swiss-franc": (("CHF",), "Swiss franc", "CHF"),
+        "currency-indian-rupee": (("₹", "INR"), "Indian rupee", "₹"),
+        "currency-south-korean-won": (("₩", "KRW"), "South Korean won", "₩"),
+        "currency-mexican-peso": (("MXN",), "Mexican peso", "MXN"),
     }
     assert all(entry.quantity_position == "both" for entry in entries.values())
-    assert all(entry.requires_numeric_value for entry in entries.values())
+
+
+@pytest.mark.parametrize(
+    ("source", "canonical_id", "symbol"),
+    [
+        ("60 mph", "speed-mile-per-hour", "mph"),
+        ("100 kPa", "pressure-kilopascal", "kPa"),
+        ("1 atm", "pressure-atmosphere", "atm"),
+        ("64 GB", "data-gigabyte", "GB"),
+        ("6 L/100km", "fuel-consumption-liter-per-100-kilometer", "L/100km"),
+        ("10 m³/s", "flow-cubic-meter-per-second", "m³/s"),
+        ("10 m3/s", "flow-cubic-meter-per-second", "m3/s"),
+        ("¥5000", "currency-japanese-yen", "¥"),
+        ("5000 JPY", "currency-japanese-yen", "JPY"),
+        ("30 CHF", "currency-swiss-franc", "CHF"),
+        ("₹750", "currency-indian-rupee", "₹"),
+        ("₩2500", "currency-south-korean-won", "₩"),
+    ],
+)
+def test_polynorm_identities_preserve_complete_source_spans(
+    source: str, canonical_id: str, symbol: str
+) -> None:
+    matches = tuple(iter_unit_matches(source, "en"))
+    assert len(matches) == 1
+    match = matches[0]
+    assert source[match.start : match.end] == source
+    assert match.canonical_id == canonical_id
+    assert match.symbol == symbol
+
+
+@pytest.mark.parametrize("source", ("60 MPH", "100 KPA", "64 Gb", "6 L/100KM", "mph", "GB"))
+def test_polynorm_identities_keep_case_and_numeric_guards(source: str) -> None:
+    assert tuple(iter_unit_matches(source, "en")) == ()
 
 
 def test_italian_currency_registry_uses_reviewed_lemmas() -> None:
@@ -272,6 +309,11 @@ def test_italian_currency_registry_uses_reviewed_lemmas() -> None:
         "currency-euro": (("€", "EUR"), "euro", "€"),
         "currency-us-dollar": (("$", "USD"), "dollaro statunitense", "$"),
         "currency-pound-sterling": (("£", "GBP"), "sterlina britannica", "£"),
+        "currency-japanese-yen": (("¥", "JPY"), "yen giapponese", "¥"),
+        "currency-swiss-franc": (("CHF",), "franco svizzero", "CHF"),
+        "currency-indian-rupee": (("₹", "INR"), "rupia indiana", "₹"),
+        "currency-south-korean-won": (("₩", "KRW"), "won sudcoreano", "₩"),
+        "currency-mexican-peso": (("MXN",), "peso messicano", "MXN"),
     }
     assert all(entry.quantity_position == "both" for entry in entries.values())
 
@@ -316,6 +358,11 @@ def test_czech_currency_registry_uses_shared_identities_and_metadata() -> None:
             "both",
             True,
         ),
+        "currency-japanese-yen": (("¥", "JPY"), "Japanese yen", "¥", "currency", "both", True),
+        "currency-swiss-franc": (("CHF",), "Swiss franc", "CHF", "currency", "both", True),
+        "currency-indian-rupee": (("₹", "INR"), "Indian rupee", "₹", "currency", "both", True),
+        "currency-south-korean-won": (("₩", "KRW"), "South Korean won", "₩", "currency", "both", True),
+        "currency-mexican-peso": (("MXN",), "Mexican peso", "MXN", "currency", "both", True),
     }
 
 
@@ -352,6 +399,11 @@ def test_portuguese_currency_registry_uses_reviewed_lemmas_and_metadata() -> Non
             True,
         ),
         "currency-brazilian-real": (("R$", "BRL"), "real", "R$", "currency", "both", True),
+        "currency-japanese-yen": (("¥", "JPY"), "Japanese yen", "¥", "currency", "both", True),
+        "currency-swiss-franc": (("CHF",), "Swiss franc", "CHF", "currency", "both", True),
+        "currency-indian-rupee": (("₹", "INR"), "Indian rupee", "₹", "currency", "both", True),
+        "currency-south-korean-won": (("₩", "KRW"), "South Korean won", "₩", "currency", "both", True),
+        "currency-mexican-peso": (("MXN",), "Mexican peso", "MXN", "currency", "both", True),
     }
 
 

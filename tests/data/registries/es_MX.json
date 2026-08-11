@@ -1,8 +1,8 @@
 {
-  "language": "es_VE",
+  "language": "es_MX",
   "entries": [
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "abr.",
       "abbreviation": "abr.",
       "expansion": "abril",
@@ -15,7 +15,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "ago.",
       "abbreviation": "ago.",
       "expansion": "agosto",
@@ -28,7 +28,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "aprox.",
       "abbreviation": "aprox.",
       "expansion": "aproximadamente",
@@ -41,7 +41,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "arq.",
       "abbreviation": "Arq.",
       "expansion": "Arquitecto",
@@ -54,7 +54,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "art.",
       "abbreviation": "art.",
       "expansion": "artículo",
@@ -67,7 +67,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "av.",
       "abbreviation": "Av.",
       "expansion": "Avenida",
@@ -80,7 +80,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "avda.",
       "abbreviation": "Avda.",
       "expansion": "Avenida",
@@ -93,7 +93,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "blvd.",
       "abbreviation": "Blvd.",
       "expansion": "bulevar",
@@ -106,7 +106,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "c/",
       "abbreviation": "C/",
       "expansion": "Calle",
@@ -119,7 +119,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "cap.",
       "abbreviation": "cap.",
       "expansion": "capítulo",
@@ -132,7 +132,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "cf.",
       "abbreviation": "cf.",
       "expansion": "confróntese",
@@ -145,7 +145,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "cm",
       "abbreviation": "cm",
       "expansion": "centímetros",
@@ -158,7 +158,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "cmno.",
       "abbreviation": "Cmno.",
       "expansion": "Camino",
@@ -171,7 +171,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "ctra.",
       "abbreviation": "Ctra.",
       "expansion": "Carretera",
@@ -184,7 +184,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "cía.",
       "abbreviation": "Cía.",
       "expansion": "Compañía",
@@ -197,7 +197,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "dic.",
       "abbreviation": "dic.",
       "expansion": "diciembre",
@@ -210,7 +210,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "dom.",
       "abbreviation": "dom.",
       "expansion": "domingo",
@@ -223,7 +223,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "dr.",
       "abbreviation": "Dr.",
       "expansion": "Doctor",
@@ -236,7 +236,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "dra.",
       "abbreviation": "Dra.",
       "expansion": "Doctora",
@@ -249,7 +249,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "ed.",
       "abbreviation": "ed.",
       "expansion": "edición",
@@ -262,7 +262,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "ej.",
       "abbreviation": "ej.",
       "expansion": "ejemplo",
@@ -275,7 +275,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "ene.",
       "abbreviation": "ene.",
       "expansion": "enero",
@@ -288,7 +288,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "etc.",
       "abbreviation": "etc.",
       "expansion": "etcétera",
@@ -301,7 +301,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "fca.",
       "abbreviation": "Fca.",
       "expansion": "fábrica",
@@ -314,7 +314,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "feb.",
       "abbreviation": "feb.",
       "expansion": "febrero",
@@ -327,7 +327,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "fís.",
       "abbreviation": "Fís.",
       "expansion": "físico",
@@ -340,7 +340,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "g",
       "abbreviation": "g",
       "expansion": "gramos",
@@ -353,7 +353,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "gral.",
       "abbreviation": "Gral.",
       "expansion": "general",
@@ -366,7 +366,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "h",
       "abbreviation": "h",
       "expansion": "horas",
@@ -379,7 +379,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "hnos.",
       "abbreviation": "Hnos.",
       "expansion": "Hermanos",
@@ -392,7 +392,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "ing.",
       "abbreviation": "Ing.",
       "expansion": "Ingeniero",
@@ -405,7 +405,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "jue.",
       "abbreviation": "jue.",
       "expansion": "jueves",
@@ -418,7 +418,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "jul.",
       "abbreviation": "jul.",
       "expansion": "julio",
@@ -431,7 +431,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "jun.",
       "abbreviation": "jun.",
       "expansion": "junio",
@@ -444,7 +444,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "kg",
       "abbreviation": "kg",
       "expansion": "kilogramos",
@@ -457,7 +457,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "km",
       "abbreviation": "km",
       "expansion": "kilómetros",
@@ -470,7 +470,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "l",
       "abbreviation": "l",
       "expansion": "litros",
@@ -483,7 +483,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "lic.",
       "abbreviation": "Lic.",
       "expansion": "Licenciado",
@@ -496,7 +496,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "lun.",
       "abbreviation": "lun.",
       "expansion": "lunes",
@@ -509,7 +509,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "m",
       "abbreviation": "m",
       "expansion": "metros",
@@ -522,7 +522,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "mar.",
       "abbreviation": "mar.",
       "expansion": "marzo",
@@ -535,7 +535,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "mg",
       "abbreviation": "mg",
       "expansion": "miligramos",
@@ -548,7 +548,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "min",
       "abbreviation": "min",
       "expansion": "minutos",
@@ -561,7 +561,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "min.",
       "abbreviation": "min.",
       "expansion": "minutos",
@@ -574,7 +574,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "mié.",
       "abbreviation": "mié.",
       "expansion": "miércoles",
@@ -587,7 +587,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "miér.",
       "abbreviation": "miér.",
       "expansion": "miércoles",
@@ -600,7 +600,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "ml",
       "abbreviation": "ml",
       "expansion": "mililitros",
@@ -613,7 +613,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "mm",
       "abbreviation": "mm",
       "expansion": "milímetros",
@@ -626,7 +626,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "mtro.",
       "abbreviation": "Mtro.",
       "expansion": "maestro",
@@ -639,7 +639,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "no.",
       "abbreviation": "No.",
       "expansion": "número",
@@ -655,7 +655,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "nov.",
       "abbreviation": "nov.",
       "expansion": "noviembre",
@@ -668,7 +668,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "n°",
       "abbreviation": "N°",
       "expansion": "número",
@@ -681,7 +681,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "nº",
       "abbreviation": "nº",
       "expansion": "número",
@@ -694,7 +694,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "núm.",
       "abbreviation": "núm.",
       "expansion": "número",
@@ -707,7 +707,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "oct.",
       "abbreviation": "oct.",
       "expansion": "octubre",
@@ -720,7 +720,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "p.",
       "abbreviation": "p.",
       "expansion": "página",
@@ -733,7 +733,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "p.ej.",
       "abbreviation": "p.ej.",
       "expansion": "por ejemplo",
@@ -746,7 +746,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "pl.",
       "abbreviation": "Pl.",
       "expansion": "Plaza",
@@ -759,7 +759,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "pp.",
       "abbreviation": "pp.",
       "expansion": "páginas",
@@ -772,7 +772,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "prof.",
       "abbreviation": "Prof.",
       "expansion": "Profesor",
@@ -793,7 +793,7 @@
       ]
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "profa.",
       "abbreviation": "Profa.",
       "expansion": "Profesora",
@@ -806,7 +806,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "pso.",
       "abbreviation": "Pso.",
       "expansion": "Paseo",
@@ -819,7 +819,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "pte.",
       "abbreviation": "Pte.",
       "expansion": "presidente",
@@ -832,7 +832,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "pza.",
       "abbreviation": "Pza.",
       "expansion": "Plaza",
@@ -845,7 +845,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "pº",
       "abbreviation": "Pº",
       "expansion": "Paseo",
@@ -858,7 +858,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "pág.",
       "abbreviation": "pág.",
       "expansion": "página",
@@ -871,7 +871,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "págs.",
       "abbreviation": "págs.",
       "expansion": "páginas",
@@ -884,7 +884,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "s.a.",
       "abbreviation": "S.A.",
       "expansion": "Sociedad Anónima",
@@ -897,7 +897,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "s.l.",
       "abbreviation": "S.L.",
       "expansion": "Sociedad Limitada",
@@ -910,7 +910,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "seg",
       "abbreviation": "seg",
       "expansion": "segundos",
@@ -923,7 +923,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "seg.",
       "abbreviation": "seg.",
       "expansion": "segundos",
@@ -936,7 +936,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "sep.",
       "abbreviation": "sep.",
       "expansion": "septiembre",
@@ -949,7 +949,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "sept.",
       "abbreviation": "sept.",
       "expansion": "septiembre",
@@ -962,7 +962,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "sr.",
       "abbreviation": "Sr.",
       "expansion": "Señor",
@@ -975,7 +975,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "sra.",
       "abbreviation": "Sra.",
       "expansion": "Señora",
@@ -988,7 +988,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "srta.",
       "abbreviation": "Srta.",
       "expansion": "Señorita",
@@ -1001,7 +1001,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "sáb.",
       "abbreviation": "sáb.",
       "expansion": "sábado",
@@ -1014,7 +1014,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "vie.",
       "abbreviation": "vie.",
       "expansion": "viernes",
@@ -1027,7 +1027,7 @@
       "variants": []
     },
     {
-      "language": "es_VE",
+      "language": "es_MX",
       "key": "vol.",
       "abbreviation": "vol.",
       "expansion": "volumen",

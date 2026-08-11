@@ -11,7 +11,8 @@
       "case_sensitive": false,
       "description": "Date abbreviation",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -23,7 +24,8 @@
       "case_sensitive": false,
       "description": "April",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -35,7 +37,8 @@
       "case_sensitive": false,
       "description": "August",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -47,7 +50,8 @@
       "case_sensitive": false,
       "description": "Common prose abbreviation",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -59,7 +63,8 @@
       "case_sensitive": false,
       "description": "Reference abbreviation",
       "only_if_preceded_by": null,
-      "only_if_followed_by": "\\s*\\d"
+      "only_if_followed_by": "\\s*\\d",
+      "variants": []
     },
     {
       "language": "nl",
@@ -71,7 +76,8 @@
       "case_sensitive": false,
       "description": "Common prose abbreviation",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -83,7 +89,8 @@
       "case_sensitive": false,
       "description": "December",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -95,7 +102,8 @@
       "case_sensitive": false,
       "description": "Title",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -107,7 +115,8 @@
       "case_sensitive": false,
       "description": "Tuesday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -119,7 +128,8 @@
       "case_sensitive": false,
       "description": "Thursday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -131,7 +141,8 @@
       "case_sensitive": false,
       "description": "Academic title",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -143,7 +154,8 @@
       "case_sensitive": false,
       "description": "Common prose abbreviation",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -155,7 +167,8 @@
       "case_sensitive": false,
       "description": "Common prose abbreviation",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -167,7 +180,8 @@
       "case_sensitive": false,
       "description": "February",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -179,7 +193,8 @@
       "case_sensitive": false,
       "description": "Academic title",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -191,7 +206,8 @@
       "case_sensitive": false,
       "description": "January",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -203,7 +219,8 @@
       "case_sensitive": false,
       "description": "Date abbreviation",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -215,7 +232,8 @@
       "case_sensitive": false,
       "description": "July",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -227,7 +245,8 @@
       "case_sensitive": false,
       "description": "June",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -239,7 +258,8 @@
       "case_sensitive": false,
       "description": "Common prose abbreviation",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -251,7 +271,8 @@
       "case_sensitive": false,
       "description": "Monday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -263,7 +284,8 @@
       "case_sensitive": false,
       "description": "Title",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -275,7 +297,8 @@
       "case_sensitive": false,
       "description": "Academic/legal title",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -287,7 +310,8 @@
       "case_sensitive": false,
       "description": "March",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -299,7 +323,8 @@
       "case_sensitive": false,
       "description": "Title",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -311,7 +336,8 @@
       "case_sensitive": false,
       "description": "Common prose abbreviation",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -323,7 +349,8 @@
       "case_sensitive": false,
       "description": "November",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -335,7 +362,8 @@
       "case_sensitive": false,
       "description": "Reference abbreviation",
       "only_if_preceded_by": null,
-      "only_if_followed_by": "\\s*\\d"
+      "only_if_followed_by": "\\s*\\d",
+      "variants": []
     },
     {
       "language": "nl",
@@ -347,7 +375,8 @@
       "case_sensitive": false,
       "description": "October",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -359,7 +388,8 @@
       "case_sensitive": true,
       "description": "Page reference",
       "only_if_preceded_by": null,
-      "only_if_followed_by": "\\s*\\d"
+      "only_if_followed_by": "\\s*\\d",
+      "variants": []
     },
     {
       "language": "nl",
@@ -371,7 +401,8 @@
       "case_sensitive": false,
       "description": "Academic title",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -383,7 +414,8 @@
       "case_sensitive": false,
       "description": "September",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -395,7 +427,8 @@
       "case_sensitive": false,
       "description": "Address abbreviation",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -407,7 +440,8 @@
       "case_sensitive": false,
       "description": "Friday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -419,7 +453,8 @@
       "case_sensitive": false,
       "description": "Wednesday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -431,7 +466,8 @@
       "case_sensitive": false,
       "description": "Saturday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "nl",
@@ -443,7 +479,8 @@
       "case_sensitive": false,
       "description": "Sunday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     }
   ]
 }

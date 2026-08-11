@@ -156,7 +156,7 @@ def test_english_currency_matches_preserve_identity_and_offsets(
 
 def test_english_currency_alias_normalizes_language() -> None:
     match = only_match("USD 12.50", "en-gb")
-    assert match.language == "en"
+    assert match.language == "en_GB"
     assert match.canonical_id == "currency-us-dollar"
 
 

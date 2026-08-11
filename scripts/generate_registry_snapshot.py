@@ -31,6 +31,24 @@ def _entry_row(language: str, key: str, entry: Any) -> dict[str, Any]:
         "only_if_followed_by": (
             str(entry.only_if_followed_by) if entry.only_if_followed_by is not None else None
         ),
+        "variants": [
+            {
+                "expansion": variant.expansion,
+                "only_if_preceded_by": (
+                    str(variant.only_if_preceded_by)
+                    if variant.only_if_preceded_by is not None
+                    else None
+                ),
+                "only_if_followed_by": (
+                    str(variant.only_if_followed_by)
+                    if variant.only_if_followed_by is not None
+                    else None
+                ),
+                "only_if_pos": sorted(variant.only_if_pos) if variant.only_if_pos else None,
+                "not_if_pos": sorted(variant.not_if_pos) if variant.not_if_pos else None,
+            }
+            for variant in entry.variants
+        ],
     }
 
 

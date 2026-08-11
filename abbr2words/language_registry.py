@@ -177,6 +177,22 @@ _BASE_SPECS.update(
             "en_NG",
             "en_NG",
         ),
+        "en_US": LanguageSpec(
+            "en_US",
+            "en",
+            "abbr2words.languages.en_US",
+            "EnglishUnitedStatesAbbreviationExpander",
+            "en_US",
+            "en",
+        ),
+        "en_GB": LanguageSpec(
+            "en_GB",
+            "en",
+            "abbr2words.languages.en_GB",
+            "EnglishUnitedKingdomAbbreviationExpander",
+            "en_GB",
+            "en_GB",
+        ),
         "es_CO": LanguageSpec(
             "es_CO",
             "es",
@@ -216,6 +232,14 @@ _BASE_SPECS.update(
             "SpanishVenezuelaAbbreviationExpander",
             "es_VE",
             "es_VE",
+        ),
+        "es_MX": LanguageSpec(
+            "es_MX",
+            "es",
+            "abbr2words.languages.es_MX",
+            "SpanishMexicoAbbreviationExpander",
+            "es_MX",
+            "es_MX",
         ),
         "fr_BE": LanguageSpec(
             "fr_BE",

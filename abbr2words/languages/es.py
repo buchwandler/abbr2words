@@ -11,6 +11,7 @@ import warnings
 from abbr2words.core import (
     AbbreviationEntry,
     AbbreviationExpander,
+    ExpansionVariant,
 )
 
 # Singleton instance
@@ -73,6 +74,12 @@ class SpanishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="Prof.",
                 expansion="Profesor",
+                variants=(
+                    ExpansionVariant(
+                        "Profesora",
+                        only_if_preceded_by=r"(?i)\bla\s+$",
+                    ),
+                ),
                 description="Title for Professor (male)",
             )
         )

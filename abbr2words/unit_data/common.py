@@ -38,6 +38,16 @@ COMMON_UNIT_DEFINITIONS = (
     UnitDefinition("temperature-fahrenheit", ("°F", "℉"), "°F"),
     UnitDefinition("speed-meter-per-second", ("m/s",), "m/s"),
     UnitDefinition("speed-kilometer-per-hour", ("km/h",), "km/h"),
+    UnitDefinition("speed-mile-per-hour", ("mph",), "mph"),
+    UnitDefinition("pressure-pascal", ("Pa",), "Pa"),
+    UnitDefinition("pressure-kilopascal", ("kPa",), "kPa"),
+    UnitDefinition("pressure-atmosphere", ("atm",), "atm"),
+    UnitDefinition("data-byte", ("B",), "B"),
+    UnitDefinition("data-kilobyte", ("kB",), "kB"),
+    UnitDefinition("data-megabyte", ("MB",), "MB"),
+    UnitDefinition("data-gigabyte", ("GB",), "GB"),
+    UnitDefinition("fuel-consumption-liter-per-100-kilometer", ("L/100km",), "L/100km"),
+    UnitDefinition("flow-cubic-meter-per-second", ("m³/s", "m3/s"), "m³/s"),
     UnitDefinition("area-square-millimeter", ("mm²", "mm2"), "mm²"),
     UnitDefinition("area-square-centimeter", ("cm²", "cm2"), "cm²"),
     UnitDefinition("area-square-meter", ("m²", "m2"), "m²"),
@@ -323,9 +333,16 @@ def locale_currency(symbol: str | tuple[str, ...], expansion: str, canonical_id:
 
 def register_locale_units(language: str, base: str, extra: Iterable[object] = ()) -> None:
     """Register an effective locale inventory inheriting a bundled base."""
-    from abbr2words.units import unit_entries
+    from abbr2words.units import UnitEntry, unit_entries
 
-    register(language, (*unit_entries(base), *tuple(extra)))
+    merged = list(unit_entries(base))
+    for item in extra:
+        if not isinstance(item, UnitEntry):
+            raise TypeError("locale unit entries must be UnitEntry values")
+        symbols = set(getattr(item, "symbols", ()))
+        merged = [entry for entry in merged if not symbols.intersection(entry.symbols)]
+        merged.append(item)
+    register(language, tuple(merged))
 
 
 __all__ = [

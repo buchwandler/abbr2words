@@ -24,6 +24,20 @@ class EnglishNigeriaAbbreviationExpander(EnglishAbbreviationExpander):
         super()._initialize_abbreviations()
 
 
+class EnglishUnitedStatesAbbreviationExpander(EnglishAbbreviationExpander):
+    UNIT_LANGUAGE = "en_US"
+
+    def _initialize_abbreviations(self) -> None:
+        super()._initialize_abbreviations()
+
+
+class EnglishUnitedKingdomAbbreviationExpander(EnglishAbbreviationExpander):
+    UNIT_LANGUAGE = "en_GB"
+
+    def _initialize_abbreviations(self) -> None:
+        super()._initialize_abbreviations()
+
+
 class SpanishColombiaAbbreviationExpander(SpanishAbbreviationExpander):
     UNIT_LANGUAGE = "es_CO"
 
@@ -54,6 +68,13 @@ class SpanishNicaraguaAbbreviationExpander(SpanishAbbreviationExpander):
 
 class SpanishVenezuelaAbbreviationExpander(SpanishAbbreviationExpander):
     UNIT_LANGUAGE = "es_VE"
+
+    def _initialize_abbreviations(self) -> None:
+        super()._initialize_abbreviations()
+
+
+class SpanishMexicoAbbreviationExpander(SpanishAbbreviationExpander):
+    UNIT_LANGUAGE = "es_MX"
 
     def _initialize_abbreviations(self) -> None:
         super()._initialize_abbreviations()
@@ -119,6 +140,8 @@ __all__ = [
     "ChineseTaiwanAbbreviationExpander",
     "EnglishIndiaAbbreviationExpander",
     "EnglishNigeriaAbbreviationExpander",
+    "EnglishUnitedKingdomAbbreviationExpander",
+    "EnglishUnitedStatesAbbreviationExpander",
     "FrenchAlgeriaAbbreviationExpander",
     "FrenchBelgiumAbbreviationExpander",
     "FrenchSwitzerlandAbbreviationExpander",
@@ -126,5 +149,6 @@ __all__ = [
     "SpanishCostaRicaAbbreviationExpander",
     "SpanishGuatemalaAbbreviationExpander",
     "SpanishNicaraguaAbbreviationExpander",
+    "SpanishMexicoAbbreviationExpander",
     "SpanishVenezuelaAbbreviationExpander",
 ]

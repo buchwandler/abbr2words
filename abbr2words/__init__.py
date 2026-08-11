@@ -25,6 +25,7 @@ from .core import (
     ExpansionMatch,
     ExpansionReplacement,
     ExpansionResult,
+    ExpansionVariant,
     ProtectedSpan,
     abbreviation_guards_match,
 )
@@ -34,6 +35,7 @@ __all__ = [
     "AbbreviationContext",
     "AbbreviationEntry",
     "AbbreviationExpander",
+    "ExpansionVariant",
     "ExpansionMatch",
     "ExpansionReplacement",
     "ExpansionResult",

@@ -11,7 +11,8 @@
       "case_sensitive": false,
       "description": "Joint-stock company",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -23,7 +24,8 @@
       "case_sensitive": false,
       "description": "And similarly",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -35,7 +37,8 @@
       "case_sensitive": false,
       "description": "Et cetera (and so on)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -47,7 +50,8 @@
       "case_sensitive": false,
       "description": "Title for Bachelor's degree",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -59,7 +63,8 @@
       "case_sensitive": false,
       "description": "March",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -71,7 +76,8 @@
       "case_sensitive": true,
       "description": "Centimeter",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -83,7 +89,8 @@
       "case_sensitive": false,
       "description": "Title for Doctor",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -95,7 +102,8 @@
       "case_sensitive": false,
       "description": "April",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -107,7 +115,8 @@
       "case_sensitive": true,
       "description": "Gram",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -119,7 +128,8 @@
       "case_sensitive": true,
       "description": "Hour",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -131,7 +141,8 @@
       "case_sensitive": false,
       "description": "Title for Engineer",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -143,7 +154,8 @@
       "case_sensitive": false,
       "description": "Title for Doctor of Law",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -155,7 +167,8 @@
       "case_sensitive": false,
       "description": "Chapter",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -167,7 +180,8 @@
       "case_sensitive": true,
       "description": "Kilogram",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -179,7 +193,8 @@
       "case_sensitive": true,
       "description": "Kilometer",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -191,7 +206,8 @@
       "case_sensitive": false,
       "description": "May",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -203,7 +219,8 @@
       "case_sensitive": true,
       "description": "Liter",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -215,7 +232,8 @@
       "case_sensitive": false,
       "description": "January",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -227,7 +245,8 @@
       "case_sensitive": false,
       "description": "November",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -239,7 +258,8 @@
       "case_sensitive": true,
       "description": "Meter",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -251,7 +271,8 @@
       "case_sensitive": false,
       "description": "Title for Master's degree holder",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -263,7 +284,8 @@
       "case_sensitive": true,
       "description": "Minute",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -275,7 +297,8 @@
       "case_sensitive": true,
       "description": "Millimeter",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -287,7 +310,8 @@
       "case_sensitive": false,
       "description": "Title for Medical Doctor",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -299,7 +323,8 @@
       "case_sensitive": false,
       "description": "Title for Veterinary Doctor",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -311,7 +336,8 @@
       "case_sensitive": false,
       "description": "For example",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -323,7 +349,8 @@
       "case_sensitive": false,
       "description": "Sunday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -335,7 +362,8 @@
       "case_sensitive": false,
       "description": "Embankment/Waterfront",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -347,7 +375,8 @@
       "case_sensitive": false,
       "description": "Square",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -359,7 +388,8 @@
       "case_sensitive": false,
       "description": "Public benefit corporation",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -371,7 +401,8 @@
       "case_sensitive": false,
       "description": "Civic association",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -383,7 +414,8 @@
       "case_sensitive": false,
       "description": "Picture/Figure",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -395,7 +427,8 @@
       "case_sensitive": false,
       "description": "Section/Department",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -407,7 +440,8 @@
       "case_sensitive": false,
       "description": "Title for Doctor of Philosophy",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -419,7 +453,8 @@
       "case_sensitive": false,
       "description": "Monday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -431,7 +466,8 @@
       "case_sensitive": false,
       "description": "Monday (alternate)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -443,7 +479,8 @@
       "case_sensitive": false,
       "description": "Note",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -455,7 +492,8 @@
       "case_sensitive": false,
       "description": "December",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -467,7 +505,8 @@
       "case_sensitive": false,
       "description": "Title for Professor",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -479,7 +518,8 @@
       "case_sensitive": false,
       "description": "Friday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -491,7 +531,8 @@
       "case_sensitive": false,
       "description": "Respectively",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -503,7 +544,8 @@
       "case_sensitive": false,
       "description": "Title for Doctor of Natural Sciences",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -515,7 +557,8 @@
       "case_sensitive": false,
       "description": "Page (short form)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -527,7 +570,8 @@
       "case_sensitive": false,
       "description": "Limited Liability Company",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -539,7 +583,8 @@
       "case_sensitive": true,
       "description": "Second",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -551,7 +596,8 @@
       "case_sensitive": false,
       "description": "Saturday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -563,7 +609,8 @@
       "case_sensitive": false,
       "description": "August",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -575,7 +622,8 @@
       "case_sensitive": false,
       "description": "Wednesday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -587,7 +635,8 @@
       "case_sensitive": false,
       "description": "Page (lowercase)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -599,7 +648,8 @@
       "case_sensitive": false,
       "description": "Wednesday (alternate)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -611,7 +661,8 @@
       "case_sensitive": false,
       "description": "Table",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -623,7 +674,8 @@
       "case_sensitive": false,
       "description": "That is",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -635,7 +687,8 @@
       "case_sensitive": false,
       "description": "That means",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -647,7 +700,8 @@
       "case_sensitive": false,
       "description": "So-called",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -659,7 +713,8 @@
       "case_sensitive": false,
       "description": "Avenue/Boulevard",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -671,7 +726,8 @@
       "case_sensitive": false,
       "description": "Street",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -683,7 +739,8 @@
       "case_sensitive": false,
       "description": "September",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -695,7 +752,8 @@
       "case_sensitive": false,
       "description": "February",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -707,7 +765,8 @@
       "case_sensitive": false,
       "description": "Tuesday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -719,7 +778,8 @@
       "case_sensitive": false,
       "description": "Number",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -731,7 +791,8 @@
       "case_sensitive": false,
       "description": "House number",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -743,7 +804,8 @@
       "case_sensitive": false,
       "description": "Thursday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -755,7 +817,8 @@
       "case_sensitive": false,
       "description": "July",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -767,7 +830,8 @@
       "case_sensitive": false,
       "description": "June",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "cs",
@@ -779,7 +843,8 @@
       "case_sensitive": false,
       "description": "October",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     }
   ]
 }

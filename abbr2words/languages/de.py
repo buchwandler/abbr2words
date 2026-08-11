@@ -10,6 +10,7 @@ from abbr2words.core import (
     AbbreviationContext,
     AbbreviationEntry,
     AbbreviationExpander,
+    ExpansionVariant,
 )
 
 
@@ -379,6 +380,13 @@ class GermanAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="evtl.",
                 expansion="eventuell",
+                variants=(
+                    ExpansionVariant(
+                        "eventuelle",
+                        only_if_preceded_by=r"(?i)\bdie\s+$",
+                        only_if_followed_by=r"^\s+[^\W\d_]",
+                    ),
+                ),
                 description="Possibly",
             )
         )
@@ -411,6 +419,13 @@ class GermanAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="max.",
                 expansion="maximal",
+                variants=(
+                    ExpansionVariant(
+                        "maximale",
+                        only_if_preceded_by=r"(?i)\bdie\s+$",
+                        only_if_followed_by=r"^\s+[^\W\d_]",
+                    ),
+                ),
                 description="Maximum",
             )
         )

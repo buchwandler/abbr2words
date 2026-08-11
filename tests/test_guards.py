@@ -6,7 +6,10 @@ import pytest
 
 from abbr2words import (
     AbbreviationEntry,
+    ExpansionVariant,
+    ProtectedSpan,
     abbreviation_guards_match,
+    get_expander,
     get_shared_expander,
     supported_languages,
 )
@@ -115,3 +118,58 @@ def test_preceded_by_negative_lookbehind_remains_bounded_and_relative() -> None:
     entry = AbbreviationEntry("Ref.", "Reference", only_if_preceded_by=r"(?<!x)foo$")
     assert abbreviation_guards_match(entry, "foo Ref.", 4, 8)
     assert not abbreviation_guards_match(entry, "xfoo Ref.", 7, 11)
+
+
+def test_ordered_variants_use_original_source_and_fall_back_to_default() -> None:
+    expander = get_expander("en")
+    expander.add_abbreviation(
+        AbbreviationEntry(
+            "Prof.",
+            "Professor",
+            variants=(
+                ExpansionVariant("professor emerita", only_if_preceded_by=r"La\s+$"),
+                ExpansionVariant("professor", only_if_followed_by=r"\s+\w+"),
+            ),
+        )
+    )
+
+    assert expander.expand("La Prof. García") == "La professor emerita García"
+    assert expander.expand("Prof. Smith") == "professor Smith"
+    assert expander.expand("Prof.") == "Professor"
+
+
+def test_variant_aliases_and_protected_spans_preserve_exact_source_ranges() -> None:
+    expander = get_expander("en")
+    expander.add_abbreviation(
+        AbbreviationEntry(
+            "Ref.",
+            "Reference",
+            aliases=("Reference.",),
+            variants=(ExpansionVariant("referee", only_if_followed_by=r"\s+\d"),),
+        )
+    )
+
+    result = expander.expand_with_replacements("Reference. 8 Ref. 9")
+    assert result.text == "referee 8 referee 9"
+    assert [(item.start, item.end, item.source) for item in result.replacements] == [
+        (0, 10, "abbr:Ref."),
+        (13, 17, "abbr:Ref."),
+    ]
+    assert expander.expand("Reference. 8 Ref. 9", protected_spans=(ProtectedSpan(0, 10),)) == (
+        "Reference. 8 referee 9"
+    )
+
+
+def test_variant_validation_is_eager_and_pos_guards_follow_entry_policy() -> None:
+    with pytest.raises(ValueError, match="only_if_followed_by"):
+        ExpansionVariant("x", only_if_followed_by="[")
+
+    expander = get_expander("en")
+    expander.add_abbreviation(
+        AbbreviationEntry(
+            "Ref.",
+            "Reference",
+            variants=(ExpansionVariant("referee", only_if_pos="NOUN", not_if_pos="PROPN"),),
+        )
+    )
+    assert expander.expand("Ref.") == "referee"

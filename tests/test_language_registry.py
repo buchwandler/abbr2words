@@ -60,12 +60,15 @@ RELEASED_BASE_KEYS = (
     "vi",
 )
 RELEASED_LOCALE_KEYS = (
+    "en_GB",
     "en_IN",
     "en_NG",
+    "en_US",
     "es_CO",
     "es_CR",
     "es_GT",
     "es_NI",
+    "es_MX",
     "es_VE",
     "fr_BE",
     "fr_CH",

@@ -55,6 +55,11 @@ def test_spanish_currency_registry_uses_reviewed_lemmas() -> None:
         "currency-euro": (("€", "EUR"), "euro", "€"),
         "currency-us-dollar": (("$", "USD"), "dólar estadounidense", "$"),
         "currency-pound-sterling": (("£", "GBP"), "libra esterlina", "£"),
+        "currency-japanese-yen": (("¥", "JPY"), "yen japonés", "¥"),
+        "currency-swiss-franc": (("CHF",), "franco suizo", "CHF"),
+        "currency-indian-rupee": (("₹", "INR"), "rupia india", "₹"),
+        "currency-south-korean-won": (("₩", "KRW"), "won surcoreano", "₩"),
+        "currency-mexican-peso": (("MXN",), "peso mexicano", "MXN"),
     }
     assert all(entry.quantity_position == "both" for entry in entries.values())
 

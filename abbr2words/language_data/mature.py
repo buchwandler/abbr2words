@@ -34,6 +34,7 @@ def bundle_from_legacy(key: str, legacy_class: type) -> LanguageBundle:
             context_expansions=(
                 dict(entry.context_expansions) if entry.context_expansions is not None else None
             ),
+            variants=entry.variants,
             boundary=entry.boundary,
             left_boundary=entry.left_boundary,
             right_boundary=entry.right_boundary,

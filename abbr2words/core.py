@@ -99,6 +99,46 @@ class ExpansionMatch:
 
 
 @dataclass(frozen=True, slots=True)
+class ExpansionVariant:
+    """One ordered, declarative conditional expansion for an abbreviation.
+
+    Variants deliberately reuse the entry guard vocabulary instead of accepting
+    callbacks.  This keeps registry data serializable and makes selection
+    deterministic and safe to evaluate against the original source text.
+    """
+
+    expansion: str
+    only_if_preceded_by: str | Pattern[str] | None = None
+    only_if_followed_by: str | Pattern[str] | None = None
+    only_if_pos: PosConstraints = None
+    not_if_pos: PosConstraints = None
+    _preceding_pattern: Pattern[str] | None = field(init=False, repr=False, compare=False)
+    _following_pattern: Pattern[str] | None = field(init=False, repr=False, compare=False)
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.expansion, str):
+            raise TypeError("variant expansion must be a string")
+        if not self.expansion:
+            raise ValueError("variant expansion must not be empty")
+        for name in ("only_if_preceded_by", "only_if_followed_by"):
+            value = getattr(self, name)
+            if value is not None and not isinstance(value, (str, re.Pattern)):
+                raise TypeError(f"{name} must be a string, compiled regex, or None")
+        object.__setattr__(self, "only_if_pos", _normalize_pos_constraints(self.only_if_pos))
+        object.__setattr__(self, "not_if_pos", _normalize_pos_constraints(self.not_if_pos))
+        object.__setattr__(
+            self,
+            "_preceding_pattern",
+            _compile_guard(self.only_if_preceded_by, "only_if_preceded_by"),
+        )
+        object.__setattr__(
+            self,
+            "_following_pattern",
+            _compile_guard(self.only_if_followed_by, "only_if_followed_by"),
+        )
+
+
+@dataclass(frozen=True, slots=True)
 class ExpansionReplacement:
     """One accepted replacement against the original source text."""
 
@@ -177,6 +217,7 @@ class AbbreviationEntry:
     abbreviation: str
     expansion: str
     context_expansions: dict[AbbreviationContext, str] | None = None
+    variants: tuple[ExpansionVariant, ...] = ()
     case_sensitive: bool = False
     description: str = ""
     only_if_preceded_by: str | Pattern[str] | None = None
@@ -241,6 +282,10 @@ class AbbreviationEntry:
                     raise TypeError("context expansion values must be strings")
                 if not value:
                     raise ValueError("context expansion values must not be empty")
+        if not isinstance(self.variants, tuple):
+            raise TypeError("variants must be a tuple of ExpansionVariant values")
+        if any(not isinstance(variant, ExpansionVariant) for variant in self.variants):
+            raise TypeError("variants must contain only ExpansionVariant values")
         for name in ("only_if_preceded_by", "only_if_followed_by"):
             value = getattr(self, name)
             if value is not None and not isinstance(value, (str, re.Pattern)):
@@ -334,8 +379,37 @@ def abbreviation_guards_match(
     if not (0 <= start <= end <= len(text)):
         return False
 
-    if entry.only_if_preceded_by:
-        pattern = entry._preceding_pattern
+    return _guards_match(
+        text,
+        start,
+        end,
+        preceding_pattern=entry._preceding_pattern,
+        following_pattern=entry._following_pattern,
+        only_if_pos=entry.only_if_pos,
+        not_if_pos=entry.not_if_pos,
+        preceding_window=preceding_window,
+        annotations=annotations,
+    )
+
+
+def _guards_match(
+    text: str,
+    start: int,
+    end: int,
+    *,
+    preceding_pattern: Pattern[str] | None,
+    following_pattern: Pattern[str] | None,
+    only_if_pos: Collection[str] | None,
+    not_if_pos: Collection[str] | None,
+    preceding_window: int = 80,
+    annotations: AnnotationIndex | Iterable[TokenAnnotation] | None = None,
+) -> bool:
+    """Evaluate compiled structural and POS guards for one source span."""
+    if not (0 <= start <= end <= len(text)):
+        return False
+
+    if preceding_pattern is not None:
+        pattern = preceding_pattern
         if pattern is None:
             return False
         raw_before = text[max(0, start - preceding_window) : start]
@@ -346,15 +420,15 @@ def abbreviation_guards_match(
         ):
             return False
 
-    if entry.only_if_followed_by:
-        pattern = entry._following_pattern
+    if following_pattern is not None:
+        pattern = following_pattern
         # Match a suffix slice rather than passing ``end`` as the regex
         # starting position. This preserves the intended relative meaning of
         # anchors such as ``^\s*\d`` for candidates after preceding text.
         if pattern is None or not pattern.match(text[end:]):
             return False
 
-    if annotations is not None and (entry.only_if_pos or entry.not_if_pos):
+    if annotations is not None and (only_if_pos or not_if_pos):
         index = (
             annotations
             if isinstance(annotations, AnnotationIndex)
@@ -365,12 +439,12 @@ def abbreviation_guards_match(
             for annotation in index.overlapping(start, end)
             if annotation.pos and annotation.pos not in {"PUNCT", "SPACE"}
         )
-        if entry.not_if_pos and any(pos in entry.not_if_pos for pos in lexical_pos):
+        if not_if_pos and any(pos in not_if_pos for pos in lexical_pos):
             return False
         if (
-            entry.only_if_pos
+            only_if_pos
             and lexical_pos
-            and not any(pos in entry.only_if_pos for pos in lexical_pos)
+            and not any(pos in only_if_pos for pos in lexical_pos)
         ):
             return False
 
@@ -810,7 +884,27 @@ class AbbreviationExpander(ABC):
                 ):
                     continue
 
-                if not self.enable_context_detection or not self.context_detector:
+                variant = next(
+                    (
+                        candidate
+                        for candidate in entry.variants
+                        if _guards_match(
+                            text,
+                            start,
+                            end,
+                            preceding_pattern=candidate._preceding_pattern,
+                            following_pattern=candidate._following_pattern,
+                            only_if_pos=candidate.only_if_pos,
+                            not_if_pos=candidate.not_if_pos,
+                            annotations=annotation_index,
+                        )
+                    ),
+                    None,
+                )
+                if variant is not None:
+                    expansion = variant.expansion
+                    context = None
+                elif not self.enable_context_detection or not self.context_detector:
                     expansion = entry.expansion
                     context = None
                 else:

@@ -507,8 +507,9 @@ class FrenchAbbreviationExpander(AbbreviationExpander):
 
         self.add_abbreviation(
             AbbreviationEntry(
-                abbreviation="bd",
+                abbreviation="Bd.",
                 expansion="boulevard",
+                aliases=("Bd", "bd", "bd."),
                 description="Boulevard",
             )
         )

@@ -11,7 +11,8 @@
       "case_sensitive": false,
       "description": "April",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -23,7 +24,8 @@
       "case_sensitive": false,
       "description": "August",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -35,7 +37,8 @@
       "case_sensitive": false,
       "description": "Approximately",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -47,7 +50,8 @@
       "case_sensitive": false,
       "description": "Title for Architect",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -59,7 +63,8 @@
       "case_sensitive": false,
       "description": "Article",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -71,7 +76,8 @@
       "case_sensitive": false,
       "description": "Avenue (short form)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -83,7 +89,8 @@
       "case_sensitive": false,
       "description": "Avenue",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -95,7 +102,8 @@
       "case_sensitive": false,
       "description": "Boulevard",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -107,7 +115,8 @@
       "case_sensitive": false,
       "description": "Street",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -119,7 +128,8 @@
       "case_sensitive": false,
       "description": "Chapter",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -131,7 +141,8 @@
       "case_sensitive": false,
       "description": "Compare (confer)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -143,7 +154,8 @@
       "case_sensitive": true,
       "description": "Centimeter(s)",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -155,7 +167,8 @@
       "case_sensitive": false,
       "description": "Path/Way",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -167,7 +180,8 @@
       "case_sensitive": false,
       "description": "Highway/Road",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -179,7 +193,8 @@
       "case_sensitive": false,
       "description": "Company",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -191,7 +206,8 @@
       "case_sensitive": false,
       "description": "December",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -203,7 +219,8 @@
       "case_sensitive": false,
       "description": "Sunday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -215,7 +232,8 @@
       "case_sensitive": false,
       "description": "Title for Doctor (male)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -227,7 +245,8 @@
       "case_sensitive": false,
       "description": "Title for Doctor (female)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -239,7 +258,8 @@
       "case_sensitive": false,
       "description": "Edition",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -251,7 +271,8 @@
       "case_sensitive": false,
       "description": "Example",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -263,7 +284,8 @@
       "case_sensitive": false,
       "description": "January",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -275,7 +297,8 @@
       "case_sensitive": false,
       "description": "Et cetera",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -287,7 +310,8 @@
       "case_sensitive": false,
       "description": "Factory",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -299,7 +323,8 @@
       "case_sensitive": false,
       "description": "February",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -311,7 +336,8 @@
       "case_sensitive": false,
       "description": "Physical/science abbreviation",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -323,7 +349,8 @@
       "case_sensitive": true,
       "description": "Gram(s)",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -335,7 +362,8 @@
       "case_sensitive": false,
       "description": "General",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -347,7 +375,8 @@
       "case_sensitive": true,
       "description": "Hour(s)",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -359,7 +388,8 @@
       "case_sensitive": false,
       "description": "Brothers",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -371,7 +401,8 @@
       "case_sensitive": false,
       "description": "Title for Engineer",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -383,7 +414,8 @@
       "case_sensitive": false,
       "description": "Thursday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -395,7 +427,8 @@
       "case_sensitive": false,
       "description": "July",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -407,7 +440,8 @@
       "case_sensitive": false,
       "description": "June",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -419,7 +453,8 @@
       "case_sensitive": true,
       "description": "Kilogram(s)",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -431,7 +466,8 @@
       "case_sensitive": true,
       "description": "Kilometer(s)",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -443,7 +479,8 @@
       "case_sensitive": true,
       "description": "Liter(s)",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -455,7 +492,8 @@
       "case_sensitive": false,
       "description": "Title for Licentiate (university graduate)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -467,7 +505,8 @@
       "case_sensitive": false,
       "description": "Monday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -479,7 +518,8 @@
       "case_sensitive": true,
       "description": "Meter(s)",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -491,7 +531,8 @@
       "case_sensitive": false,
       "description": "March (conflicts with Tuesday, context detection needed)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -503,7 +544,8 @@
       "case_sensitive": true,
       "description": "Milligram(s)",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -515,7 +557,8 @@
       "case_sensitive": true,
       "description": "Minute(s)",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -527,7 +570,8 @@
       "case_sensitive": true,
       "description": "Minute(s) with period",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -539,7 +583,8 @@
       "case_sensitive": false,
       "description": "Wednesday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -551,7 +596,8 @@
       "case_sensitive": false,
       "description": "Wednesday (alternate)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -563,7 +609,8 @@
       "case_sensitive": true,
       "description": "Milliliter(s)",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -575,7 +622,8 @@
       "case_sensitive": true,
       "description": "Millimeter(s)",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -587,7 +635,8 @@
       "case_sensitive": false,
       "description": "Maestro",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -602,7 +651,8 @@
       "case_sensitive": false,
       "description": "Number marker before a numeric reference",
       "only_if_preceded_by": null,
-      "only_if_followed_by": "^\\s*\\d"
+      "only_if_followed_by": "^\\s*\\d",
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -614,7 +664,8 @@
       "case_sensitive": false,
       "description": "November",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -626,7 +677,8 @@
       "case_sensitive": false,
       "description": "Number (capital symbol form)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -638,7 +690,8 @@
       "case_sensitive": false,
       "description": "Number (symbol form)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -650,7 +703,8 @@
       "case_sensitive": false,
       "description": "Number",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -662,7 +716,8 @@
       "case_sensitive": false,
       "description": "October",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -674,7 +729,8 @@
       "case_sensitive": false,
       "description": "Page (short form)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -686,7 +742,8 @@
       "case_sensitive": false,
       "description": "For example",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -698,7 +755,8 @@
       "case_sensitive": false,
       "description": "Plaza (short form)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -710,7 +768,8 @@
       "case_sensitive": false,
       "description": "Pages (short form)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -722,7 +781,16 @@
       "case_sensitive": false,
       "description": "Title for Professor (male)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": [
+        {
+          "expansion": "Profesora",
+          "only_if_preceded_by": "(?i)\\bla\\s+$",
+          "only_if_followed_by": null,
+          "only_if_pos": null,
+          "not_if_pos": null
+        }
+      ]
     },
     {
       "language": "es_NI",
@@ -734,7 +802,8 @@
       "case_sensitive": false,
       "description": "Title for Professor (female)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -746,7 +815,8 @@
       "case_sensitive": false,
       "description": "Promenade (alternate)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -758,7 +828,8 @@
       "case_sensitive": false,
       "description": "President",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -770,7 +841,8 @@
       "case_sensitive": false,
       "description": "Plaza/Square",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -782,7 +854,8 @@
       "case_sensitive": false,
       "description": "Promenade/Boulevard",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -794,7 +867,8 @@
       "case_sensitive": false,
       "description": "Page",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -806,7 +880,8 @@
       "case_sensitive": false,
       "description": "Pages",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -818,7 +893,8 @@
       "case_sensitive": false,
       "description": "Corporation (similar to Inc.)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -830,7 +906,8 @@
       "case_sensitive": false,
       "description": "Limited Liability Company",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -842,7 +919,8 @@
       "case_sensitive": true,
       "description": "Second(s)",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -854,7 +932,8 @@
       "case_sensitive": true,
       "description": "Second(s) with period",
       "only_if_preceded_by": "(?:^|[^\\w.])[+\\-−]?(?:\\d{1,3}(?:[ \\u00a0\\u202f]\\d{3})+|\\d+)(?:[.,]\\d+)?[ \\t\\u00a0\\u202f]*$",
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -866,7 +945,8 @@
       "case_sensitive": false,
       "description": "September",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -878,7 +958,8 @@
       "case_sensitive": false,
       "description": "September (alternate)",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -890,7 +971,8 @@
       "case_sensitive": false,
       "description": "Title for Mr.",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -902,7 +984,8 @@
       "case_sensitive": false,
       "description": "Title for Mrs.",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -914,7 +997,8 @@
       "case_sensitive": false,
       "description": "Title for Miss",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -926,7 +1010,8 @@
       "case_sensitive": false,
       "description": "Saturday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -938,7 +1023,8 @@
       "case_sensitive": false,
       "description": "Friday",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     },
     {
       "language": "es_NI",
@@ -950,7 +1036,8 @@
       "case_sensitive": false,
       "description": "Volume",
       "only_if_preceded_by": null,
-      "only_if_followed_by": null
+      "only_if_followed_by": null,
+      "variants": []
     }
   ]
 }

@@ -49,10 +49,10 @@ for replacement in result.replacements:
     print(replacement.start, replacement.end, replacement.text, replacement.kind)
 ```
 
-The bundled language registry follows the 63-key current-master parity snapshot:
-49 base keys plus the explicit locale overlays `en_IN`, `en_NG`, `es_CO`,
-`es_CR`, `es_GT`, `es_NI`, `es_VE`, `fr_BE`, `fr_CH`, `fr_DZ`, `pt_BR`,
-`zh_CN`, `zh_HK`, and `zh_TW`. `normalize_language()` returns an exact locale
+The bundled language registry follows a 66-key current-master parity snapshot:
+49 base keys plus the explicit locale overlays `en_GB`, `en_IN`, `en_NG`,
+`en_US`, `es_CO`, `es_CR`, `es_GT`, `es_MX`, `es_NI`, `es_VE`, `fr_BE`,
+`fr_CH`, `fr_DZ`, `pt_BR`, `zh_CN`, `zh_HK`, and `zh_TW`. `normalize_language()` returns an exact locale
 key when registered and otherwise its base key. Turkish unit symbols followed by straight or
 curly apostrophe suffixes are intentionally not expanded until suffix
 realization is implemented.
@@ -153,6 +153,12 @@ grammar, currency decomposition, and locale-specific decimal policy belong to
 the consuming semantic normalizer. Currency and magnitude matches expose their
 `category` without turning this package into a structured-number parser.
 
+Reviewed semantic identities include speed, pressure, data, fuel-consumption,
+and flow units plus JPY, CHF, INR, KRW, and MXN currencies. The `es_MX`
+overlay gives unqualified `$` the Mexican-peso identity while `US$` and `USD`
+remain US dollar. These are recognition contracts for a downstream consumer,
+not amount or number grammar.
+
 ## Core types
 
 ```{autoclass} abbr2words.TokenAnnotation
@@ -160,6 +166,15 @@ the consuming semantic normalizer. Currency and magnitude matches expose their
 ```
 
 ```{autoclass} abbr2words.AbbreviationEntry
+:members:
+```
+
+`AbbreviationEntry.variants` is an ordered tuple of immutable,
+declarative `ExpansionVariant` values. The first variant whose guards match
+the original source wins, followed by existing context and default expansion
+fallback. Variants do not accept callbacks.
+
+```{autoclass} abbr2words.ExpansionVariant
 :members:
 ```
 

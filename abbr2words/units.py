@@ -901,6 +901,130 @@ _EXTENDED_DEFINITIONS = (
     _UnitDefinition("volume-cubic-meter", ("m³", "m3"), "Volume"),
 )
 
+_POLYNORM_DEFINITIONS = (
+    _UnitDefinition("speed-mile-per-hour", ("mph",), "Speed"),
+    _UnitDefinition("pressure-pascal", ("Pa",), "Pressure"),
+    _UnitDefinition("pressure-kilopascal", ("kPa",), "Pressure"),
+    _UnitDefinition("pressure-atmosphere", ("atm",), "Pressure"),
+    _UnitDefinition("data-byte", ("B",), "Data"),
+    _UnitDefinition("data-kilobyte", ("kB",), "Data"),
+    _UnitDefinition("data-megabyte", ("MB",), "Data"),
+    _UnitDefinition("data-gigabyte", ("GB",), "Data"),
+    _UnitDefinition(
+        "fuel-consumption-liter-per-100-kilometer",
+        ("L/100km",),
+        "Fuel consumption",
+    ),
+    _UnitDefinition("flow-cubic-meter-per-second", ("m³/s", "m3/s"), "Flow"),
+)
+
+_POLYNORM_UNIT_LABELS = {
+    "en": (
+        "mile per hour",
+        "pascal",
+        "kilopascal",
+        "atmosphere",
+        "byte",
+        "kilobyte",
+        "megabyte",
+        "gigabyte",
+        "liter per 100 kilometers",
+        "cubic meter per second",
+    ),
+    "de": (
+        "Meile pro Stunde",
+        "Pascal",
+        "Kilopascal",
+        "Atmosphäre",
+        "Byte",
+        "Kilobyte",
+        "Megabyte",
+        "Gigabyte",
+        "Liter pro 100 Kilometer",
+        "Kubikmeter pro Sekunde",
+    ),
+    "es": (
+        "milla por hora",
+        "pascal",
+        "kilopascal",
+        "atmósfera",
+        "byte",
+        "kilobyte",
+        "megabyte",
+        "gigabyte",
+        "litro por 100 kilómetros",
+        "metro cúbico por segundo",
+    ),
+    "fr": (
+        "mille par heure",
+        "pascal",
+        "kilopascal",
+        "atmosphère",
+        "octet",
+        "kilooctet",
+        "mégaoctet",
+        "gigaoctet",
+        "litre aux 100 kilomètres",
+        "mètre cube par seconde",
+    ),
+    "it": (
+        "miglio all'ora",
+        "pascal",
+        "kilopascal",
+        "atmosfera",
+        "byte",
+        "kilobyte",
+        "megabyte",
+        "gigabyte",
+        "litro per 100 chilometri",
+        "metro cubo al secondo",
+    ),
+}
+
+_POLYNORM_CURRENCY_LABELS = {
+    "en": ("Japanese yen", "Swiss franc", "Indian rupee", "South Korean won", "Mexican peso"),
+    "de": ("japanischer Yen", "Schweizer Franken", "indische Rupie", "südkoreanischer Won", "mexikanischer Peso"),
+    "es": ("yen japonés", "franco suizo", "rupia india", "won surcoreano", "peso mexicano"),
+    "fr": ("yen japonais", "franc suisse", "roupie indienne", "won sud-coréen", "peso mexicain"),
+    "it": ("yen giapponese", "franco svizzero", "rupia indiana", "won sudcoreano", "peso messicano"),
+}
+
+
+def _polynorm_unit_entries(language: str) -> tuple[UnitEntry, ...]:
+    labels = _POLYNORM_UNIT_LABELS.get(language, _POLYNORM_UNIT_LABELS["en"])
+    return tuple(
+        _entry(
+            definition.symbols,
+            labels[index],
+            definition.description,
+            canonical_id=definition.canonical_id,
+        )
+        for index, definition in enumerate(_POLYNORM_DEFINITIONS)
+    )
+
+
+def _polynorm_currency_entries(language: str) -> tuple[UnitEntry, ...]:
+    labels = _POLYNORM_CURRENCY_LABELS.get(language, _POLYNORM_CURRENCY_LABELS["en"])
+    definitions = (
+        (("¥", "JPY"), "currency-japanese-yen", "¥"),
+        (("CHF",), "currency-swiss-franc", "CHF"),
+        (("₹", "INR"), "currency-indian-rupee", "₹"),
+        (("₩", "KRW"), "currency-south-korean-won", "₩"),
+        (("MXN",), "currency-mexican-peso", "MXN"),
+    )
+    return tuple(
+        _entry(
+            symbols,
+            labels[index],
+            "Currency",
+            canonical_id=canonical_id,
+            canonical_symbol=canonical_symbol,
+            category="currency",
+            quantity_position="both",
+        )
+        for index, (symbols, canonical_id, canonical_symbol) in enumerate(definitions)
+    )
+
 _EXTENDED_TRANSLATION_VALUES = {
     "cs": (
         "čtvereční milimetr",
@@ -1062,6 +1186,10 @@ for _lang, _names in _LOCALIZED_EXTENDED_UNIT_NAMES.items():
 UNIT_ENTRIES["de"] += _GERMAN_REQUIRED_ENTRIES
 for _lang, _currency_entries in _STRUCTURED_CURRENCY_ENTRIES.items():
     UNIT_ENTRIES[_lang] += _currency_entries
+
+for _lang in tuple(UNIT_ENTRIES):
+    UNIT_ENTRIES[_lang] += _polynorm_unit_entries(_lang)
+    UNIT_ENTRIES[_lang] += _polynorm_currency_entries(_lang)
 
 UNIT_ENTRIES["fr"] += _FRENCH_DOTTED_DURATION_ENTRIES
 

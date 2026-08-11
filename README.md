@@ -21,13 +21,14 @@ The registry follows the pinned current-master `num2words` key contract. It has
 `ko`, `kz`, `lt`, `lv`, `mn`, `nl`, `no`, `pl`, `pt`, `ro`, `ru`, `sk`, `sl`,
 `sr`, `sv`, `te`, `tet`, `tg`, `th`, `tr`, `uk`, `vi`, and `zh`.
 
-The 14 explicit locale overlays are `en_IN`, `en_NG`, `es_CO`, `es_CR`,
-`es_GT`, `es_NI`, `es_VE`, `fr_BE`, `fr_CH`, `fr_DZ`, `pt_BR`, `zh_CN`,
-`zh_HK`, and `zh_TW`.
+The 17 explicit locale overlays are `en_GB`, `en_IN`, `en_NG`, `en_US`,
+`es_CO`, `es_CR`, `es_GT`, `es_MX`, `es_NI`, `es_VE`, `fr_BE`, `fr_CH`,
+`fr_DZ`, `pt_BR`, `zh_CN`, `zh_HK`, and `zh_TW`.
 
 Language resolution trims input, accepts hyphens and underscores, canonicalizes
 base/region casing, tries an exact locale first, then falls back to its base.
-Thus `pt-BR` resolves to `pt_BR`, `fr_FR` to `fr`, and `en_GB` to `en`.
+Thus `pt-BR` resolves to `pt_BR`, `fr_FR` to `fr`, and `en_GB` to its explicit
+British-English overlay.
 `eo` and `es_NI` are explicit registry keys; `eu` is unsupported. Use
 `base_language()` when a caller needs the resolved base key.
 
@@ -129,12 +130,14 @@ currency major/minor decomposition, and locale-specific spoken decimal policy
 belong to the consuming speech normalizer.
 
 Structured currency identities are available in the reviewed quantity registry
-for Czech, English, French, Italian, Portuguese, and Spanish. Czech recognizes
+for Czech, English, French, Italian, Portuguese, and Spanish. The shared
+inventory also recognizes JPY, CHF, INR, KRW, and MXN. Czech recognizes
 `Kč`/`CZK` as `currency-czech-koruna`; Portuguese also recognizes
 `R$`/`BRL` as `currency-brazilian-real`; English, French, Italian, and Spanish
 recognize the shared `currency-euro`, `currency-us-dollar`, and
-`currency-pound-sterling` identities for EUR/USD/GBP. The other listed
-other locales keep locale-specific identities numeric-context-only where provided.
+`currency-pound-sterling` identities for EUR/USD/GBP. In `es_MX`, unqualified
+`$` resolves to `currency-mexican-peso`, while `US$` and `USD` remain
+`currency-us-dollar`. These identities are numeric-context-only.
 These identities are recognized when a numeric value is adjacent in either
 prefix or suffix position:
 
