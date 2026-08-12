@@ -42,7 +42,7 @@ def test_custom_punctuation_spellings_and_word_attachment(abbreviation: str):
 
 
 def test_initialism_period_guard_allows_ellipsis_but_preserves_embedded_initialisms():
-    assert abbr2words("A.B.S.", lang="en") == "A.B.S."
+    assert abbr2words("A.B.S.", lang="en") == "A B S."
     assert abbr2words("Hello.Dr.", lang="en") == "Hello.Dr."
     assert abbr2words("...Dr. Smith", lang="en") == "...Doctor Smith"
     assert abbr2words(".Dr. Smith", lang="en") == ".Doctor Smith"

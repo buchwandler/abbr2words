@@ -214,7 +214,7 @@ def test_abbreviation_cli_compact() -> None:
     result = run_example("examples/abbreviations.py", "--compact")
     assert result.returncode == 0
     assert "=== Source ===" not in result.stdout
-    assert "identification card" in result.stdout
+    assert "I D card" in result.stdout
     assert result.stderr == ""
 
 

@@ -9,8 +9,7 @@ import warnings
 from abbr2words.core import AbbreviationContext, AbbreviationEntry, AbbreviationExpander
 
 _NUMBER_AFTER_REFERENCE = r"[ \t]+\d"
-_DIRECTION_LEFT_CONTEXT = r"(?:^|[\s,;(])$"
-_DIRECTION_RIGHT_CONTEXT = r"^[ \t]+(?:\d|[A-ZÀ-ÖØ-Þ])"
+_DIRECTION_RIGHT_CONTEXT = r"^(?:$|[ \t]+(?![a-z]))"
 _NUMBER_BEFORE_UNIT = (
     r"(?:^|[^\w.])"
     r"(?:(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?|\.\d+)"
@@ -459,7 +458,8 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="L.A.",
-                expansion="Los Angeles",
+                expansion="L A",
+                case_sensitive=True,
                 description="Los Angeles",
             )
         )
@@ -467,7 +467,9 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="D.C.",
-                expansion="District of Columbia",
+                expansion="D C",
+                context_expansions={AbbreviationContext.PLACE: "District of Columbia"},
+                case_sensitive=True,
                 description="District of Columbia",
             )
         )
@@ -649,6 +651,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="e.g.",
                 expansion="for example",
+                case_sensitive=True,
                 description="Exempli gratia (for example)",
             )
         )
@@ -842,9 +845,10 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="N.",
-                expansion="North",
+                expansion="N",
+                context_expansions={AbbreviationContext.PLACE: "North"},
+                case_sensitive=True,
                 description="North",
-                only_if_preceded_by=_DIRECTION_LEFT_CONTEXT,
                 only_if_followed_by=_DIRECTION_RIGHT_CONTEXT,
             )
         )
@@ -852,9 +856,10 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="S.",
-                expansion="South",
+                expansion="S",
+                context_expansions={AbbreviationContext.PLACE: "South"},
+                case_sensitive=True,
                 description="South",
-                only_if_preceded_by=_DIRECTION_LEFT_CONTEXT,
                 only_if_followed_by=_DIRECTION_RIGHT_CONTEXT,
             )
         )
@@ -862,9 +867,10 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="E.",
-                expansion="East",
+                expansion="E",
+                context_expansions={AbbreviationContext.PLACE: "East"},
+                case_sensitive=True,
                 description="East",
-                only_if_preceded_by=_DIRECTION_LEFT_CONTEXT,
                 only_if_followed_by=_DIRECTION_RIGHT_CONTEXT,
             )
         )
@@ -872,9 +878,10 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="W.",
-                expansion="West",
+                expansion="W",
+                context_expansions={AbbreviationContext.PLACE: "West"},
+                case_sensitive=True,
                 description="West",
-                only_if_preceded_by=_DIRECTION_LEFT_CONTEXT,
                 only_if_followed_by=_DIRECTION_RIGHT_CONTEXT,
             )
         )
@@ -1203,8 +1210,9 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="I.D.",
-                expansion="identification",
-                description="Identification",
+                expansion="I D",
+                case_sensitive=True,
+                description="Identification, spoken as letters",
             )
         )
 

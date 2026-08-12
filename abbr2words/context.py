@@ -60,6 +60,19 @@ _STREET_NAME_PROSE = frozenset(
         "were",
     }
 )
+_ADDRESS_NUMBER = re.compile(r"(?:^|[\s,;(])\d+[A-Za-z]?\s*$")
+_STREET_SUFFIX = re.compile(
+    r"\b(?:street|st|avenue|ave|road|rd|boulevard|blvd|lane|ln|drive|dr|"
+    r"court|ct|highway|hwy|parkway|pkwy|place|pl|terrace|ter|way)\.?"
+    r"(?=$|[\s,;.)])",
+    re.IGNORECASE,
+)
+_WASHINGTON_PLACE = re.compile(r"\bWashington\s*,?\s*$", re.IGNORECASE)
+_EXPLICIT_PLACE_AFTER = re.compile(
+    r"^\s*(?:metropolitan(?:\s+area)?|metro(?:politan)?|area|residents?|"
+    r"district|downtown)\b",
+    re.IGNORECASE,
+)
 
 
 def _context(name: str) -> Any:
@@ -91,6 +104,13 @@ def _reviewed_street_name_evidence(before: str) -> bool:
         return False
     first_token = match.group("name").split(maxsplit=1)[0].casefold()
     return first_token not in _STREET_NAME_PROSE
+
+
+def _direction_place_evidence(before: str, after: str) -> bool:
+    """Require a bounded address/street signal for a single compass letter."""
+    if not _STREET_SUFFIX.search(after):
+        return False
+    return bool(_ADDRESS_NUMBER.search(before) or _reviewed_street_name_evidence(before))
 
 
 class ContextProfile(ABC):
@@ -146,11 +166,22 @@ class EnglishContextProfile(DefaultContextProfile):
     }
 
     def detect_context(self, abbreviation: str, before: str, after: str) -> Any:
+        spelling = abbreviation.casefold()
+        if spelling in {"n.", "s.", "e.", "w."}:
+            if _direction_place_evidence(before, after):
+                return _context("place")
+            if after and _name_evidence(after):
+                return _context("title")
+            return _context("default")
+        if spelling == "d.c." and (
+            _WASHINGTON_PLACE.search(before) or _EXPLICIT_PLACE_AFTER.match(after)
+        ):
+            return _context("place")
         if _DATE_BEFORE.search(before) or _DATE_AFTER.search(after):
             return _context("date")
         if _TIME.search(before):
             return _context("time")
-        if abbreviation.casefold() in {"st.", "st"}:
+        if spelling in {"st.", "st"}:
             token = _first_lexical_token(after).casefold()
             if token in self._saints:
                 return _context("religious")

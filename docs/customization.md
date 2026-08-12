@@ -45,6 +45,20 @@ follows that boundary. A colon is not a sentence boundary. Dotted abbreviation
 matches preserve one final period when their consumed dot is sentence-final;
 commas, semicolons, and internal dots are not added or moved.
 
+## Ambiguous English dotted forms
+
+The English registry prefers reversible letter readings when a dotted spelling
+could be either a semantic abbreviation or a person's initials. The structural
+fallback recognizes standalone uppercase forms with two through eight dotted
+letters, such as `E.D.` and `F.C.S.C.J.`, after registered abbreviations and
+reviewed units have had priority. Thus lowercase `e.g.` expands to `for example`,
+while uppercase `E.G.` is rendered as `E G`; `I.D.` is rendered as `I D`.
+
+Single-letter `N.`, `S.`, `E.`, and `W.` use letter defaults and require bounded
+address/street evidence before expanding to a direction. This protects personal
+initials and biological names such as `S. aureus`. `D.C.` expands to `District of Columbia` only with explicit Washington/place evidence; `L.A.` remains `L A`
+in this layer so author initials are not rewritten as a city name.
+
 Followed-by guards are evaluated against the suffix immediately after the
 candidate abbreviation. In `only_if_followed_by=r"^\s*\d"`, `^` therefore
 means “immediately after this abbreviation,” even when the candidate occurs

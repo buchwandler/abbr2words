@@ -87,6 +87,38 @@
     },
     {
       "language": "en_GB",
+      "key": "D.C.",
+      "abbreviation": "D.C.",
+      "expansion": "D C",
+      "aliases": [],
+      "context_expansions": {
+        "place": "District of Columbia"
+      },
+      "case_sensitive": true,
+      "case_policy": "fixed",
+      "description": "District of Columbia",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null,
+      "variants": []
+    },
+    {
+      "language": "en_GB",
+      "key": "E.",
+      "abbreviation": "E.",
+      "expansion": "E",
+      "aliases": [],
+      "context_expansions": {
+        "place": "East"
+      },
+      "case_sensitive": true,
+      "case_policy": "fixed",
+      "description": "East",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^(?:$|[ \\t]+(?![a-z]))",
+      "variants": []
+    },
+    {
+      "language": "en_GB",
       "key": "EDT",
       "abbreviation": "EDT",
       "expansion": "E D T",
@@ -123,6 +155,34 @@
       "case_sensitive": true,
       "case_policy": "fixed",
       "description": "Greenwich Mean Time",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null,
+      "variants": []
+    },
+    {
+      "language": "en_GB",
+      "key": "I.D.",
+      "abbreviation": "I.D.",
+      "expansion": "I D",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "case_policy": "fixed",
+      "description": "Identification, spoken as letters",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null,
+      "variants": []
+    },
+    {
+      "language": "en_GB",
+      "key": "L.A.",
+      "abbreviation": "L.A.",
+      "expansion": "L A",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "case_policy": "fixed",
+      "description": "Los Angeles",
       "only_if_preceded_by": null,
       "only_if_followed_by": null,
       "variants": []
@@ -171,6 +231,22 @@
     },
     {
       "language": "en_GB",
+      "key": "N.",
+      "abbreviation": "N.",
+      "expansion": "N",
+      "aliases": [],
+      "context_expansions": {
+        "place": "North"
+      },
+      "case_sensitive": true,
+      "case_policy": "fixed",
+      "description": "North",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^(?:$|[ \\t]+(?![a-z]))",
+      "variants": []
+    },
+    {
+      "language": "en_GB",
       "key": "PDT",
       "abbreviation": "PDT",
       "expansion": "P D T",
@@ -213,6 +289,22 @@
     },
     {
       "language": "en_GB",
+      "key": "S.",
+      "abbreviation": "S.",
+      "expansion": "S",
+      "aliases": [],
+      "context_expansions": {
+        "place": "South"
+      },
+      "case_sensitive": true,
+      "case_policy": "fixed",
+      "description": "South",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^(?:$|[ \\t]+(?![a-z]))",
+      "variants": []
+    },
+    {
+      "language": "en_GB",
       "key": "UTC",
       "abbreviation": "UTC",
       "expansion": "U T C",
@@ -223,6 +315,22 @@
       "description": "Coordinated Universal Time",
       "only_if_preceded_by": null,
       "only_if_followed_by": null,
+      "variants": []
+    },
+    {
+      "language": "en_GB",
+      "key": "W.",
+      "abbreviation": "W.",
+      "expansion": "W",
+      "aliases": [],
+      "context_expansions": {
+        "place": "West"
+      },
+      "case_sensitive": true,
+      "case_policy": "fixed",
+      "description": "West",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^(?:$|[ \\t]+(?![a-z]))",
       "variants": []
     },
     {
@@ -619,20 +727,6 @@
     },
     {
       "language": "en_GB",
-      "key": "d.c.",
-      "abbreviation": "D.C.",
-      "expansion": "District of Columbia",
-      "aliases": [],
-      "context_expansions": null,
-      "case_sensitive": false,
-      "case_policy": "fixed",
-      "description": "District of Columbia",
-      "only_if_preceded_by": null,
-      "only_if_followed_by": null,
-      "variants": []
-    },
-    {
-      "language": "en_GB",
       "key": "d.d.s.",
       "abbreviation": "D.D.S.",
       "expansion": "D D S",
@@ -706,26 +800,12 @@
     },
     {
       "language": "en_GB",
-      "key": "e.",
-      "abbreviation": "E.",
-      "expansion": "East",
-      "aliases": [],
-      "context_expansions": null,
-      "case_sensitive": false,
-      "case_policy": "fixed",
-      "description": "East",
-      "only_if_preceded_by": "(?:^|[\\s,;(])$",
-      "only_if_followed_by": "^[ \\t]+(?:\\d|[A-ZÀ-ÖØ-Þ])",
-      "variants": []
-    },
-    {
-      "language": "en_GB",
       "key": "e.g.",
       "abbreviation": "e.g.",
       "expansion": "for example",
       "aliases": [],
       "context_expansions": null,
-      "case_sensitive": false,
+      "case_sensitive": true,
       "case_policy": "fixed",
       "description": "Exempli gratia (for example)",
       "only_if_preceded_by": null,
@@ -944,20 +1024,6 @@
     },
     {
       "language": "en_GB",
-      "key": "i.d.",
-      "abbreviation": "I.D.",
-      "expansion": "identification",
-      "aliases": [],
-      "context_expansions": null,
-      "case_sensitive": false,
-      "case_policy": "fixed",
-      "description": "Identification",
-      "only_if_preceded_by": null,
-      "only_if_followed_by": null,
-      "variants": []
-    },
-    {
-      "language": "en_GB",
       "key": "i.e.",
       "abbreviation": "i.e.",
       "expansion": "that is",
@@ -1107,20 +1173,6 @@
       "case_policy": "fixed",
       "description": "Kilometer",
       "only_if_preceded_by": "(?:^|[^\\w.])(?:(?:\\d{1,3}(?:,\\d{3})+|\\d+)(?:\\.\\d+)?|\\.\\d+)[ \\t]*\\Z",
-      "only_if_followed_by": null,
-      "variants": []
-    },
-    {
-      "language": "en_GB",
-      "key": "l.a.",
-      "abbreviation": "L.A.",
-      "expansion": "Los Angeles",
-      "aliases": [],
-      "context_expansions": null,
-      "case_sensitive": false,
-      "case_policy": "fixed",
-      "description": "Los Angeles",
-      "only_if_preceded_by": null,
       "only_if_followed_by": null,
       "variants": []
     },
@@ -1472,20 +1524,6 @@
       "description": "Gender-neutral honorific",
       "only_if_preceded_by": null,
       "only_if_followed_by": null,
-      "variants": []
-    },
-    {
-      "language": "en_GB",
-      "key": "n.",
-      "abbreviation": "N.",
-      "expansion": "North",
-      "aliases": [],
-      "context_expansions": null,
-      "case_sensitive": false,
-      "case_policy": "fixed",
-      "description": "North",
-      "only_if_preceded_by": "(?:^|[\\s,;(])$",
-      "only_if_followed_by": "^[ \\t]+(?:\\d|[A-ZÀ-ÖØ-Þ])",
       "variants": []
     },
     {
@@ -1850,20 +1888,6 @@
       "description": "Room",
       "only_if_preceded_by": null,
       "only_if_followed_by": null,
-      "variants": []
-    },
-    {
-      "language": "en_GB",
-      "key": "s.",
-      "abbreviation": "S.",
-      "expansion": "South",
-      "aliases": [],
-      "context_expansions": null,
-      "case_sensitive": false,
-      "case_policy": "fixed",
-      "description": "South",
-      "only_if_preceded_by": "(?:^|[\\s,;(])$",
-      "only_if_followed_by": "^[ \\t]+(?:\\d|[A-ZÀ-ÖØ-Þ])",
       "variants": []
     },
     {
@@ -2259,20 +2283,6 @@
       "description": "Versus",
       "only_if_preceded_by": null,
       "only_if_followed_by": null,
-      "variants": []
-    },
-    {
-      "language": "en_GB",
-      "key": "w.",
-      "abbreviation": "W.",
-      "expansion": "West",
-      "aliases": [],
-      "context_expansions": null,
-      "case_sensitive": false,
-      "case_policy": "fixed",
-      "description": "West",
-      "only_if_preceded_by": "(?:^|[\\s,;(])$",
-      "only_if_followed_by": "^[ \\t]+(?:\\d|[A-ZÀ-ÖØ-Þ])",
       "variants": []
     },
     {

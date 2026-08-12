@@ -132,6 +132,15 @@ downstream structured-code handling while `7 B`, `3 A`, and `300 K` remain units
 Use `iter_unit_diagnostics()` when a caller needs to distinguish an accepted unit
 claim from a compact candidate rejected by that policy.
 
+English dotted forms are handled conservatively when a spelling can be either a
+semantic abbreviation or a person's initials. Uppercase dotted initialisms such
+as `E.D.` and `F.C.S.C.J.` fall back to source-letter spelling only when no
+registered rule wins; lowercase `e.g.` remains `for example`, while uppercase
+`E.G.` is letter-spelled. Single-letter compass forms expand to directions only
+with bounded address/street evidence, and `D.C.`/`L.A.` remain letter-spelled in
+author names. This lexical layer does not parse dates, numbers, URLs, versions,
+or product identifiers; those belong to a downstream speech normalizer.
+
 `abbr2words` recognizes and identifies quantity symbols; it does not decide how
 a complete numeric quantity is spoken. Number words, grammatical number,
 currency major/minor decomposition, and locale-specific spoken decimal policy

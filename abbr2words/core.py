@@ -19,6 +19,7 @@ from typing import Literal, TypeAlias
 from ._replacements import Replacement, apply_replacements, resolve_replacements
 from .annotations import AnnotationIndex, TokenAnnotation, normalize_annotations
 from .context import profile_for
+from .initialisms import iter_initialism_replacements, should_preserve_sentence_final_period
 from .registry_keys import normalize_entry_key
 from .units import (
     NUMBER_BEFORE_UNIT,
@@ -802,6 +803,12 @@ class AbbreviationExpander(ABC):
             candidate for candidate in candidates if not _overlaps_spans(candidate, spans)
         ]
 
+        candidates.extend(
+            candidate
+            for candidate in iter_initialism_replacements(text)
+            if not _overlaps_spans(candidate, spans)
+        )
+
         # Process all abbreviations against the original source. The resolver
         # preserves longest-first behavior while giving reviewed units priority.
         for entry in entries:
@@ -921,7 +928,7 @@ class AbbreviationExpander(ABC):
                     entry.case_policy,
                     sentence_start=_is_sentence_start(text, start),
                 )
-                if _should_preserve_sentence_final_period(text, end, match.group(), expansion):
+                if should_preserve_sentence_final_period(text, end, match.group(), expansion):
                     expansion += "."
 
                 yield Replacement(
@@ -987,30 +994,6 @@ def _apply_case_policy(
         if character.lower() != character.upper():
             return expansion[:index] + character.upper() + expansion[index + 1 :]
     return expansion
-
-
-def _should_preserve_sentence_final_period(
-    text: str,
-    end: int,
-    matched_text: str,
-    expansion: str,
-) -> bool:
-    """Return whether a dotted abbreviation consumed sentence punctuation."""
-    if not matched_text.endswith(".") or not expansion or expansion[-1] in ".!?":
-        return False
-
-    suffix = text[end:]
-    index = 0
-    while index < len(suffix) and suffix[index].isspace():
-        index += 1
-
-    closing = frozenset("\"'”’»)]}")
-    while index < len(suffix) and suffix[index] in closing:
-        index += 1
-        while index < len(suffix) and suffix[index].isspace():
-            index += 1
-
-    return index == len(suffix)
 
 
 def _normalize_protected_spans(

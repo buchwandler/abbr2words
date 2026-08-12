@@ -30,6 +30,14 @@ date-punctuation evidence in the local source window; it does not parse dates.
 Language profiles may add stricter policies, and uncased scripts do not use the
 cased-letter title heuristic.
 
+English context profiles use positive place evidence for ambiguous dotted
+spellings. Address/street evidence can expand a single compass letter, and
+explicit Washington/place evidence can expand `D.C.`; personal and
+bibliographic initials remain letter-spelled. Standalone uppercase dotted
+initialisms of two through eight letters use a low-priority source-grapheme
+fallback, so registered semantic rules such as `e.g.` and `U.S.` retain
+precedence while `E.G.` can become `E G`.
+
 Abbreviation boundaries use symmetric Unicode word-character lookarounds:
 registered spellings may start or end with punctuation, but cannot attach to a
 surrounding `\w` character. Optional `protected_spans=[(start, end), ...]`
