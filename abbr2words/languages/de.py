@@ -508,6 +508,7 @@ class GermanAbbreviationExpander(AbbreviationExpander):
                 expansion="G m b H",
                 case_sensitive=True,
                 description="Source-grapheme spelling of limited liability company initialism",
+                speech_strategy="spell_source",
             )
         )
 
@@ -517,6 +518,7 @@ class GermanAbbreviationExpander(AbbreviationExpander):
                 expansion="A G",
                 case_sensitive=True,
                 description="Source-grapheme spelling of stock corporation initialism",
+                speech_strategy="spell_source",
             )
         )
 

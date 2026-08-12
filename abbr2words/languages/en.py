@@ -471,6 +471,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
                 context_expansions={AbbreviationContext.PLACE: "District of Columbia"},
                 case_sensitive=True,
                 description="District of Columbia",
+                speech_strategy="spell_source",
             )
         )
 
@@ -959,6 +960,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
                 abbreviation="U.S.",
                 expansion="U S",  # Spell out as letters for TTS
                 description="United States",
+                speech_strategy="spell_source",
             )
         )
 
@@ -967,6 +969,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
                 abbreviation="U.K.",
                 expansion="U K",  # Spell out as letters for TTS
                 description="United Kingdom",
+                speech_strategy="spell_source",
             )
         )
 
@@ -1240,6 +1243,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
                 expansion="Massachusetts Institute of Technology",
                 case_sensitive=True,
                 description="Massachusetts Institute of Technology",
+                speech_strategy="spell_source",
             )
         )
 
@@ -1249,6 +1253,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
                 expansion="chief executive officer",
                 case_sensitive=True,
                 description="Chief executive officer",
+                speech_strategy="spell_source",
             )
         )
 

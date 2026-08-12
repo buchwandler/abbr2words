@@ -39,6 +39,7 @@ class AbbreviationSeed:
     ] = "other"
     case_sensitive: bool = False
     case_policy: Literal["fixed", "sentence"] = "fixed"
+    speech_strategy: Literal["expand", "spell_source"] = "expand"
     aliases: tuple[str, ...] = ()
     only_if_preceded_by: str | Pattern[str] | None = None
     only_if_followed_by: str | Pattern[str] | None = None

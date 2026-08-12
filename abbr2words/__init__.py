@@ -30,12 +30,22 @@ from .core import (
     ProtectedSpan,
     abbreviation_guards_match,
 )
+from .initialisms import (
+    InitialismCase,
+    InitialismMode,
+    InitialismPolicy,
+    RegisteredInitialismMode,
+)
 from .units import UnitDiagnostic, UnitEntry, UnitMatch
 
 __all__ = [
     "AbbreviationContext",
     "AbbreviationEntry",
     "AbbreviationExpander",
+    "InitialismCase",
+    "InitialismMode",
+    "InitialismPolicy",
+    "RegisteredInitialismMode",
     "ExpansionVariant",
     "ExpansionMatch",
     "ExpansionReplacement",

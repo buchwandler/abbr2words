@@ -27,6 +27,7 @@ def bundle_from_legacy(key: str, legacy_class: type) -> LanguageBundle:
             description=entry.description,
             case_sensitive=entry.case_sensitive,
             case_policy=entry.case_policy,
+            speech_strategy=entry.speech_strategy,
             aliases=entry.aliases,
             only_if_preceded_by=entry.only_if_preceded_by,
             only_if_followed_by=entry.only_if_followed_by,

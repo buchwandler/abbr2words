@@ -19,7 +19,15 @@ from typing import Literal, TypeAlias
 from ._replacements import Replacement, apply_replacements, resolve_replacements
 from .annotations import AnnotationIndex, TokenAnnotation, normalize_annotations
 from .context import profile_for
-from .initialisms import iter_initialism_replacements, should_preserve_sentence_final_period
+from .initialisms import (
+    InitialismCase,
+    InitialismMode,
+    InitialismPolicy,
+    RegisteredInitialismMode,
+    iter_initialism_replacements,
+    render_initialism_source,
+    should_preserve_sentence_final_period,
+)
 from .registry_keys import normalize_entry_key
 from .units import (
     NUMBER_BEFORE_UNIT,
@@ -231,6 +239,7 @@ class AbbreviationEntry:
     origin: str = "bundled"
     aliases: tuple[str, ...] = ()
     case_policy: Literal["fixed", "sentence"] = "fixed"
+    speech_strategy: Literal["expand", "spell_source"] = "expand"
     _pattern: Pattern[str] = field(init=False, repr=False, compare=False)
     _patterns: tuple[Pattern[str], ...] = field(init=False, repr=False, compare=False)
     _preceding_pattern: Pattern[str] | None = field(init=False, repr=False, compare=False)
@@ -251,6 +260,8 @@ class AbbreviationEntry:
             raise TypeError("case_sensitive must be a bool")
         if self.case_policy not in {"fixed", "sentence"}:
             raise ValueError("case_policy must be 'fixed' or 'sentence'")
+        if self.speech_strategy not in {"expand", "spell_source"}:
+            raise ValueError("speech_strategy must be 'expand' or 'spell_source'")
         if self.boundary not in {"word", "custom"}:
             raise ValueError("boundary must be 'word' or 'custom'")
         for name in ("left_boundary", "right_boundary"):
@@ -481,6 +492,10 @@ class AbbreviationExpander(ABC):
     def __init__(
         self,
         enable_context_detection: bool = True,
+        *,
+        initialism_mode: InitialismMode = "dotted_only",
+        initialism_case: InitialismCase = "source",
+        registered_initialism_mode: RegisteredInitialismMode = "expand",
     ) -> None:
         """Initialize the abbreviation expander.
 
@@ -502,6 +517,11 @@ class AbbreviationExpander(ABC):
         self._unit_overrides: dict[str, UnitEntry] = {}
         self._suppressed_units: set[str] = set()
         self.enable_context_detection = enable_context_detection
+        self.initialism_policy = InitialismPolicy(
+            mode=initialism_mode,
+            case=initialism_case,
+            registered_mode=registered_initialism_mode,
+        )
         self.context_detector = ContextDetector(language) if enable_context_detection else None
         self._initialize_abbreviations()
 
@@ -805,7 +825,11 @@ class AbbreviationExpander(ABC):
 
         candidates.extend(
             candidate
-            for candidate in iter_initialism_replacements(text)
+            for candidate in iter_initialism_replacements(
+                text,
+                mode=self.initialism_policy.mode,
+                case=self.initialism_policy.case,
+            )
             if not _overlaps_spans(candidate, spans)
         )
 
@@ -928,6 +952,13 @@ class AbbreviationExpander(ABC):
                     entry.case_policy,
                     sentence_start=_is_sentence_start(text, start),
                 )
+                if (
+                    self.initialism_policy.registered_mode == "spell"
+                    and entry.speech_strategy == "spell_source"
+                ):
+                    expansion = render_initialism_source(
+                        match.group(), case=self.initialism_policy.case
+                    )
                 if should_preserve_sentence_final_period(text, end, match.group(), expansion):
                     expansion += "."
 

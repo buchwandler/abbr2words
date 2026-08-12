@@ -61,6 +61,34 @@ for replacement in result.replacements:
     print(replacement.start, replacement.end, replacement.text, replacement.kind)
 ```
 
+## Initialism policies
+
+The public expansion functions and `get_expander()`, `get_shared_expander()`,
+and `Expander` accept these optional policy arguments:
+
+```python
+abbr2words(
+    "BBC PDF",
+    initialism_mode="spell_undotted",   # default: "dotted_only"
+    initialism_case="lower",             # "source", "upper", or "lower"
+    registered_initialism_mode="expand", # or explicit "spell"
+)
+```
+
+The default preserves existing behavior. `spell_undotted` recognizes only
+standalone ASCII uppercase tokens from two through eight letters and renders
+source-aligned graphemes. It does not parse numbers, URLs, e-mail addresses,
+versions, product codes, phone numbers, stock tickers, or Roman numerals.
+Callers should reserve typed structured spans first, then use this policy for
+remaining uppercase tokens. `registered_initialism_mode="spell"` affects only
+reviewed registry entries carrying the explicit `speech_strategy="spell_source"`
+metadata; semantic registry expansions remain the default.
+
+The shared-expander cache includes all policy values, so expanders with
+different initialism behavior are independent instances. Fallback replacement
+records use `abbr:initialism` for dotted matches and
+`abbr:initialism-undotted` for the opt-in undotted matcher.
+
 The bundled language registry follows a 66-key current-master parity snapshot:
 49 base keys plus the explicit locale overlays `en_GB`, `en_IN`, `en_NG`,
 `en_US`, `es_CO`, `es_CR`, `es_GT`, `es_MX`, `es_NI`, `es_VE`, `fr_BE`,

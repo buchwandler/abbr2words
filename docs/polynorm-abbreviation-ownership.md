@@ -81,6 +81,34 @@ Compound unit expressions may be recognized compositionally by downstream
 logic. This package is not a general UCUM parser and should only add a complete
 compound when it is specifically reviewed and represented by the unit registry.
 
+## Opt-in residual initialism policy
+
+Unknown undotted uppercase tokens are intentionally unchanged by the default
+API. A downstream speech normalizer may first claim typed structured spans and
+then call `initialism_mode="spell_undotted"` for residual standalone ASCII
+uppercase tokens. The bounded matcher covers two through eight letters and
+reports `abbr:initialism-undotted` provenance; it skips Roman-like strings,
+mixed/alphanumeric identifiers, and hyphenated code fragments. Protected spans
+remain untouched.
+
+The output case is independent of recognition: `initialism_case` may be
+`source`, `upper`, or `lower`. Registered entries retain their semantic
+expansions unless the caller explicitly requests
+`registered_initialism_mode="spell"` and the reviewed entry carries
+`speech_strategy="spell_source"`. This lets TTS profiles select surface
+spelling without weakening the normal lexical registry.
+
+The intended orchestration is:
+
+1. Spokenform or another caller claims numbers, dates, URLs, e-mail addresses,
+   phone numbers, stock tickers, product/version codes, and other typed spans.
+2. `abbr2words` applies reviewed lexical abbreviations and units.
+3. The caller optionally enables residual undotted initialism spelling for
+   spans still unclaimed by its structured recognizers.
+
+This policy does not make benchmark-specific rules for `MIT`, `v.`, `Co.`,
+`e.g.`, `D.C.`, or language-data disagreements such as Italian `Onlus`.
+
 ## Compact unit diagnostics
 
 The separator policy is metadata-driven and defaults to allowing compact forms,

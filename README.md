@@ -141,6 +141,31 @@ with bounded address/street evidence, and `D.C.`/`L.A.` remain letter-spelled in
 author names. This lexical layer does not parse dates, numbers, URLs, versions,
 or product identifiers; those belong to a downstream speech normalizer.
 
+Unknown undotted uppercase initialisms are preserved by default. A downstream
+speech normalizer that has already reserved its structured spans can opt into a
+bounded residual fallback:
+
+```python
+abbr2words("BBC News", initialism_mode="spell_undotted")
+# "B B C News"
+
+abbr2words(
+    "BBC PDF",
+    initialism_mode="spell_undotted",
+    initialism_case="lower",
+)
+# "b b c p d f"
+```
+
+`initialism_case` (`source`, `upper`, or `lower`) controls rendering separately
+from detection. The fallback accepts only standalone ASCII uppercase tokens of
+two through eight letters, skips Roman-like and hyphenated identifier fragments,
+and leaves protected spans unchanged. Registered semantic entries continue to
+win; `registered_initialism_mode="spell"` is a separate opt-in that applies only
+to reviewed entries tagged for source spelling. The API is included in the
+planned v0.2.7 feature release; callers should require that release (or a newer
+compatible release) before using these options.
+
 `abbr2words` recognizes and identifies quantity symbols; it does not decide how
 a complete numeric quantity is spoken. Number words, grammatical number,
 currency major/minor decomposition, and locale-specific spoken decimal policy

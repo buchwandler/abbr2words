@@ -17,6 +17,7 @@ from .core import (
     PosConstraints,
     ProtectedSpan,
 )
+from .initialisms import InitialismCase, InitialismMode, RegisteredInitialismMode
 from .language_registry import (
     LANGUAGE_SPECS,
     language_spec,
@@ -31,7 +32,9 @@ _LANGUAGE_CLASSES: Final[dict[str, tuple[str, str]]] = {
     key: (spec.module, spec.class_name) for key, spec in LANGUAGE_SPECS.items()
 }
 
-_SHARED_EXPANDERS: dict[tuple[str, bool], AbbreviationExpander] = {}
+_SHARED_EXPANDERS: dict[
+    tuple[str, bool, InitialismMode, InitialismCase, RegisteredInitialismMode], AbbreviationExpander
+] = {}
 _SHARED_LOCK = RLock()
 
 
@@ -98,23 +101,39 @@ def get_expander(
     lang: str = "en",
     *,
     context: bool = True,
+    initialism_mode: InitialismMode = "dotted_only",
+    initialism_case: InitialismCase = "source",
+    registered_initialism_mode: RegisteredInitialismMode = "expand",
 ) -> AbbreviationExpander:
     """Return a new, independently mutable language expander."""
     cls = _expander_class(lang)
-    return cls(enable_context_detection=context)
+    return cls(
+        enable_context_detection=context,
+        initialism_mode=initialism_mode,
+        initialism_case=initialism_case,
+        registered_initialism_mode=registered_initialism_mode,
+    )
 
 
 def get_shared_expander(
     lang: str = "en",
     *,
     context: bool = True,
+    initialism_mode: InitialismMode = "dotted_only",
+    initialism_case: InitialismCase = "source",
+    registered_initialism_mode: RegisteredInitialismMode = "expand",
 ) -> AbbreviationExpander:
-    """Return the shared registry for a language and context mode."""
+    """Return the shared registry for a language, context, and policy."""
     code = normalize_language(lang)
-    key = (code, context)
+    key = (code, context, initialism_mode, initialism_case, registered_initialism_mode)
     with _SHARED_LOCK:
         if key not in _SHARED_EXPANDERS:
-            _SHARED_EXPANDERS[key] = _expander_class(code)(enable_context_detection=context)
+            _SHARED_EXPANDERS[key] = _expander_class(code)(
+                enable_context_detection=context,
+                initialism_mode=initialism_mode,
+                initialism_case=initialism_case,
+                registered_initialism_mode=registered_initialism_mode,
+            )
         return _SHARED_EXPANDERS[key]
 
 
@@ -133,6 +152,9 @@ def abbr2words(
     *,
     lang: str = "en",
     context: bool = True,
+    initialism_mode: InitialismMode = "dotted_only",
+    initialism_case: InitialismCase = "source",
+    registered_initialism_mode: RegisteredInitialismMode = "expand",
     annotations: Iterable[TokenAnnotation] | None = None,
     protected_spans: Iterable[ProtectedSpan | tuple[int, int] | tuple[int, int, str | None]]
     | None = None,
@@ -148,9 +170,13 @@ def abbr2words(
     if not isinstance(text, str):
         raise TypeError("text must be a string")
     code = normalize_language(lang)
-    return get_shared_expander(code, context=context).expand(
-        text, annotations=annotations, protected_spans=protected_spans
-    )
+    return get_shared_expander(
+        code,
+        context=context,
+        initialism_mode=initialism_mode,
+        initialism_case=initialism_case,
+        registered_initialism_mode=registered_initialism_mode,
+    ).expand(text, annotations=annotations, protected_spans=protected_spans)
 
 
 def abbr2words_with_replacements(
@@ -158,6 +184,9 @@ def abbr2words_with_replacements(
     *,
     lang: str = "en",
     context: bool = True,
+    initialism_mode: InitialismMode = "dotted_only",
+    initialism_case: InitialismCase = "source",
+    registered_initialism_mode: RegisteredInitialismMode = "expand",
     annotations: Iterable[TokenAnnotation] | None = None,
     protected_spans: Iterable[ProtectedSpan | tuple[int, int] | tuple[int, int, str | None]]
     | None = None,
@@ -166,9 +195,13 @@ def abbr2words_with_replacements(
     if not isinstance(text, str):
         raise TypeError("text must be a string")
     code = normalize_language(lang)
-    return get_shared_expander(code, context=context).expand_with_replacements(
-        text, annotations=annotations, protected_spans=protected_spans
-    )
+    return get_shared_expander(
+        code,
+        context=context,
+        initialism_mode=initialism_mode,
+        initialism_case=initialism_case,
+        registered_initialism_mode=registered_initialism_mode,
+    ).expand_with_replacements(text, annotations=annotations, protected_spans=protected_spans)
 
 
 expand = abbr2words
@@ -177,10 +210,27 @@ expand = abbr2words
 class Expander:
     """Small facade for a mutable, language-specific abbreviation registry."""
 
-    def __init__(self, lang: str = "en", *, context: bool = True) -> None:
+    def __init__(
+        self,
+        lang: str = "en",
+        *,
+        context: bool = True,
+        initialism_mode: InitialismMode = "dotted_only",
+        initialism_case: InitialismCase = "source",
+        registered_initialism_mode: RegisteredInitialismMode = "expand",
+    ) -> None:
         self.lang = normalize_language(lang)
         self.context = context
-        self._impl = get_expander(self.lang, context=context)
+        self.initialism_mode = initialism_mode
+        self.initialism_case = initialism_case
+        self.registered_initialism_mode = registered_initialism_mode
+        self._impl = get_expander(
+            self.lang,
+            context=context,
+            initialism_mode=initialism_mode,
+            initialism_case=initialism_case,
+            registered_initialism_mode=registered_initialism_mode,
+        )
 
     def expand(
         self,
@@ -243,6 +293,7 @@ class Expander:
         only_if_pos: PosConstraints = None,
         not_if_pos: PosConstraints = None,
         case_policy: Literal["fixed", "sentence"] = "fixed",
+        speech_strategy: Literal["expand", "spell_source"] = "expand",
     ) -> None:
         """Add or replace an abbreviation, optionally constrained by POS.
 
@@ -277,6 +328,7 @@ class Expander:
                 only_if_pos=only_if_pos,
                 not_if_pos=not_if_pos,
                 case_policy=case_policy,
+                speech_strategy=speech_strategy,
                 origin="custom",
             )
         )

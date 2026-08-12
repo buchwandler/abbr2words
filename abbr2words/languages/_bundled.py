@@ -19,6 +19,7 @@ def register_bundle(expander: AbbreviationExpander, bundle: LanguageBundle) -> N
                 variants=seed.variants,
                 case_sensitive=seed.case_sensitive,
                 case_policy=seed.case_policy,
+                speech_strategy=seed.speech_strategy,
                 description=seed.description,
                 aliases=seed.aliases,
                 only_if_preceded_by=seed.only_if_preceded_by,

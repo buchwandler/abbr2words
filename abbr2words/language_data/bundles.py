@@ -26,6 +26,7 @@ def _seed(
     category: str = "other",
     source_id: str = "legacy-abbr2words",
     aliases: tuple[str, ...] = (),
+    speech_strategy: str = "expand",
 ) -> AbbreviationSeed:
     return AbbreviationSeed(
         abbreviation,
@@ -34,6 +35,7 @@ def _seed(
         case_sensitive=case_sensitive,
         category=category,  # type: ignore[arg-type]
         aliases=aliases,
+        speech_strategy=speech_strategy,  # type: ignore[arg-type]
         boundary=boundary,  # type: ignore[arg-type]
         only_if_followed_by=only_if_followed_by,
         source_ids=(source_id,),
