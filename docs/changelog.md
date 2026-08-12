@@ -4,24 +4,6 @@
 
 ## [Unreleased]
 
-### Added
-
-- Added the pinned 66-key language/locale parity registry with exact-locale-first resolution and base fallback.
-- Added inherited locale unit inventories, conservative Unicode-aware language registries, and sharded deterministic registry snapshots.
-- Added typed source-traceable language bundles and migrated mature registries through a behavior-neutral declarative path.
-- Added meaningful guarded baseline behavior for former one-seed languages, localized neutral unit labels, bounded `DATE` context, CLDR import/audit tooling, and structured locale currency identities.
-- Added ordered conditional abbreviation variants, PolyNorm-safe French/Italian/Spanish/German lexical corrections, and a local abbreviation-stage diagnostic helper.
-- Added reviewed speed, pressure, data, fuel-consumption, flow, JPY, CHF, INR, KRW, and MXN semantic identities, plus `es_MX`, `en_US`, and `en_GB` locale overlays.
-
-### Changed
-
-- Unified shared-cache reset behavior, Unicode casefold registry keys, immutable unit collision adjustments, and compact numeric-marker boundaries.
-- Preserved the lexical-only boundary: numeric/date/ordinal rendering, currency amount grammar, sentence grammar, and entity-specific initial expansion remain downstream responsibilities.
-
-### Documentation
-
-- Documented coverage tiers, provenance/review status, script-specific limitations, neutral unit semantics, and the dependency-free runtime policy.
-
 ## [v0.2.7] - Unreleased
 
 ### Added
