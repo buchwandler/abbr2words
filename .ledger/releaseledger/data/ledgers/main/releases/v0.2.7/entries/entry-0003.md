@@ -3,7 +3,7 @@ schema_version: 2
 object_type: release_entry
 versioning:
   schema_version: 1
-  revision: 2
+  revision: 4
 entry_id: entry-0003
 release_version: v0.2.7
 kind: quality

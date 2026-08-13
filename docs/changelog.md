@@ -4,7 +4,7 @@
 
 ## [Unreleased]
 
-## [v0.2.7] - Unreleased
+## [v0.2.7] - 2026-08-12
 
 ### Added
 
