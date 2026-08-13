@@ -13,6 +13,10 @@ from abbr2words.core import (
     AbbreviationExpander,
     ExpansionVariant,
 )
+from abbr2words.language_data.initialisms import (
+    TECHNICAL_INITIALISMS,
+    register_reviewed_initialisms,
+)
 
 # Singleton instance
 _expander_instance: SpanishAbbreviationExpander | None = None
@@ -411,6 +415,8 @@ class SpanishAbbreviationExpander(AbbreviationExpander):
                 description="Et cetera",
             )
         )
+
+        register_reviewed_initialisms(self, TECHNICAL_INITIALISMS)
 
         self.add_abbreviation(
             AbbreviationEntry(

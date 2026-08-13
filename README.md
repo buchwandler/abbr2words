@@ -166,6 +166,16 @@ to reviewed entries tagged for source spelling. The API is included in the
 planned v0.2.7 feature release; callers should require that release (or a newer
 compatible release) before using these options.
 
+The reviewed registry owns a small, audited set of common initialisms such as
+`BBC`, `CBS`, `US`, `UK`, `USA`, `ISBN`, `HTML`, `ISO`, `IEC`, `TV`, `NFL`,
+`NHL`, and `MLB`. These entries use `speech_strategy="spell_source"` and emit
+source graphemes in the default mode. Lexical acronyms such as `NASA`, `NATO`,
+`FIFA`, and `UNESCO`, ordinary uppercase words, stock tickers, and unknown
+codes remain unchanged unless a caller explicitly selects broad undotted
+spelling. Reviewed replacements report stable `abbr:<canonical>` provenance;
+the generic dotted and undotted fallbacks remain `abbr:initialism` and
+`abbr:initialism-undotted`.
+
 `abbr2words` recognizes and identifies quantity symbols; it does not decide how
 a complete numeric quantity is spoken. Number words, grammatical number,
 currency major/minor decomposition, and locale-specific spoken decimal policy

@@ -11,30 +11,30 @@ from abbr2words import (
 
 
 def test_unknown_undotted_initialisms_are_unchanged_by_default() -> None:
-    assert abbr2words("BBC News; The UK left the EU.", lang="en") == (
-        "BBC News; The UK left the EU."
-    )
+    assert abbr2words("ZXQK system; The EU left.", lang="en") == ("ZXQK system; The EU left.")
 
 
 def test_initialism_compatibility_matrix_keeps_conservative_defaults() -> None:
-    assert abbr2words("ABC", lang="en") == "ABC"
+    assert abbr2words("ABC", lang="en") == "A B C"
     assert (
         abbr2words("ABC", lang="en", initialism_mode="spell_undotted", initialism_case="upper")
         == "A B C"
     )
     assert (
-        abbr2words("ABC", lang="en", initialism_mode="spell_undotted", initialism_case="lower")
+        abbr2words(
+            "ABC",
+            lang="en",
+            initialism_mode="spell_undotted",
+            initialism_case="lower",
+            registered_initialism_mode="spell",
+        )
         == "a b c"
     )
     assert (
-        abbr2words(
-            "U.S.", lang="en", initialism_case="lower", registered_initialism_mode="spell"
-        )
+        abbr2words("U.S.", lang="en", initialism_case="lower", registered_initialism_mode="spell")
         == "u s."
     )
-    assert (
-        abbr2words("pp. 12", lang="en", registered_initialism_mode="spell") == "p p 12"
-    )
+    assert abbr2words("pp. 12", lang="en", registered_initialism_mode="spell") == "p p 12"
 
 
 def test_undotted_initialisms_can_be_spelled_in_source_case() -> None:
@@ -51,6 +51,7 @@ def test_detection_and_output_case_are_independent() -> None:
             lang="en",
             initialism_mode="spell_undotted",
             initialism_case="lower",
+            registered_initialism_mode="spell",
         )
         == "b b c p d f"
     )
@@ -60,6 +61,7 @@ def test_detection_and_output_case_are_independent() -> None:
             lang="en",
             initialism_mode="spell_undotted",
             initialism_case="upper",
+            registered_initialism_mode="spell",
         )
         == "B B C P D F"
     )
@@ -109,18 +111,34 @@ def test_roman_like_and_structured_identifiers_are_not_claimed(source: str) -> N
     assert abbr2words(source, lang="en", initialism_mode="spell_undotted") == source
 
 
+def test_reviewed_entries_do_not_claim_hyphenated_identifiers() -> None:
+    assert abbr2words("ISO-9001 HH-GT NVIDIA-Aktie", lang="en") == ("ISO-9001 HH-GT NVIDIA-Aktie")
+
+
+def test_explicit_broad_mode_is_structural_and_can_spell_headline_words() -> None:
+    source = "AAPL PIALAT FILM GETS TOP PRIZE AT CANNES"
+    assert abbr2words(source, lang="en") == source
+    assert abbr2words(source, lang="en", initialism_mode="spell_undotted") == (
+        "A A P L P I A L A T F I L M G E T S T O P P R I Z E A T C A N N E S"
+    )
+
+
 def test_replacement_offsets_and_provenance_are_source_aligned() -> None:
     source = "See BBC, PDF."
     result = abbr2words_with_replacements(
-        source, lang="en", initialism_mode="spell_undotted", initialism_case="lower"
+        source,
+        lang="en",
+        initialism_mode="spell_undotted",
+        initialism_case="lower",
+        registered_initialism_mode="spell",
     )
     assert result.text == "See b b c, p d f."
     assert [
         (item.start, item.end, source[item.start : item.end], item.text, item.source, item.entry_id)
         for item in result.replacements
     ] == [
-        (4, 7, "BBC", "b b c", "abbr:initialism-undotted", "abbr:initialism-undotted"),
-        (9, 12, "PDF", "p d f", "abbr:initialism-undotted", "abbr:initialism-undotted"),
+        (4, 7, "BBC", "b b c", "abbr:BBC", "abbr:BBC"),
+        (9, 12, "PDF", "p d f", "abbr:PDF", "abbr:PDF"),
     ]
 
 

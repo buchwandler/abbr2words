@@ -474,6 +474,17 @@ def _is_hyphenated_initial_fragment(text: str, start: int, match_text: str) -> b
     )
 
 
+def _is_hyphenated_identifier_entry(text: str, start: int, end: int, match_text: str) -> bool:
+    """Reject compact uppercase registry entries attached to identifier text."""
+    if not re.fullmatch(r"[A-Z]{2,8}", match_text):
+        return False
+    left = start > 0 and text[start - 1] == "-"
+    right = end < len(text) and text[end] == "-"
+    return (left and start > 1 and text[start - 2].isalnum()) or (
+        right and end + 1 < len(text) and text[end + 1].isalnum()
+    )
+
+
 class ContextDetector:
     """Compatibility wrapper around the language-specific context profile."""
 
@@ -907,6 +918,9 @@ class AbbreviationExpander(ABC):
                     continue
 
                 if _is_hyphenated_initial_fragment(text, start, match.group()):
+                    continue
+
+                if _is_hyphenated_identifier_entry(text, start, end, match.group()):
                     continue
 
                 if not abbreviation_guards_match(

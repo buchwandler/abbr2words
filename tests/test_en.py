@@ -49,9 +49,7 @@ def test_guarded_undotted_english_forms_leave_non_matching_context_unchanged(
         ("Smith, eds.", "Smith, editors."),
     ],
 )
-def test_bibliographic_entries_keep_semantic_default_expansion(
-    source: str, expected: str
-) -> None:
+def test_bibliographic_entries_keep_semantic_default_expansion(source: str, expected: str) -> None:
     assert abbr2words(source, lang="en") == expected
 
 
@@ -59,9 +57,7 @@ def test_bibliographic_entries_keep_semantic_default_expansion(
     ("source", "expected"),
     [("pp. 12", "p p 12"), ("pp 12", "p p 12"), ("Smith, eds.", "Smith, e d s.")],
 )
-def test_bibliographic_entries_can_spell_the_source_form(
-    source: str, expected: str
-) -> None:
+def test_bibliographic_entries_can_spell_the_source_form(source: str, expected: str) -> None:
     assert abbr2words(source, lang="en", registered_initialism_mode="spell") == expected
 
 

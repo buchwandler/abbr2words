@@ -75,8 +75,11 @@ abbr2words(
 )
 ```
 
-The default preserves existing behavior. `spell_undotted` recognizes only
-standalone ASCII uppercase tokens from two through eight letters and renders
+The default preserves existing behavior for unknown uppercase text. The
+reviewed registry intentionally owns a small set of common initialisms such as
+`BBC`, `US`, `UK`, `ISBN`, `HTML`, and `TV`, which render source graphemes as
+ordinary abbreviation entries. `spell_undotted` recognizes only standalone
+ASCII uppercase tokens from two through eight letters and renders
 source-aligned graphemes. It does not parse numbers, URLs, e-mail addresses,
 versions, product codes, phone numbers, stock tickers, or Roman numerals.
 Callers should reserve typed structured spans first, then use this policy for
@@ -86,13 +89,13 @@ metadata; semantic registry expansions remain the default.
 
 The compatibility surface is intentionally conservative:
 
-| Source | Detection mode | Case | Registered mode | Result |
-| --- | --- | --- | --- | --- |
-| `ABC` | `dotted_only` | `source` | `expand` | `ABC` |
-| `ABC` | `spell_undotted` | `upper` | `expand` | `A B C` |
-| `ABC` | `spell_undotted` | `lower` | `expand` | `a b c` |
-| `U.S.` | dotted | `lower` | `spell` | `u s.` |
-| `pp. 12` | dotted | `source` | `spell` | `p p 12` |
+| Source   | Detection mode   | Case     | Registered mode | Result                   |
+| -------- | ---------------- | -------- | --------------- | ------------------------ |
+| `ABC`    | `dotted_only`    | `source` | `expand`        | `A B C` (reviewed entry) |
+| `ABC`    | `spell_undotted` | `upper`  | `expand`        | `A B C`                  |
+| `ABC`    | `spell_undotted` | `lower`  | `expand`        | `a b c`                  |
+| `U.S.`   | dotted           | `lower`  | `spell`         | `u s.`                   |
+| `pp. 12` | dotted           | `source` | `spell`         | `p p 12`                 |
 
 The final period in the `U.S.` row is source sentence punctuation retained by
 the existing replacement policy. Reviewed entries continue to outrank the

@@ -10,6 +10,10 @@ from abbr2words.core import (
     AbbreviationEntry,
     AbbreviationExpander,
 )
+from abbr2words.language_data.initialisms import (
+    TECHNICAL_INITIALISMS,
+    register_reviewed_initialisms,
+)
 
 
 class FrenchAbbreviationExpander(AbbreviationExpander):
@@ -299,6 +303,8 @@ class FrenchAbbreviationExpander(AbbreviationExpander):
                 description="Et cetera",
             )
         )
+
+        register_reviewed_initialisms(self, TECHNICAL_INITIALISMS)
 
         self.add_abbreviation(
             AbbreviationEntry(

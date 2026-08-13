@@ -7,6 +7,11 @@ and their expansions, organized by category.
 import warnings
 
 from abbr2words.core import AbbreviationContext, AbbreviationEntry, AbbreviationExpander
+from abbr2words.language_data.initialisms import (
+    TECHNICAL_INITIALISMS,
+    ReviewedInitialism,
+    register_reviewed_initialisms,
+)
 
 _NUMBER_AFTER_REFERENCE = r"[ \t]+\d"
 _HONORIFIC_FOLLOWING = r"^\s+[A-ZÀ-ÖØ-Þ][\w'’.-]*"
@@ -18,6 +23,28 @@ _NUMBER_BEFORE_UNIT = (
     r"(?:^|[^\w.])"
     r"(?:(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?|\.\d+)"
     r"[ \t]*\Z"
+)
+
+_REVIEWED_INITIALISMS = (
+    ReviewedInitialism("ABC", description="American Broadcasting Company initialism"),
+    ReviewedInitialism("BBC", description="British Broadcasting Corporation initialism"),
+    ReviewedInitialism("CBC", description="Canadian Broadcasting Corporation initialism"),
+    ReviewedInitialism("CBS", description="Columbia Broadcasting System initialism"),
+    ReviewedInitialism(
+        "IUCN", description="International Union for Conservation of Nature initialism"
+    ),
+    ReviewedInitialism("ITV", description="Independent Television initialism"),
+    ReviewedInitialism("LLC", description="Limited liability company initialism"),
+    ReviewedInitialism("MLB", description="Major League Baseball initialism"),
+    ReviewedInitialism("MTV", description="Music Television initialism"),
+    ReviewedInitialism("NFL", description="National Football League initialism"),
+    ReviewedInitialism("NHL", description="National Hockey League initialism"),
+    ReviewedInitialism("PDF", description="Portable Document Format initialism"),
+    ReviewedInitialism("US", expansion="U S", description="United States initialism"),
+    ReviewedInitialism("UK", expansion="U K", description="United Kingdom initialism"),
+    ReviewedInitialism(
+        "USA", expansion="U S A", description="United States of America initialism"
+    ),
 )
 
 
@@ -1004,7 +1031,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="U.S.",
-                expansion="U S",  # Spell out as letters for TTS
+                expansion="U S",
                 description="United States",
                 speech_strategy="spell_source",
             )
@@ -1013,7 +1040,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="U.K.",
-                expansion="U K",  # Spell out as letters for TTS
+                expansion="U K",
                 description="United Kingdom",
                 speech_strategy="spell_source",
             )
@@ -1022,8 +1049,9 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
         self.add_abbreviation(
             AbbreviationEntry(
                 abbreviation="U.S.A.",
-                expansion="U S A",  # Spell out as letters for TTS
+                expansion="U S A",
                 description="United States of America",
+                speech_strategy="spell_source",
             )
         )
 
@@ -1284,23 +1312,19 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
         )
 
         self.add_abbreviation(
-            AbbreviationEntry(
-                abbreviation="MIT",
+            ReviewedInitialism(
+                "MIT",
                 expansion="Massachusetts Institute of Technology",
-                case_sensitive=True,
                 description="Massachusetts Institute of Technology",
-                speech_strategy="spell_source",
-            )
+            ).to_entry()
         )
 
         self.add_abbreviation(
-            AbbreviationEntry(
-                abbreviation="CEO",
+            ReviewedInitialism(
+                "CEO",
                 expansion="chief executive officer",
-                case_sensitive=True,
                 description="Chief executive officer",
-                speech_strategy="spell_source",
-            )
+            ).to_entry()
         )
 
         self.add_abbreviation(
@@ -1548,6 +1572,9 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
                 description="Reference",
             )
         )
+
+        register_reviewed_initialisms(self, _REVIEWED_INITIALISMS)
+        register_reviewed_initialisms(self, TECHNICAL_INITIALISMS)
 
 
 # Create a singleton instance for easy access

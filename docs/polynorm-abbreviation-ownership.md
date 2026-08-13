@@ -39,6 +39,9 @@ benchmark ground-truth override.
   when a numeric value and the reviewed symbol are present.
 - German organization initialisms whose entries represent spelling, such as
   `GmbH` → `G m b H` and `AG` → `A G`; source case is preserved.
+- Reviewed English initialisms such as `BBC`, `CBS`, `US`, `UK`, `USA`, `ISBN`,
+  `HTML`, `ISO`, `IEC`, `TV`, `NFL`, `NHL`, and `MLB`; these are ordinary
+  registry entries and report `abbr:<canonical>` provenance.
 - Explicitly spaced ambiguous one-letter units such as `7 B`, `3 A`, and
   `300 K`. Compact `7B`, `3A`, and `5K` are deliberately left for downstream
   structured-code handling because their unit metadata requires a separator.
@@ -108,6 +111,8 @@ The intended orchestration is:
 
 This policy does not make benchmark-specific rules for `MIT`, `v.`, `Co.`,
 `e.g.`, `D.C.`, or language-data disagreements such as Italian `Onlus`.
+Lexical acronyms such as `NASA`, `NATO`, `FIFA`, and `UNESCO` remain outside
+the reviewed letter-spelling registry.
 
 ## Compact unit diagnostics
 

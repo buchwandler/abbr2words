@@ -12,6 +12,10 @@ from abbr2words.core import (
     AbbreviationExpander,
     ExpansionVariant,
 )
+from abbr2words.language_data.initialisms import (
+    TECHNICAL_INITIALISMS,
+    register_reviewed_initialisms,
+)
 
 
 class GermanAbbreviationExpander(AbbreviationExpander):
@@ -529,6 +533,8 @@ class GermanAbbreviationExpander(AbbreviationExpander):
                 description="Registered association",
             )
         )
+
+        register_reviewed_initialisms(self, TECHNICAL_INITIALISMS)
 
 
 # Create a singleton instance for easy access
