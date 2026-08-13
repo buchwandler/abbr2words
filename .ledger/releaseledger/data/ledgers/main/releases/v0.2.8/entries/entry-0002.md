@@ -3,9 +3,9 @@ schema_version: 2
 object_type: release_entry
 versioning:
   schema_version: 1
-  revision: 3
-entry_id: entry-0012
-release_version: v0.2.7
+  revision: 1
+entry_id: entry-0002
+release_version: v0.2.8
 kind: docs
 summary:
   Documented reviewed initialisms, lexical-acronym exclusions, and downstream
@@ -24,5 +24,5 @@ sources: []
 contributors: []
 breaking: false
 internal: false
-order: 12
+order: 2
 ---

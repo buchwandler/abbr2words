@@ -3,9 +3,9 @@ schema_version: 2
 object_type: release_entry
 versioning:
   schema_version: 1
-  revision: 3
-entry_id: entry-0011
-release_version: v0.2.7
+  revision: 1
+entry_id: entry-0003
+release_version: v0.2.8
 kind: changed
 summary:
   Changed reviewed initialism precedence and provenance while retaining conservative
@@ -23,5 +23,5 @@ sources: []
 contributors: []
 breaking: false
 internal: false
-order: 11
+order: 3
 ---

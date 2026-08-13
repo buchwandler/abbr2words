@@ -3,9 +3,9 @@ schema_version: 2
 object_type: release_entry
 versioning:
   schema_version: 1
-  revision: 4
-entry_id: entry-0013
-release_version: v0.2.7
+  revision: 1
+entry_id: entry-0004
+release_version: v0.2.8
 kind: quality
 summary: Added distilled regression coverage for initialism safety and provenance
 status: accepted
@@ -20,5 +20,5 @@ sources: []
 contributors: []
 breaking: false
 internal: false
-order: 13
+order: 4
 ---
