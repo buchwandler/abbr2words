@@ -9,6 +9,10 @@ import warnings
 from abbr2words.core import AbbreviationContext, AbbreviationEntry, AbbreviationExpander
 
 _NUMBER_AFTER_REFERENCE = r"[ \t]+\d"
+_HONORIFIC_FOLLOWING = r"^\s+[A-ZÀ-ÖØ-Þ][\w'’.-]*"
+_CORPORATE_SUFFIX_PRECEDING = r"(?i)[\w][\w .&'’/-]*\s"
+_CORPORATE_SUFFIX_FOLLOWING = r"^(?:\s*(?:[,.;:)]|$))"
+_BIBLIOGRAPHIC_FOLLOWING = r"^(?:[ \t]+\d|$)"
 _DIRECTION_RIGHT_CONTEXT = r"^(?:$|[ \t]+(?![a-z]))"
 _NUMBER_BEFORE_UNIT = (
     r"(?:^|[^\w.])"
@@ -71,6 +75,22 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
                 description="Professor",
             )
         )
+
+        for abbreviation, expansion, description in (
+            ("Mr", "Mister", "Undotted male honorific"),
+            ("Mrs", "Missus", "Undotted married female honorific"),
+            ("Ms", "Miss", "Undotted female honorific"),
+            ("Dr", "Doctor", "Undotted doctor honorific"),
+            ("Prof", "Professor", "Undotted professor honorific"),
+        ):
+            self.add_abbreviation(
+                AbbreviationEntry(
+                    abbreviation=abbreviation,
+                    expansion=expansion,
+                    only_if_followed_by=_HONORIFIC_FOLLOWING,
+                    description=description,
+                )
+            )
 
         self.add_abbreviation(
             AbbreviationEntry(
@@ -635,6 +655,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="vs.",
                 expansion="versus",
+                aliases=("vs",),
                 description="Versus",
             )
         )
@@ -739,6 +760,17 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
 
         self.add_abbreviation(
             AbbreviationEntry(
+                abbreviation="Ltd",
+                expansion="limited",
+                case_sensitive=False,
+                only_if_preceded_by=_CORPORATE_SUFFIX_PRECEDING,
+                only_if_followed_by=_CORPORATE_SUFFIX_FOLLOWING,
+                description="Guarded undotted corporate suffix",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
                 abbreviation="co.",
                 expansion="company",
                 description="Company",
@@ -758,6 +790,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="vol.",
                 expansion="volume",
+                aliases=("vol",),
                 description="Volume",
                 only_if_followed_by=_NUMBER_AFTER_REFERENCE,
             )
@@ -776,8 +809,21 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
             AbbreviationEntry(
                 abbreviation="pp.",
                 expansion="pages",
+                aliases=("pp",),
                 description="Pages",
                 only_if_followed_by=_NUMBER_AFTER_REFERENCE,
+                speech_strategy="spell_source",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="eds.",
+                expansion="editors",
+                aliases=("eds",),
+                description="Bibliographic editors",
+                only_if_followed_by=_BIBLIOGRAPHIC_FOLLOWING,
+                speech_strategy="spell_source",
             )
         )
 

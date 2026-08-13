@@ -567,6 +567,7 @@ class AbbreviationExpander(ABC):
         only_if_pos: PosConstraints = None,
         not_if_pos: PosConstraints = None,
         case_policy: Literal["fixed", "sentence"] = "fixed",
+        aliases: tuple[str, ...] = (),
     ) -> None:
         """Add or replace an entry using string context names and POS guards.
 
@@ -616,6 +617,7 @@ class AbbreviationExpander(ABC):
                 only_if_pos=only_if_pos,
                 not_if_pos=not_if_pos,
                 case_policy=case_policy,
+                aliases=aliases,
                 origin="custom",
             )
         )

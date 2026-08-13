@@ -41,6 +41,12 @@ NUMERIC_FORMAT_PROFILES = {
     ),
 }
 
+UnitAmbiguity = Literal[
+    "none",
+    "lexical",
+    "bare_symbol",
+]
+
 
 def numeric_format_profile(language: str) -> NumericFormatProfile:
     """Return the recognition profile used for a language key."""
@@ -116,6 +122,8 @@ class UnitMatch:
     expansion: str
     language: str
     category: str = "unit"
+    ambiguity: UnitAmbiguity = "none"
+    separator: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -130,6 +138,8 @@ class UnitDiagnostic:
     language: str
     status: Literal["accepted", "rejected"]
     reason: str | None = None
+    ambiguity: UnitAmbiguity = "none"
+    separator: str = ""
 
 
 @dataclass(frozen=True)
@@ -1514,6 +1524,7 @@ def _unit_match(
     entry: UnitEntry,
     canonical_symbol: str,
     language: str,
+    separator: str,
 ) -> UnitMatch:
     return UnitMatch(
         start=start,
@@ -1527,7 +1538,19 @@ def _unit_match(
         expansion=entry.expansion,
         language=language,
         category=entry.category,
+        ambiguity=_unit_match_ambiguity(entry, symbol),
+        separator=separator,
     )
+
+
+def _unit_match_ambiguity(entry: UnitEntry, symbol: str) -> UnitAmbiguity:
+    """Classify ambiguity from the matched source spelling and unit identity."""
+    source_symbol = symbol.casefold()
+    if entry.canonical_id == "customary-inch" and source_symbol in {"in", "in."}:
+        return "lexical"
+    if source_symbol.rstrip(".").isalpha() and len(source_symbol.rstrip(".")) == 1:
+        return "bare_symbol"
+    return "none"
 
 
 def _unit_replacement_text(
@@ -1619,6 +1642,19 @@ def _inch_alias_is_prepositional(text: str, end: int) -> bool:
     return bool(match and match.group("word").casefold() in _EN_PREPOSITION_DETERMINERS)
 
 
+def _inch_alias_rejection_reason(text: str, end: int, value: str, symbol: str) -> str | None:
+    """Return the conservative rejection reason for an English inch alias."""
+    if _inch_alias_is_prepositional(text, end):
+        return "prepositional_in"
+    if symbol == "in" and re.fullmatch(r"\d{4}", value):
+        year = int(value)
+        if 1000 <= year <= 2099:
+            return "year_like_before_lexical_in"
+    if symbol == "in" and re.match(rf"[{_HSPACE}]+(?:1\d{{3}}|20\d{{2}})(?!\d)", text[end:]):
+        return "year_like_before_lexical_in"
+    return None
+
+
 def _canonical_symbol(entry: UnitEntry, symbol: str) -> str:
     if entry.canonical_id is not None:
         for definition in _BASE_DEFINITIONS + _EXTENDED_DEFINITIONS:
@@ -1677,9 +1713,9 @@ def iter_unit_matches(
             language == "en"
             and entry.canonical_id == "customary-inch"
             and symbol.casefold() in {"in", "in."}
-            and _inch_alias_is_prepositional(text, end)
         ):
-            continue
+            if _inch_alias_rejection_reason(text, end, value, symbol) is not None:
+                continue
         start = value_match.start()
         if entry.category == "currency" and _currency_is_embedded_in_lexical_material(
             text, start, end
@@ -1698,6 +1734,7 @@ def iter_unit_matches(
                 entry=entry,
                 canonical_symbol=_canonical_symbol(entry, symbol),
                 language=language,
+                separator=text[value_match.end("value") : unit_start],
             )
         )
 
@@ -1735,6 +1772,7 @@ def iter_unit_matches(
                     entry=entry,
                     canonical_symbol=_canonical_symbol(entry, symbol),
                     language=language,
+                    separator=text[value_match.end("symbol") : value_match.start("value")],
                 )
             )
 
@@ -1770,6 +1808,8 @@ def iter_unit_diagnostics(
             canonical_id=match.canonical_id,
             language=match.language,
             status="accepted",
+            ambiguity=match.ambiguity,
+            separator=match.separator,
         )
         for match in iter_unit_matches(
             text,
@@ -1816,6 +1856,48 @@ def iter_unit_diagnostics(
                 language=language,
                 status="rejected",
                 reason="requires_separator",
+                ambiguity=_unit_match_ambiguity(entry, text[unit_start:end]),
+                separator=text[value_match.end("value") : unit_start],
+            )
+        )
+    for value_match in value_pattern.finditer(text):
+        value = value_match.group("value")
+        unit_start = value_match.end()
+        candidates = [
+            (symbol, entry)
+            for symbol, entry in inventory
+            if entry.quantity_position in {"suffix", "both"}
+            and entry.requires_numeric_value
+            and entry.canonical_id == "customary-inch"
+            and symbol == "in"
+            and _unit_text_matches(text, unit_start, symbol, entry.case_sensitive)
+        ]
+        if not candidates:
+            continue
+        symbol, entry = max(candidates, key=lambda item: len(item[0]))
+        end = unit_start + len(symbol)
+        reason = _inch_alias_rejection_reason(text, end, value, symbol)
+        if reason != "year_like_before_lexical_in":
+            continue
+        start = value_match.start()
+        if end < len(text) and (text[end].isalnum() or text[end] == "_"):
+            continue
+        if _unit_continuation_is_unsupported(text, end):
+            continue
+        if _overlaps_protected(start, end, protected):
+            continue
+        diagnostics.append(
+            UnitDiagnostic(
+                start=start,
+                end=end,
+                value=value,
+                symbol=text[unit_start:end],
+                canonical_id=entry.canonical_id,
+                language=language,
+                status="rejected",
+                reason=reason,
+                ambiguity=_unit_match_ambiguity(entry, text[unit_start:end]),
+                separator=text[value_match.end("value") : unit_start],
             )
         )
     yield from sorted(diagnostics, key=lambda item: (item.start, item.end, item.status))
@@ -1893,6 +1975,7 @@ __all__ = [
     "NUMERIC_FORMAT_PROFILES",
     "NumericFormatProfile",
     "UNIT_ENTRIES",
+    "UnitAmbiguity",
     "UnitEntry",
     "UnitDiagnostic",
     "UnitMatch",

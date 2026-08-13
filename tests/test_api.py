@@ -83,6 +83,20 @@ def test_isolated_custom_expander() -> None:
     assert abbr2words("KI hilft.", lang="de") == "KI hilft."
 
 
+def test_expander_add_accepts_aliases_with_shared_guards() -> None:
+    expander = Expander("en")
+    expander.add("abbr.", "abbreviation", aliases=("abbr",))
+    assert expander("abbr. abbr") == "abbreviation abbreviation"
+
+
+def test_expander_add_validates_aliases_through_the_entry_contract() -> None:
+    expander = Expander("en")
+    with pytest.raises(TypeError, match="aliases must be a tuple"):
+        expander.add("abbr.", "abbreviation", aliases=["abbr"])  # type: ignore[arg-type]
+    with pytest.raises(ValueError, match="aliases must differ"):
+        expander.add("abbr.", "abbreviation", aliases=("abbr.",))
+
+
 def test_context_can_be_disabled() -> None:
     assert abbr2words("Fr. Klein", lang="de", context=False) == "Freitag Klein"
 

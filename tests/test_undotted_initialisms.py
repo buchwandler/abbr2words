@@ -16,6 +16,27 @@ def test_unknown_undotted_initialisms_are_unchanged_by_default() -> None:
     )
 
 
+def test_initialism_compatibility_matrix_keeps_conservative_defaults() -> None:
+    assert abbr2words("ABC", lang="en") == "ABC"
+    assert (
+        abbr2words("ABC", lang="en", initialism_mode="spell_undotted", initialism_case="upper")
+        == "A B C"
+    )
+    assert (
+        abbr2words("ABC", lang="en", initialism_mode="spell_undotted", initialism_case="lower")
+        == "a b c"
+    )
+    assert (
+        abbr2words(
+            "U.S.", lang="en", initialism_case="lower", registered_initialism_mode="spell"
+        )
+        == "u s."
+    )
+    assert (
+        abbr2words("pp. 12", lang="en", registered_initialism_mode="spell") == "p p 12"
+    )
+
+
 def test_undotted_initialisms_can_be_spelled_in_source_case() -> None:
     assert (
         abbr2words("BBC News Online.", lang="en", initialism_mode="spell_undotted")

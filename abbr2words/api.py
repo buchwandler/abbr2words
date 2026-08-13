@@ -294,6 +294,7 @@ class Expander:
         not_if_pos: PosConstraints = None,
         case_policy: Literal["fixed", "sentence"] = "fixed",
         speech_strategy: Literal["expand", "spell_source"] = "expand",
+        aliases: tuple[str, ...] = (),
     ) -> None:
         """Add or replace an abbreviation, optionally constrained by POS.
 
@@ -314,6 +315,7 @@ class Expander:
                 only_if_followed_by=only_if_followed_by,
                 only_if_pos=only_if_pos,
                 not_if_pos=not_if_pos,
+                aliases=aliases,
             )
             return
         self._impl.add_abbreviation(
@@ -329,6 +331,7 @@ class Expander:
                 not_if_pos=not_if_pos,
                 case_policy=case_policy,
                 speech_strategy=speech_strategy,
+                aliases=aliases,
                 origin="custom",
             )
         )

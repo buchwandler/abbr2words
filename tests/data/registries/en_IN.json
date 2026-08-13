@@ -783,6 +783,20 @@
     },
     {
       "language": "en_IN",
+      "key": "dr",
+      "abbreviation": "Dr",
+      "expansion": "Doctor",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "case_policy": "fixed",
+      "description": "Undotted doctor honorific",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^\\s+[A-ZÀ-ÖØ-Þ][\\w'’.-]*",
+      "variants": []
+    },
+    {
+      "language": "en_IN",
       "key": "dr.",
       "abbreviation": "Dr.",
       "expansion": "Doctor",
@@ -810,6 +824,22 @@
       "description": "Exempli gratia (for example)",
       "only_if_preceded_by": null,
       "only_if_followed_by": null,
+      "variants": []
+    },
+    {
+      "language": "en_IN",
+      "key": "eds.",
+      "abbreviation": "eds.",
+      "expansion": "editors",
+      "aliases": [
+        "eds"
+      ],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "case_policy": "fixed",
+      "description": "Bibliographic editors",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^(?:[ \\t]+\\d|$)",
       "variants": []
     },
     {
@@ -1248,6 +1278,20 @@
     },
     {
       "language": "en_IN",
+      "key": "ltd",
+      "abbreviation": "Ltd",
+      "expansion": "limited",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "case_policy": "fixed",
+      "description": "Guarded undotted corporate suffix",
+      "only_if_preceded_by": "(?i)[\\w][\\w .&'’/-]*\\s",
+      "only_if_followed_by": "^(?:\\s*(?:[,.;:)]|$))",
+      "variants": []
+    },
+    {
+      "language": "en_IN",
       "key": "ltd.",
       "abbreviation": "ltd.",
       "expansion": "limited",
@@ -1444,6 +1488,20 @@
     },
     {
       "language": "en_IN",
+      "key": "mr",
+      "abbreviation": "Mr",
+      "expansion": "Mister",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "case_policy": "fixed",
+      "description": "Undotted male honorific",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^\\s+[A-ZÀ-ÖØ-Þ][\\w'’.-]*",
+      "variants": []
+    },
+    {
+      "language": "en_IN",
       "key": "mr.",
       "abbreviation": "Mr.",
       "expansion": "Mister",
@@ -1458,6 +1516,20 @@
     },
     {
       "language": "en_IN",
+      "key": "mrs",
+      "abbreviation": "Mrs",
+      "expansion": "Missus",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "case_policy": "fixed",
+      "description": "Undotted married female honorific",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^\\s+[A-ZÀ-ÖØ-Þ][\\w'’.-]*",
+      "variants": []
+    },
+    {
+      "language": "en_IN",
       "key": "mrs.",
       "abbreviation": "Mrs.",
       "expansion": "Missus",
@@ -1468,6 +1540,20 @@
       "description": "Married female honorific",
       "only_if_preceded_by": null,
       "only_if_followed_by": null,
+      "variants": []
+    },
+    {
+      "language": "en_IN",
+      "key": "ms",
+      "abbreviation": "Ms",
+      "expansion": "Miss",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "case_policy": "fixed",
+      "description": "Undotted female honorific",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^\\s+[A-ZÀ-ÖØ-Þ][\\w'’.-]*",
       "variants": []
     },
     {
@@ -1755,13 +1841,29 @@
       "key": "pp.",
       "abbreviation": "pp.",
       "expansion": "pages",
-      "aliases": [],
+      "aliases": [
+        "pp"
+      ],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
       "description": "Pages",
       "only_if_preceded_by": null,
       "only_if_followed_by": "[ \\t]+\\d",
+      "variants": []
+    },
+    {
+      "language": "en_IN",
+      "key": "prof",
+      "abbreviation": "Prof",
+      "expansion": "Professor",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "case_policy": "fixed",
+      "description": "Undotted professor honorific",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^\\s+[A-ZÀ-ÖØ-Þ][\\w'’.-]*",
       "variants": []
     },
     {
@@ -2262,7 +2364,9 @@
       "key": "vol.",
       "abbreviation": "vol.",
       "expansion": "volume",
-      "aliases": [],
+      "aliases": [
+        "vol"
+      ],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
@@ -2276,7 +2380,9 @@
       "key": "vs.",
       "abbreviation": "vs.",
       "expansion": "versus",
-      "aliases": [],
+      "aliases": [
+        "vs"
+      ],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",

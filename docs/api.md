@@ -84,6 +84,21 @@ remaining uppercase tokens. `registered_initialism_mode="spell"` affects only
 reviewed registry entries carrying the explicit `speech_strategy="spell_source"`
 metadata; semantic registry expansions remain the default.
 
+The compatibility surface is intentionally conservative:
+
+| Source | Detection mode | Case | Registered mode | Result |
+| --- | --- | --- | --- | --- |
+| `ABC` | `dotted_only` | `source` | `expand` | `ABC` |
+| `ABC` | `spell_undotted` | `upper` | `expand` | `A B C` |
+| `ABC` | `spell_undotted` | `lower` | `expand` | `a b c` |
+| `U.S.` | dotted | `lower` | `spell` | `u s.` |
+| `pp. 12` | dotted | `source` | `spell` | `p p 12` |
+
+The final period in the `U.S.` row is source sentence punctuation retained by
+the existing replacement policy. Reviewed entries continue to outrank the
+generic fallback, while Roman-only tokens and structured identifier
+components remain excluded.
+
 The shared-expander cache includes all policy values, so expanders with
 different initialism behavior are independent instances. Fallback replacement
 records use `abbr:initialism` for dotted matches and
@@ -238,7 +253,8 @@ sentence-final.
 `AbbreviationEntry.only_if_pos` and `not_if_pos` accept coarse POS labels such
 as `NOUN`, `PROPN`, and `ADP`. They are evaluated only when annotations are
 provided. `Expander.add()` exposes the same optional `only_if_pos` and
-`not_if_pos` keyword arguments.
+`not_if_pos` keyword arguments, plus `aliases=(...)` for additional source
+spellings that share the entry's guards, case policy, and speech strategy.
 
 The abbreviation stage returns lexical replacements with source-aligned spans;
 it does not interpret following numbers, dates, decimals, structured

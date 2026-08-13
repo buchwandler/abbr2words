@@ -338,6 +338,43 @@ def test_english_temperature_aliases_preserve_source_identity_and_offsets(
 
 
 @pytest.mark.parametrize(
+    ("source", "ambiguity", "separator"),
+    [
+        ("37 °C", "none", " "),
+        ("37 C", "bare_symbol", " "),
+        ("37C", "bare_symbol", ""),
+        ("5 A", "bare_symbol", " "),
+        ("20 N", "bare_symbol", " "),
+        ("12 in", "lexical", " "),
+    ],
+)
+def test_unit_matches_expose_source_shape_ambiguity_and_separator(
+    source: str, ambiguity: str, separator: str
+) -> None:
+    match = only_match(source, "en")
+    assert match.ambiguity == ambiguity
+    assert match.separator == separator
+    assert source[match.start : match.end] == source
+    assert source[match.value_start : match.value_end] == source[: len(match.value)]
+
+
+def test_unit_diagnostic_carries_ambiguity_and_exact_separator() -> None:
+    diagnostics = list(iter_unit_diagnostics("1992 in Clareen and 7B", "en"))
+    year_like = next(item for item in diagnostics if item.reason == "year_like_before_lexical_in")
+    compact = next(item for item in diagnostics if item.reason == "requires_separator")
+    assert (year_like.status, year_like.ambiguity, year_like.separator) == (
+        "rejected",
+        "lexical",
+        " ",
+    )
+    assert (compact.status, compact.ambiguity, compact.separator) == (
+        "rejected",
+        "bare_symbol",
+        "",
+    )
+
+
+@pytest.mark.parametrize(
     "source",
     ["C.", "F.", "Plan C.", "Press F.", "abcC", "Celsius", "Fahrenheit"],
 )

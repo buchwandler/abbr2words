@@ -36,7 +36,7 @@ from .initialisms import (
     InitialismPolicy,
     RegisteredInitialismMode,
 )
-from .units import UnitDiagnostic, UnitEntry, UnitMatch
+from .units import UnitAmbiguity, UnitDiagnostic, UnitEntry, UnitMatch
 
 __all__ = [
     "AbbreviationContext",
@@ -53,6 +53,7 @@ __all__ = [
     "ProtectedSpan",
     "TokenAnnotation",
     "UnitEntry",
+    "UnitAmbiguity",
     "UnitDiagnostic",
     "UnitMatch",
     "abbreviation_guards_match",

@@ -155,6 +155,20 @@ def test_english_in_unit_and_preposition_collision(source: str, expected: str) -
 
 
 @pytest.mark.parametrize(
+    "source",
+    ["1992 in Clareen", "1977 in Istanbul", "2002 in London", "10 in 2002"],
+)
+def test_english_year_like_values_do_not_claim_lexical_in_as_inches(source: str) -> None:
+    assert tuple(iter_unit_matches(source, "en")) == ()
+    assert abbr2words(source, lang="en") == source
+
+
+@pytest.mark.parametrize("source", ["999 in Clareen", "2100 in Clareen", "12 in long"])
+def test_english_non_year_like_in_measurements_remain_supported(source: str) -> None:
+    assert len(tuple(iter_unit_matches(source, "en"))) == 1
+
+
+@pytest.mark.parametrize(
     ("source", "expected"),
     (
         ("30,000.10 in.", "30,000.10 inch"),
