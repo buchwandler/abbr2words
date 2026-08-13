@@ -3,7 +3,7 @@ schema_version: 2
 object_type: release_entry
 versioning:
   schema_version: 1
-  revision: 1
+  revision: 2
 entry_id: entry-0004
 release_version: v0.2.8
 kind: quality
@@ -11,7 +11,8 @@ summary: Added distilled regression coverage for initialism safety and provenanc
 status: accepted
 audience: null
 scopes: []
-source_refs: []
+source_refs:
+  - git:8229ade5626bacc10b6d3959fe3205fbf07c3094
 paths:
   - tests/test_benchmark_initialism_regressions.py
 issues: []

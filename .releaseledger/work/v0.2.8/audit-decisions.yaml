@@ -1,0 +1,73 @@
+rows:
+  - sha: fe06130fd72cb68d11af74c221374efdc2e40ddc
+    inspected: true
+    inspected_paths:
+      - abbr2words/__init__.py
+      - abbr2words/api.py
+      - abbr2words/core.py
+      - abbr2words/languages/en.py
+      - abbr2words/units.py
+      - docs/api.md
+      - tests/data/registries/en.json
+      - tests/data/registries/en_GB.json
+      - tests/data/registries/en_IN.json
+      - tests/data/registries/en_NG.json
+      - tests/data/registries/en_US.json
+      - tests/data/registries/index.json
+      - tests/test_api.py
+      - tests/test_en.py
+      - tests/test_quantity_matches.py
+      - tests/test_undotted_initialisms.py
+      - tests/test_units.py
+    observed_behavior: Adds opt-in policy controls, improved detection API, and expanded test coverage for undotted initialisms and quantity matches
+    public_impact: public
+    decision: accepted
+    target_entry_key: null
+    notes: Feature commit with abbreviation detection improvements
+  - sha: 8229ade5626bacc10b6d3959fe3205fbf07c3094
+    inspected: true
+    inspected_paths:
+      - README.md
+      - abbr2words/core.py
+      - abbr2words/language_data/initialisms.py
+      - abbr2words/languages/de.py
+      - abbr2words/languages/en.py
+      - abbr2words/languages/es.py
+      - abbr2words/languages/fr.py
+      - abbr2words/languages/it.py
+      - docs/api.md
+      - docs/polynorm-abbreviation-ownership.md
+      - tests/data/registries/de.json
+      - tests/data/registries/en.json
+      - tests/data/registries/es.json
+      - tests/data/registries/fr.json
+      - tests/data/registries/it.json
+      - tests/test_benchmark_initialism_regressions.py
+      - tests/test_en.py
+      - tests/test_undotted_initialisms.py
+    observed_behavior: Adds reviewed initialism entries, expanded multilingual coverage, and benchmark regression tests
+    public_impact: public
+    decision: accepted
+    target_entry_key: null
+    notes: Major feature commit with initialism improvements and multilingual support
+  - sha: 1694b25b594160529611fe770865a5012aca81ed
+    inspected: true
+    inspected_paths:
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.7/
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.8/
+      - docs/changelog.md
+    observed_behavior: Release management - moved entries from v0.2.7 to v0.2.8
+    public_impact: internal
+    decision: internal
+    target_entry_key: null
+    notes: Release housekeeping commit
+  - sha: cde17d89aca653984567cf2e45c2dacadb8ea381
+    inspected: true
+    inspected_paths:
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.8/
+      - docs/changelog.md
+    observed_behavior: Release management - changelog updates for v0.2.8
+    public_impact: internal
+    decision: internal
+    target_entry_key: null
+    notes: Release housekeeping commit

@@ -1,0 +1,198 @@
+schema_version: 1
+object_type: commit_audit_sheet
+versioning:
+  schema_version: 1
+  revision: 2
+release_version: v0.2.8
+git_base_ref: v0.2.7
+git_base_sha: fb644a7bef5f70043c12b80443fd19868f4055bf
+git_head_ref: HEAD
+git_head_sha: cde17d89aca653984567cf2e45c2dacadb8ea381
+git_range: fb644a7bef5f70043c12b80443fd19868f4055bf..cde17d89aca653984567cf2e45c2dacadb8ea381
+commit_count: 4
+rows:
+  - sha: fe06130fd72cb68d11af74c221374efdc2e40ddc
+    source_ref: git:fe06130fd72cb68d11af74c221374efdc2e40ddc
+    short_sha: fe06130
+    changed_paths:
+      - abbr2words/__init__.py
+      - abbr2words/api.py
+      - abbr2words/core.py
+      - abbr2words/languages/en.py
+      - abbr2words/units.py
+      - docs/api.md
+      - tests/data/registries/en.json
+      - tests/data/registries/en_GB.json
+      - tests/data/registries/en_IN.json
+      - tests/data/registries/en_NG.json
+      - tests/data/registries/en_US.json
+      - tests/data/registries/index.json
+      - tests/test_api.py
+      - tests/test_en.py
+      - tests/test_quantity_matches.py
+      - tests/test_undotted_initialisms.py
+      - tests/test_units.py
+    stats:
+      files_changed: 0
+      insertions: 866
+      deletions: 30
+    inspected: true
+    inspected_paths:
+      - abbr2words/__init__.py
+      - abbr2words/api.py
+      - abbr2words/core.py
+      - abbr2words/languages/en.py
+      - abbr2words/units.py
+      - docs/api.md
+      - tests/data/registries/en.json
+      - tests/data/registries/en_GB.json
+      - tests/data/registries/en_IN.json
+      - tests/data/registries/en_NG.json
+      - tests/data/registries/en_US.json
+      - tests/data/registries/index.json
+      - tests/test_api.py
+      - tests/test_en.py
+      - tests/test_quantity_matches.py
+      - tests/test_undotted_initialisms.py
+      - tests/test_units.py
+    observed_behavior:
+      Adds opt-in policy controls, improved detection API, and expanded
+      test coverage for undotted initialisms and quantity matches
+    public_impact: public
+    decision: accepted
+    evidence_subject: "feat: improved detection"
+    notes: Feature commit with abbreviation detection improvements
+  - sha: 8229ade5626bacc10b6d3959fe3205fbf07c3094
+    source_ref: git:8229ade5626bacc10b6d3959fe3205fbf07c3094
+    short_sha: 8229ade
+    changed_paths:
+      - .ledger/releaseledger/data/ledgers/main/events/events.jsonl
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.7/entries/entry-0010.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.7/entries/entry-0011.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.7/entries/entry-0012.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.7/entries/entry-0013.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.7/release.md
+      - README.md
+      - abbr2words/core.py
+      - abbr2words/language_data/initialisms.py
+      - abbr2words/languages/de.py
+      - abbr2words/languages/en.py
+      - abbr2words/languages/es.py
+      - abbr2words/languages/fr.py
+      - abbr2words/languages/it.py
+      - docs/api.md
+      - docs/changelog.md
+      - docs/polynorm-abbreviation-ownership.md
+      - tests/data/registries/de.json
+      - tests/data/registries/en.json
+      - tests/data/registries/en_GB.json
+      - tests/data/registries/en_IN.json
+      - tests/data/registries/en_NG.json
+      - tests/data/registries/en_US.json
+      - tests/data/registries/es.json
+      - tests/data/registries/es_CO.json
+      - tests/data/registries/es_CR.json
+      - tests/data/registries/es_GT.json
+      - tests/data/registries/es_MX.json
+      - tests/data/registries/es_NI.json
+      - tests/data/registries/es_VE.json
+      - tests/data/registries/fr.json
+      - tests/data/registries/fr_BE.json
+      - tests/data/registries/fr_CH.json
+      - tests/data/registries/fr_DZ.json
+      - tests/data/registries/index.json
+      - tests/data/registries/it.json
+      - tests/test_benchmark_initialism_regressions.py
+      - tests/test_en.py
+      - tests/test_undotted_initialisms.py
+    stats:
+      files_changed: 0
+      insertions: 3006
+      deletions: 141
+    inspected: true
+    inspected_paths:
+      - README.md
+      - abbr2words/core.py
+      - abbr2words/language_data/initialisms.py
+      - abbr2words/languages/de.py
+      - abbr2words/languages/en.py
+      - abbr2words/languages/es.py
+      - abbr2words/languages/fr.py
+      - abbr2words/languages/it.py
+      - docs/api.md
+      - docs/polynorm-abbreviation-ownership.md
+      - tests/data/registries/de.json
+      - tests/data/registries/en.json
+      - tests/data/registries/es.json
+      - tests/data/registries/fr.json
+      - tests/data/registries/it.json
+      - tests/test_benchmark_initialism_regressions.py
+      - tests/test_en.py
+      - tests/test_undotted_initialisms.py
+    observed_behavior:
+      Adds reviewed initialism entries, expanded multilingual coverage,
+      and benchmark regression tests
+    public_impact: public
+    decision: accepted
+    evidence_subject: "feat: improved abbr detection"
+    notes: Major feature commit with initialism improvements and multilingual support
+  - sha: 1694b25b594160529611fe770865a5012aca81ed
+    source_ref: git:1694b25b594160529611fe770865a5012aca81ed
+    short_sha: 1694b25
+    changed_paths:
+      - .ledger/releaseledger/data/ledgers/main/events/events.jsonl
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.7/entries/entry-0001.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.7/entries/entry-0002.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.7/entries/entry-0003.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.7/entries/entry-0004.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.7/entries/entry-0005.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.7/entries/entry-0006.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.7/entries/entry-0007.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.7/entries/entry-0008.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.7/entries/entry-0009.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.7/entries/entry-0010.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.7/entries/entry-0011.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.7/entries/entry-0012.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.7/entries/entry-0013.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.7/release.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.8/release.md
+      - docs/changelog.md
+    stats:
+      files_changed: 0
+      insertions: 49
+      deletions: 17
+    inspected: true
+    inspected_paths:
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.7/
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.8/
+      - docs/changelog.md
+    observed_behavior: Release management - moved entries from v0.2.7 to v0.2.8
+    public_impact: internal
+    decision: internal
+    evidence_subject: "chore: changelog"
+    notes: Release housekeeping commit
+  - sha: cde17d89aca653984567cf2e45c2dacadb8ea381
+    source_ref: git:cde17d89aca653984567cf2e45c2dacadb8ea381
+    short_sha: cde17d8
+    changed_paths:
+      - .ledger/releaseledger/data/ledgers/main/events/events.jsonl
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.7/release.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.8/entries/entry-0001.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.8/entries/entry-0002.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.8/entries/entry-0003.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.8/entries/entry-0004.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.8/release.md
+      - docs/changelog.md
+    stats:
+      files_changed: 0
+      insertions: 28
+      deletions: 22
+    inspected: true
+    inspected_paths:
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.8/
+      - docs/changelog.md
+    observed_behavior: Release management - changelog updates for v0.2.8
+    public_impact: internal
+    decision: internal
+    evidence_subject: "doc: update changelog"
+    notes: Release housekeeping commit
