@@ -11,6 +11,7 @@ from abbr2words.core import (
     AbbreviationExpander,
 )
 from abbr2words.language_data.initialisms import (
+    FRENCH_REVIEWED_INITIALISMS,
     TECHNICAL_INITIALISMS,
     register_reviewed_initialisms,
 )
@@ -304,6 +305,7 @@ class FrenchAbbreviationExpander(AbbreviationExpander):
             )
         )
 
+        register_reviewed_initialisms(self, FRENCH_REVIEWED_INITIALISMS)
         register_reviewed_initialisms(self, TECHNICAL_INITIALISMS)
 
         self.add_abbreviation(

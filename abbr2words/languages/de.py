@@ -13,6 +13,7 @@ from abbr2words.core import (
     ExpansionVariant,
 )
 from abbr2words.language_data.initialisms import (
+    GERMAN_REVIEWED_INITIALISMS,
     TECHNICAL_INITIALISMS,
     register_reviewed_initialisms,
 )
@@ -534,6 +535,7 @@ class GermanAbbreviationExpander(AbbreviationExpander):
             )
         )
 
+        register_reviewed_initialisms(self, GERMAN_REVIEWED_INITIALISMS)
         register_reviewed_initialisms(self, TECHNICAL_INITIALISMS)
 
 

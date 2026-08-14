@@ -42,60 +42,60 @@
       "sha256": "73ea35d6006604db16a39950d4eb992869992889cc14877ca9a5e066660a7616"
     },
     "de": {
-      "count": 74,
-      "sha256": "5e738e0b6f659da9568b61acbff28bc4905717939daa3c479f14587a95bcc86c"
+      "count": 91,
+      "sha256": "0028a94c3dbae5944786b9638b0b93c4017b472f313d13c202e030233c99d03f"
     },
     "en": {
-      "count": 193,
-      "sha256": "869eb4efe335ba5081bdbe9f7e285399ec3158591d6eeaa1cab550e0df719113"
+      "count": 212,
+      "sha256": "bc45aaa1f5852a019754afe55aa216c2b90cd70e8d5cd1e8d7d737de8f200b40"
     },
     "en_GB": {
-      "count": 193,
-      "sha256": "c345f06341c20d078f3749f20297fe15eceac668e15f99cd0ac806cda27aa913"
+      "count": 212,
+      "sha256": "27fba815d84392818d6971304d9db5ae4b75d786849f934790a794c328fa4192"
     },
     "en_IN": {
-      "count": 193,
-      "sha256": "4f794715d5a7aa59e836f36997d0aa8c4fafaa61e13375610d00a07b7067988e"
+      "count": 212,
+      "sha256": "f19a0695d49fdd0fbb2f69a96966aeb78fc05cc8f51d4bf8658d84459e8a4011"
     },
     "en_NG": {
-      "count": 193,
-      "sha256": "fb1785b353fa5be050bd95d5f584e942523cff2d22c4fe6d95ee7a7fad6a30f6"
+      "count": 212,
+      "sha256": "ab1c71ae54bc36eb7b86345dc4e85aa28c148d32a21e0961c3c66359b3798d3a"
     },
     "en_US": {
-      "count": 193,
-      "sha256": "3df10a2d436429754c0e2f16af842e156c00e4e79bfd7211558d3e79b84ed9f3"
+      "count": 212,
+      "sha256": "a3c4740154937c8427a166a15c8ef7f2ac4709f530ed46ec856b3328db902be1"
     },
     "eo": {
       "count": 3,
       "sha256": "837dd58c6451d69012a620e7c6ac2bbdc2891ea1008c8c827c4ad15ec6f2af2d"
     },
     "es": {
-      "count": 85,
-      "sha256": "29f8b9e826a9935f43e689bed11e40a9c8175b86d294d8d0c9be4efdba295643"
+      "count": 98,
+      "sha256": "467ad1c501bed6de0d28a6eb774300650229577777ed6ccdd05fc08602af22bd"
     },
     "es_CO": {
-      "count": 85,
-      "sha256": "7872ee87164fed609b080d4b5e8030110b5968ef062d9a49cf9e19751da64b5d"
+      "count": 98,
+      "sha256": "cdc570aa304b96c163568ec9b2999a6b8352a923bce8c5ed11f1822c12ad44b6"
     },
     "es_CR": {
-      "count": 85,
-      "sha256": "c99c038bdfa5ced507b19edaf3d538dbfaa751abfddfd7af76fd743261018a5f"
+      "count": 98,
+      "sha256": "1cb0f00cccce71ff8716a6c3019b7cfb529987d95869502b9e61afaec2976af6"
     },
     "es_GT": {
-      "count": 85,
-      "sha256": "0d9b5b9482410489a9b7a83b3e4692396f8ba99c5f7dc65b431000272306f232"
+      "count": 98,
+      "sha256": "69b05588445c01eb7d14e9e422ebfb49712ddaf78e62fdf787d27c3c5e66f4d2"
     },
     "es_MX": {
-      "count": 85,
-      "sha256": "a193002ac857dddd8c1f94a3e937eb0ca80e6da894e2341b99c1ca9c63d6615e"
+      "count": 98,
+      "sha256": "e6ed66aea99c74bf53adc980500a79f38769fd348c7439f118f5800cda22c8bd"
     },
     "es_NI": {
-      "count": 85,
-      "sha256": "5d9023616c2023ad71036e61f6226264f1e81c5b8ecc94f85122f68bfcda94fb"
+      "count": 98,
+      "sha256": "18adf8efeb203c554a1201cc3af516705bdc8d82f26959341b6e7e700b21dd08"
     },
     "es_VE": {
-      "count": 85,
-      "sha256": "9bff5b589b9c154dedf9f244f86f6b5080857018ed9f7c8d530ec449e66c1432"
+      "count": 98,
+      "sha256": "57c3542ea169e86be7d1657c03b8d26aedf5650ff071aeb7682042057ee3fcaa"
     },
     "fa": {
       "count": 3,
@@ -106,20 +106,20 @@
       "sha256": "1fafd4905e1b4d031b4fa1659de19cf918b58ce518072e93ea1a8ac8b4837b84"
     },
     "fr": {
-      "count": 64,
-      "sha256": "7e9b7ef47de96c4fb9db9f9415a78492ff1dbd238b9340c631fa57e114a21ed8"
+      "count": 80,
+      "sha256": "dd242754df124a6fbf1dcf25abf7abf16b40d99b7447798ba9e90364bdb17ec6"
     },
     "fr_BE": {
-      "count": 64,
-      "sha256": "4d1f2db615ad6b0e631222d1aa0a3d65f1947f97794b2c3a652ac68470f151f4"
+      "count": 80,
+      "sha256": "73a8aa19c1072718d1a86334978c4880d25058dee7bf3b29b749caa23d68b981"
     },
     "fr_CH": {
-      "count": 65,
-      "sha256": "5f157d93988a15590ba0e102e204e694d93b81d4d5c023d57ab409d2bef17260"
+      "count": 81,
+      "sha256": "535516adc3a4238d67334de82f5f8ff9ced43815ce2e5e505d951ecb77533659"
     },
     "fr_DZ": {
-      "count": 65,
-      "sha256": "06f559ebfc199efad1fc0d2bfcd7996e391b9ff243c31031eba6048246c6ac4e"
+      "count": 81,
+      "sha256": "2e1c148e1c145d977fc713952b8c545bbeb95341248a713be3af63a05cc2eb02"
     },
     "he": {
       "count": 3,
@@ -146,8 +146,8 @@
       "sha256": "679923977ea2e39e14f2606ea904440b10883dad17394baef81a42052f9cd8e0"
     },
     "it": {
-      "count": 96,
-      "sha256": "af7d55e1a4178316a23324b7db8c7c721d136dd5b5ec16a12d06a67ccd87b587"
+      "count": 112,
+      "sha256": "073f7ea8fb1b1c3513f1d00622e80c4575e7b38b3fdb4f8837ece955c7c65d9d"
     },
     "ja": {
       "count": 3,
@@ -266,5 +266,5 @@
       "sha256": "8501a5cbce9526c4e0503e6a0a8b91803efa02711b6f041b644f2c7e6f9e4950"
     }
   },
-  "all_sha256": "3c20965dbc808fece0c6e78913af572e72cb8461f13cf265f649a2543f611bd7"
+  "all_sha256": "ef21e4f42c4afd7ca4afe02e669070ddd78fd4d5b6e32df9bbfa4c7d8744177a"
 }

@@ -50,14 +50,67 @@ def register_reviewed_initialisms(
 # These are high-confidence technical labels whose source-letter reading is
 # stable across the reviewed Latin-script language registries using them.
 TECHNICAL_INITIALISMS = (
-    ReviewedInitialism("GTK", description="GTK toolkit initialism"),
-    ReviewedInitialism("HTML", description="Hypertext Markup Language initialism"),
+    ReviewedInitialism("GTK", aliases=("gtk",), description="GTK toolkit initialism"),
+    ReviewedInitialism(
+        "HTML", aliases=("html",), description="Hypertext Markup Language initialism"
+    ),
+    ReviewedInitialism(
+        "XML", aliases=("xml",), description="Extensible Markup Language initialism"
+    ),
+    ReviewedInitialism(
+        "XHTML", aliases=("xhtml",), description="Extensible Hypertext Markup Language initialism"
+    ),
+    ReviewedInitialism(
+        "GFDL", aliases=("gfdl",), description="GNU Free Documentation License initialism"
+    ),
+    ReviewedInitialism("SQL", aliases=("sql",), description="Structured Query Language initialism"),
+    ReviewedInitialism("GLSL", aliases=("glsl",), description="OpenGL Shading Language initialism"),
     ReviewedInitialism("IEC", description="International Electrotechnical Commission initialism"),
     ReviewedInitialism("ISBN", description="International Standard Book Number initialism"),
     ReviewedInitialism(
         "ISO", description="International Organization for Standardization initialism"
     ),
     ReviewedInitialism("TV", description="Television initialism"),
+)
+
+
+# Locale-specific review queues. These are case-sensitive source forms: each
+# item is a stable letter-spelling initialism rather than a generic uppercase
+# guess, and the compact descriptions document the independent review basis.
+ENGLISH_REVIEWED_INITIALISMS = tuple(
+    ReviewedInitialism(token, description="Common English initialism")
+    for token in (
+        "FBI",
+        "IRS",
+        "CIA",
+        "UN",
+        "DJ",
+        "ATM",
+        "EU",
+        "FDA",
+        "CD",
+        "PC",
+        "UFO",
+        "DVD",
+        "AI",
+        "GPS",
+    )
+)
+GERMAN_REVIEWED_INITIALISMS = tuple(
+    ReviewedInitialism(token, description="Common German initialism")
+    for token in ("USA", "EU", "WHO", "CDU", "SPD", "ARD", "ZDF", "BND", "DDR", "BRD", "IBM", "WM")
+)
+SPANISH_REVIEWED_INITIALISMS = tuple(
+    ReviewedInitialism(token, description="Common Spanish initialism")
+    for token in ("UNAM", "EUA", "ONU", "IMSS", "FBI", "CFE", "ISSSTE", "SRE")
+)
+FRENCH_REVIEWED_INITIALISMS = tuple(
+    ReviewedInitialism(token, description="Common French initialism")
+    for token in ("UE", "PDG", "OMS", "FBI", "SNCF", "CIO", "CNRS", "AFP", "RATP", "AIE", "GPS")
+)
+ITALIAN_REVIEWED_INITIALISMS = tuple(
+    ReviewedInitialism(token, description="Common Italian initialism")
+    for token in ("USA", "PIL", "FBI", "OMS", "CEO", "ATM", "GPS", "ADSL", "PC", "URL", "DVD")
 )
 
 
@@ -118,6 +171,11 @@ def preserve_initialism_tokens(language: str) -> tuple[InitialismPreserveToken, 
 
 __all__ = [
     "PRESERVE_INITIALISM_TOKENS",
+    "ENGLISH_REVIEWED_INITIALISMS",
+    "FRENCH_REVIEWED_INITIALISMS",
+    "GERMAN_REVIEWED_INITIALISMS",
+    "ITALIAN_REVIEWED_INITIALISMS",
+    "SPANISH_REVIEWED_INITIALISMS",
     "TECHNICAL_INITIALISMS",
     "InitialismPreserveToken",
     "ReviewedInitialism",

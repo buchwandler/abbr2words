@@ -11,7 +11,7 @@ from abbr2words import (
 
 
 def test_unknown_undotted_initialisms_are_unchanged_by_default() -> None:
-    assert abbr2words("ZXQK system; The EU left.", lang="en") == ("ZXQK system; The EU left.")
+    assert abbr2words("ZXQK system; The EU left.", lang="en") == ("ZXQK system; The E U left.")
 
 
 def test_initialism_compatibility_matrix_keeps_conservative_defaults() -> None:

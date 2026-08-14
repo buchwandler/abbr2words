@@ -55,9 +55,7 @@ def validate_metadata(
     """Validate required metadata and optional current-source expectations."""
     metadata = report_metadata(report)
     missing = [
-        key
-        for key in REQUIRED_METADATA
-        if key not in metadata or metadata[key] in (None, "", {})
+        key for key in REQUIRED_METADATA if key not in metadata or metadata[key] in (None, "", {})
     ]
     errors: list[str] = []
     if missing:

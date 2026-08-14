@@ -478,15 +478,55 @@ def _is_hyphenated_initial_fragment(text: str, start: int, match_text: str) -> b
     )
 
 
-def _is_hyphenated_identifier_entry(text: str, start: int, end: int, match_text: str) -> bool:
-    """Reject compact uppercase registry entries attached to identifier text."""
+def _hyphen_neighbor(text: str, start: int, end: int) -> str | None:
+    """Return the non-whitespace segment on the other side of a hyphen."""
+    if start > 0 and text[start - 1] == "-":
+        index = start - 2
+        while index >= 0 and text[index].isalnum():
+            index -= 1
+        return text[index + 1 : start - 1] or None
+    if end < len(text) and text[end] == "-":
+        index = end + 1
+        while index < len(text) and text[index].isalnum():
+            index += 1
+        return text[end + 1 : index] or None
+    return None
+
+
+def _is_code_like_hyphen_neighbor(segment: str) -> bool:
+    """Return whether a hyphen neighbor has a compact identifier shape."""
+    if not segment:
+        return True
+    if segment[0].isdigit() or len(segment) == 1:
+        return True
+    if re.fullmatch(r"[A-Z]{1,8}", segment):
+        return True
+    return any(character.isdigit() for character in segment) and any(
+        character.isalpha() for character in segment
+    )
+
+
+def _is_hyphenated_identifier_entry(
+    text: str,
+    start: int,
+    end: int,
+    match_text: str,
+    entry: AbbreviationEntry | None = None,
+) -> bool:
+    """Reject uppercase registry entries attached to code-like identifier text."""
     if not re.fullmatch(r"[A-Z]{2,8}", match_text):
         return False
     left = start > 0 and text[start - 1] == "-"
     right = end < len(text) and text[end] == "-"
-    return (left and start > 1 and text[start - 2].isalnum()) or (
-        right and end + 1 < len(text) and text[end + 1].isalnum()
-    )
+    if not left and not right:
+        return False
+
+    neighbor = _hyphen_neighbor(text, start, end)
+    if neighbor is None:
+        return True
+    if entry is not None and entry.speech_strategy == "spell_source":
+        return _is_code_like_hyphen_neighbor(neighbor)
+    return True
 
 
 class ContextDetector:
@@ -871,6 +911,7 @@ class AbbreviationExpander(ABC):
                 case=self.initialism_policy.case,
                 language=language,
                 protected_spans=((span.start, span.end) for span in spans),
+                registered_entries=entries,
             )
             if not _overlaps_spans(candidate, spans)
         )
@@ -948,7 +989,7 @@ class AbbreviationExpander(ABC):
                 if _is_hyphenated_initial_fragment(text, start, match.group()):
                     continue
 
-                if _is_hyphenated_identifier_entry(text, start, end, match.group()):
+                if _is_hyphenated_identifier_entry(text, start, end, match.group(), entry):
                     continue
 
                 if not abbreviation_guards_match(

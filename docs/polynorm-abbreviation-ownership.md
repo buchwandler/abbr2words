@@ -89,12 +89,24 @@ compound when it is specifically reviewed and represented by the unit registry.
 Unknown undotted uppercase tokens are intentionally unchanged by the default
 API. A downstream speech normalizer should first claim typed structured spans
 and then normally call `initialism_mode="conservative_undotted"` for residual
-standalone ASCII uppercase tokens. This middle-ground matcher covers bounded
-high-confidence shapes, rejects lexical/headline runs, ambiguous words,
-Roman-like strings, mixed/alphanumeric identifiers, and hyphenated code
-fragments, and reports `abbr:initialism-conservative` provenance. The explicit
-`spell_undotted` mode remains available when a caller knowingly wants broad
-spelling. Protected spans remain untouched.
+standalone ASCII uppercase tokens. This middle-ground matcher accepts only
+three-to-six-letter, consonant-only residual shapes, rejects unknown two-letter
+forms, lexical/headline runs, vowel-bearing words, Roman-like strings,
+mixed/alphanumeric identifiers, and hyphenated code fragments, and reports
+`abbr:initialism-conservative` provenance. The explicit `spell_undotted` mode
+remains available when a caller knowingly wants broad spelling. Protected spans
+remain untouched.
+
+Reviewed locale registries and explicit lowercase aliases provide coverage for
+known initialisms such as common organization names and technical forms like
+`html`, `xml`, `xhtml`, `gtk`, `gfdl`, `sql`, and `glsl`. These aliases are
+case-sensitive data entries; ordinary words such as `us`, `in`, `as`, `at`, and
+`no` are not made globally case-insensitive.
+
+Registered initialisms may expand in lexical hyphen compounds such as
+`ZDF-Sendung` and `EU-Richtlinie`. Code-like neighbors remain protected,
+including numeric, uppercase-code, compact mixed-alphanumeric, version-like,
+and one-character segments such as `ISO-9001`, `HH-GT`, and `FW-1.2.3`.
 
 The output case is independent of recognition: `initialism_case` may be
 `source`, `upper`, or `lower`. Registered entries retain their semantic
@@ -113,8 +125,9 @@ The intended orchestration is:
 
 Use `iter_initialism_diagnostics()` to inspect why a candidate was accepted or
 preserved. Diagnostics expose source offsets and stable reasons such as
-`registered-semantic`, `unknown-conservative-accepted`, `lexical-acronym`,
-`headline-run`, `roman-like`, `alphanumeric-identifier`, and `protected`;
+`registered-semantic`, `conservative-unknown`, `vowel-bearing-unknown`,
+`two-letter-unknown`, `lexical-acronym`, `uppercase-run`, `roman-like`,
+`structured-candidate`, `hyphenated-code`, and `protected-span`;
 benchmark triage must not infer these decisions from a downstream rendering
 failure alone.
 

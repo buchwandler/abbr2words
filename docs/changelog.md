@@ -11,6 +11,7 @@
 ### Changed
 
 - Changed reviewed initialism precedence and provenance while retaining conservative unknown-uppercase behavior
+- Hardened conservative undotted initialism handling and expanded reviewed locale coverage
 
 ### Documentation
 

@@ -44,9 +44,9 @@ def test_aliases_and_sentence_punctuation_are_source_aligned() -> None:
 
 def test_reviewed_and_generic_provenance_are_distinct() -> None:
     result = abbr2words_with_replacements(
-        "BBC AAPL E.G.", lang="en", initialism_mode="spell_undotted"
+        "BBC TST E.G.", lang="en", initialism_mode="spell_undotted"
     )
-    assert result.text == "B B C A A P L E G."
+    assert result.text == "B B C T S T E G."
     assert [(item.source, item.rule) for item in result.replacements] == [
         ("abbr:BBC", "abbr:BBC"),
         ("abbr:initialism-undotted", "abbr:initialism-undotted"),

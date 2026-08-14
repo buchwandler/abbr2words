@@ -15,6 +15,7 @@ from abbr2words.core import (
     ExpansionVariant,
 )
 from abbr2words.language_data.initialisms import (
+    ITALIAN_REVIEWED_INITIALISMS,
     TECHNICAL_INITIALISMS,
     register_reviewed_initialisms,
 )
@@ -497,6 +498,7 @@ class ItalianAbbreviationExpander(AbbreviationExpander):
             )
         )
 
+        register_reviewed_initialisms(self, ITALIAN_REVIEWED_INITIALISMS)
         register_reviewed_initialisms(self, TECHNICAL_INITIALISMS)
 
         self.add_abbreviation(

@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
-from typing import Any, Literal
+from typing import Any, Literal, cast
 
 from ._replacements import Replacement
 
@@ -16,16 +16,24 @@ INITIALISM_FALLBACK_PRIORITY = 50
 _DOTTED_INITIALISM = re.compile(r"(?<!\w)(?P<value>(?:[A-Z]\.){2,8})(?!\w)")
 _UNDOTTED_INITIALISM = re.compile(r"(?<!\w)(?P<value>[A-Z]{2,8})(?!\w)")
 _ROMAN_ONLY = re.compile(r"^[IVXLCDM]+$")
-_UPPERCASE_WORD = re.compile(r"(?<!\w)(?P<value>[A-Z]{2,8})(?!\w)")
-_STRUCTURED_IDENTIFIER = re.compile(
-    r"(?<!\w)(?P<value>[A-Z0-9]+(?:[-.][A-Z0-9]+)+)(?!\w)"
-)
+_UPPERCASE_WORD = re.compile(r"(?<!\w)(?P<value>[A-Z]{2,})(?!\w)")
+_STRUCTURED_IDENTIFIER = re.compile(r"(?<!\w)(?P<value>[A-Z0-9]+(?:[-.][A-Z0-9]+)+)(?!\w)")
 _VOWELS = frozenset("AEIOU")
+_UNKNOWN_VOWEL_LIKE = {
+    "en": frozenset("AEIOUY"),
+    "de": frozenset("AEIOUY"),
+    "es": frozenset("AEIOUY"),
+    "fr": frozenset("AEIOUY"),
+    "it": frozenset("AEIOUY"),
+}
+_ASCII_UPPERCASE = re.compile(r"^[A-Z]+$")
+_UPPERCASE_RUN_SEPARATOR = re.compile(r"^[\s,;:!?…—–()\[\]{}\"'“”‘’]+$")
 
 InitialismMode = Literal["dotted_only", "conservative_undotted", "spell_undotted"]
 InitialismCase = Literal["source", "upper", "lower"]
 RegisteredInitialismMode = Literal["expand", "spell"]
 InitialismDiagnosticDecision = Literal["accepted", "preserved", "rejected"]
+_InitialismDecisionKind = Literal["expand", "preserve", "skip"]
 
 
 @dataclass(frozen=True, slots=True)
@@ -54,6 +62,20 @@ class InitialismDiagnostic:
     decision: InitialismDiagnosticDecision
     reason: str
     registered_entry_id: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class _InitialismDecision:
+    """One source-aligned policy decision shared by diagnostics and fallback."""
+
+    start: int
+    end: int
+    source: str
+    candidate_kind: str
+    decision: _InitialismDecisionKind
+    reason: str
+    registry_key: str | None = None
+    speech_strategy: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -147,12 +169,14 @@ def _preserve_records(language: str) -> tuple[InitialismPreserveToken, ...]:
 
 
 def _uppercase_runs(text: str) -> tuple[tuple[re.Match[str], ...], ...]:
-    """Return whitespace-separated uppercase word runs in source order."""
+    """Return presentation-separated uppercase word runs in source order."""
     matches = tuple(_UPPERCASE_WORD.finditer(text))
     runs: list[tuple[re.Match[str], ...]] = []
     current: list[re.Match[str]] = []
     for match in matches:
-        if current and not text[current[-1].end() : match.start()].isspace():
+        if current and not _UPPERCASE_RUN_SEPARATOR.fullmatch(
+            text[current[-1].end() : match.start()]
+        ):
             runs.append(tuple(current))
             current = []
         current.append(match)
@@ -164,25 +188,42 @@ def _uppercase_runs(text: str) -> tuple[tuple[re.Match[str], ...], ...]:
 def _headline_run_spans(
     text: str,
     records: tuple[InitialismPreserveToken, ...],
+    entries: tuple[Any, ...],
 ) -> frozenset[tuple[int, int]]:
-    """Return candidates in runs dominated by reviewed lexical words."""
-    headline_words = {
-        record.token for record in records if record.reason == "headline-word"
-    }
+    """Return unregistered candidates in generic uppercase prose runs."""
+    headline_words = {record.token for record in records if record.reason == "headline-word"}
     spans: set[tuple[int, int]] = set()
     for run in _uppercase_runs(text):
         values = {match.group("value") for match in run}
-        if len(run) >= 2 and values & headline_words:
-            spans.update((match.start("value"), match.end("value")) for match in run)
+        if len(run) < 3:
+            continue
+        lexical_count = sum(
+            _registered_entry_for(value, entries) is None
+            and value not in headline_words
+            and not _ROMAN_ONLY.fullmatch(value)
+            for value in values
+        )
+        if lexical_count >= 2 or values & headline_words:
+            spans.update(
+                (match.start("value"), match.end("value"))
+                for match in run
+                if _registered_entry_for(match.group("value"), entries) is None
+            )
     return frozenset(spans)
 
 
 def _is_high_confidence_unknown(source: str) -> bool:
-    """Keep only short or strongly consonantal unknown uppercase candidates."""
-    vowel_ratio = sum(character in _VOWELS for character in source) / len(source)
-    if len(source) <= 3:
-        return vowel_ratio <= 1 / 3
-    return vowel_ratio == 0 or vowel_ratio <= 1 / 4
+    """Keep only bounded, ASCII consonant-only unknown candidates."""
+    return (
+        3 <= len(source) <= 6
+        and _ASCII_UPPERCASE.fullmatch(source) is not None
+        and not any(character in _VOWELS or character == "Y" for character in source)
+    )
+
+
+def _unknown_vowel_like(language: str) -> frozenset[str]:
+    """Return the language-specific vowel-like set for residual candidates."""
+    return _UNKNOWN_VOWEL_LIKE.get(language.split("_", 1)[0], frozenset("AEIOUY"))
 
 
 def _overlaps_protected(
@@ -230,11 +271,135 @@ def _initialism_candidates(text: str) -> tuple[tuple[int, int, str, str], ...]:
     ):
         for match in pattern.finditer(text):
             start, end = match.start("value"), match.end("value")
-            if any(start < identifier.end() and identifier.start() < end for identifier in identifiers):
+            if any(
+                start < identifier.end() and identifier.start() < end for identifier in identifiers
+            ):
                 continue
             candidates.append((start, end, kind, match.group("value")))
 
     return tuple(sorted(candidates, key=lambda item: (item[0], -(item[1] - item[0]))))
+
+
+def _initialism_decisions(
+    text: str,
+    *,
+    language: str,
+    mode: InitialismMode,
+    registered_mode: RegisteredInitialismMode,
+    protected_spans: tuple[tuple[int, int], ...],
+    registered_entries: tuple[Any, ...],
+) -> tuple[_InitialismDecision, ...]:
+    """Classify every candidate once for all initialism consumers."""
+    records = _preserve_records(language) if mode == "conservative_undotted" else ()
+    preserve_reasons = {record.token: record.reason for record in records}
+    headline_spans = (
+        _headline_run_spans(text, records, registered_entries)
+        if mode == "conservative_undotted"
+        else frozenset()
+    )
+    decisions: list[_InitialismDecision] = []
+
+    for start, end, kind, source in _initialism_candidates(text):
+        registered = _registered_entry_for(source, registered_entries)
+        registry_key = f"abbr:{registered.abbreviation}" if registered is not None else None
+        speech_strategy = (
+            getattr(registered, "speech_strategy", None) if registered is not None else None
+        )
+        if _overlaps_protected(start, end, protected_spans):
+            decisions.append(
+                _InitialismDecision(
+                    start,
+                    end,
+                    text[start:end],
+                    kind,
+                    "preserve",
+                    "protected-span",
+                    registry_key,
+                    speech_strategy,
+                )
+            )
+            continue
+
+        if registered is not None:
+            reason = (
+                "registered-spell"
+                if registered_mode == "spell" and speech_strategy == "spell_source"
+                else "registered-semantic"
+            )
+            decisions.append(
+                _InitialismDecision(
+                    start,
+                    end,
+                    source,
+                    "registered",
+                    "expand",
+                    reason,
+                    registry_key,
+                    speech_strategy,
+                )
+            )
+            continue
+
+        if kind == "identifier":
+            decisions.append(
+                _InitialismDecision(start, end, source, kind, "skip", "structured-candidate")
+            )
+            continue
+
+        if kind == "dotted":
+            decisions.append(
+                _InitialismDecision(start, end, source, kind, "expand", "dotted-initialism")
+            )
+            continue
+
+        if _ROMAN_ONLY.fullmatch(source):
+            reason = "roman-like"
+        elif _is_hyphenated_identifier_component(text, start, end):
+            reason = "hyphenated-code"
+        elif mode == "conservative_undotted" and source in preserve_reasons:
+            reason = preserve_reasons[source]
+            if reason == "headline-word":
+                reason = "uppercase-run"
+        elif (start, end) in headline_spans:
+            reason = "uppercase-run"
+        elif mode == "dotted_only":
+            reason = "unsupported-shape"
+        elif mode == "conservative_undotted" and len(source) == 2:
+            reason = "two-letter-unknown"
+        elif mode == "conservative_undotted" and any(
+            character in _unknown_vowel_like(language) for character in source
+        ):
+            reason = "vowel-bearing-unknown"
+        elif mode == "conservative_undotted" and _is_high_confidence_unknown(source):
+            decisions.append(
+                _InitialismDecision(
+                    start,
+                    end,
+                    source,
+                    kind,
+                    "expand",
+                    "conservative-unknown",
+                )
+            )
+            continue
+        elif mode == "spell_undotted":
+            decisions.append(
+                _InitialismDecision(
+                    start,
+                    end,
+                    source,
+                    kind,
+                    "expand",
+                    "unknown-undotted",
+                )
+            )
+            continue
+        else:
+            reason = "unsupported-shape"
+
+        decisions.append(_InitialismDecision(start, end, source, kind, "skip", reason))
+
+    return tuple(decisions)
 
 
 def iter_initialism_diagnostics(
@@ -250,98 +415,32 @@ def iter_initialism_diagnostics(
     validate_initialism_policy(mode=mode, registered_mode=registered_mode)
     protected = tuple(protected_spans)
     entries = tuple(registered_entries)
-    records = _preserve_records(language)
-    preserve_reasons = {record.token: record.reason for record in records}
-    headline_spans = _headline_run_spans(text, records)
-
-    for start, end, kind, source in _initialism_candidates(text):
-        registered = _registered_entry_for(source, entries)
-        registered_id = (
-            f"abbr:{registered.abbreviation}" if registered is not None else None
+    for item in _initialism_decisions(
+        text,
+        language=language,
+        mode=mode,
+        registered_mode=registered_mode,
+        protected_spans=protected,
+        registered_entries=entries,
+    ):
+        decision = cast(
+            InitialismDiagnosticDecision,
+            {
+                "expand": "accepted",
+                "preserve": "preserved",
+                "skip": "rejected",
+            }[item.decision],
         )
-        if _overlaps_protected(start, end, protected):
-            yield InitialismDiagnostic(
-                start,
-                end,
-                text[start:end],
-                language,
-                kind,
-                "preserved",
-                "protected",
-                registered_id,
-            )
-            continue
-
-        if registered is not None:
-            reason = (
-                "registered-spell"
-                if registered_mode == "spell"
-                and getattr(registered, "speech_strategy", "expand") == "spell_source"
-                else "registered-semantic"
-            )
-            yield InitialismDiagnostic(
-                start,
-                end,
-                source,
-                language,
-                "registered",
-                "accepted",
-                reason,
-                registered_id,
-            )
-            continue
-
-        if kind == "identifier":
-            reason = "alphanumeric-identifier"
-            yield InitialismDiagnostic(
-                start, end, source, language, kind, "rejected", reason
-            )
-            continue
-
-        if kind == "dotted":
-            yield InitialismDiagnostic(
-                start, end, source, language, kind, "accepted", "dotted-fallback"
-            )
-            continue
-
-        if _ROMAN_ONLY.fullmatch(source):
-            reason = "roman-like"
-        elif _is_hyphenated_identifier_component(text, start, end):
-            reason = "hyphenated-identifier"
-        elif mode == "dotted_only":
-            reason = "unsupported-shape"
-        elif source in preserve_reasons:
-            reason = preserve_reasons[source]
-            if reason == "headline-word":
-                reason = "headline-run"
-        elif (start, end) in headline_spans:
-            reason = "headline-run"
-        elif mode == "conservative_undotted" and _is_high_confidence_unknown(source):
-            yield InitialismDiagnostic(
-                start,
-                end,
-                source,
-                language,
-                kind,
-                "accepted",
-                "unknown-conservative-accepted",
-            )
-            continue
-        elif mode == "spell_undotted":
-            yield InitialismDiagnostic(
-                start,
-                end,
-                source,
-                language,
-                kind,
-                "accepted",
-                "unknown-undotted-accepted",
-            )
-            continue
-        else:
-            reason = "unsupported-shape"
-
-        yield InitialismDiagnostic(start, end, source, language, kind, "rejected", reason)
+        yield InitialismDiagnostic(
+            item.start,
+            item.end,
+            item.source,
+            language,
+            item.candidate_kind,
+            decision,
+            item.reason,
+            item.registry_key,
+        )
 
 
 def iter_initialism_replacements(
@@ -351,51 +450,42 @@ def iter_initialism_replacements(
     case: InitialismCase = "source",
     language: str = "en",
     protected_spans: Iterable[tuple[int, int]] = (),
+    registered_entries: Iterable[Any] = (),
 ) -> Iterator[Replacement]:
     """Yield low-priority replacements for standalone initialisms."""
     validate_initialism_policy(mode=mode, case=case)
     protected = tuple(protected_spans)
-    patterns = [_DOTTED_INITIALISM]
-    if mode in {"conservative_undotted", "spell_undotted"}:
-        patterns.append(_UNDOTTED_INITIALISM)
-
-    records = _preserve_records(language) if mode == "conservative_undotted" else ()
-    preserve_reasons = {record.token: record.reason for record in records}
-    headline_spans = _headline_run_spans(text, records) if records else frozenset()
-
-    for pattern in patterns:
-        for match in pattern.finditer(text):
-            source = match.group("value")
-            start, end = match.start("value"), match.end("value")
-            if _overlaps_protected(start, end, protected):
-                continue
-            if pattern is _UNDOTTED_INITIALISM:
-                if _ROMAN_ONLY.fullmatch(source) or _is_hyphenated_identifier_component(text, start, end):
-                    continue
-                if mode == "conservative_undotted":
-                    if source in preserve_reasons:
-                        continue
-                    if (start, end) in headline_spans:
-                        continue
-                    if not _is_high_confidence_unknown(source):
-                        continue
-                    rule = "abbr:initialism-conservative"
-                else:
-                    rule = "abbr:initialism-undotted"
-            else:
-                rule = "abbr:initialism"
-            expansion = render_initialism_source(source, case=case)
-            if should_preserve_sentence_final_period(text, match.end(), source, expansion):
-                expansion += "."
-            yield Replacement(
-                start=match.start("value"),
-                end=match.end("value"),
-                text=expansion,
-                priority=INITIALISM_FALLBACK_PRIORITY,
-                source=rule,
-                kind="abbreviation",
-                entry_id=rule,
-            )
+    entries = tuple(registered_entries)
+    for item in _initialism_decisions(
+        text,
+        language=language,
+        mode=mode,
+        registered_mode="expand",
+        protected_spans=protected,
+        registered_entries=entries,
+    ):
+        if item.decision != "expand" or item.registry_key is not None:
+            continue
+        if item.candidate_kind == "dotted":
+            rule = "abbr:initialism"
+        elif item.reason == "conservative-unknown":
+            rule = "abbr:initialism-conservative"
+        elif item.reason == "unknown-undotted":
+            rule = "abbr:initialism-undotted"
+        else:
+            continue
+        expansion = render_initialism_source(item.source, case=case)
+        if should_preserve_sentence_final_period(text, item.end, item.source, expansion):
+            expansion += "."
+        yield Replacement(
+            start=item.start,
+            end=item.end,
+            text=expansion,
+            priority=INITIALISM_FALLBACK_PRIORITY,
+            source=rule,
+            kind="abbreviation",
+            entry_id=rule,
+        )
 
 
 __all__ = [

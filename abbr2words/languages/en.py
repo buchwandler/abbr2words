@@ -8,6 +8,7 @@ import warnings
 
 from abbr2words.core import AbbreviationContext, AbbreviationEntry, AbbreviationExpander
 from abbr2words.language_data.initialisms import (
+    ENGLISH_REVIEWED_INITIALISMS,
     TECHNICAL_INITIALISMS,
     ReviewedInitialism,
     register_reviewed_initialisms,
@@ -1574,6 +1575,7 @@ class EnglishAbbreviationExpander(AbbreviationExpander):
         )
 
         register_reviewed_initialisms(self, _REVIEWED_INITIALISMS)
+        register_reviewed_initialisms(self, ENGLISH_REVIEWED_INITIALISMS)
         register_reviewed_initialisms(self, TECHNICAL_INITIALISMS)
 
 

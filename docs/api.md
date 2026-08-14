@@ -96,14 +96,14 @@ metadata; semantic registry expansions remain the default.
 
 The compatibility surface is intentionally conservative:
 
-| Source   | Detection mode   | Case     | Registered mode | Result                   |
-| -------- | ---------------- | -------- | --------------- | ------------------------ |
-| `ABC`    | `dotted_only`    | `source` | `expand`        | `A B C` (reviewed entry) |
-| `NGO`    | `conservative_undotted` | `source` | `expand` | `N G O` (high-confidence residual) |
-| `ABC`    | `spell_undotted` | `upper`  | `expand`        | `A B C`                  |
-| `ABC`    | `spell_undotted` | `lower`  | `expand`        | `a b c`                  |
-| `U.S.`   | dotted           | `lower`  | `spell`         | `u s.`                   |
-| `pp. 12` | dotted           | `source` | `spell`         | `p p 12`                 |
+| Source   | Detection mode          | Case     | Registered mode | Result                             |
+| -------- | ----------------------- | -------- | --------------- | ---------------------------------- |
+| `ABC`    | `dotted_only`           | `source` | `expand`        | `A B C` (reviewed entry)           |
+| `NGO`    | `conservative_undotted` | `source` | `expand`        | `N G O` (high-confidence residual) |
+| `ABC`    | `spell_undotted`        | `upper`  | `expand`        | `A B C`                            |
+| `ABC`    | `spell_undotted`        | `lower`  | `expand`        | `a b c`                            |
+| `U.S.`   | dotted                  | `lower`  | `spell`         | `u s.`                             |
+| `pp. 12` | dotted                  | `source` | `spell`         | `p p 12`                           |
 
 The final period in the `U.S.` row is source sentence punctuation retained by
 the existing replacement policy. Reviewed entries continue to outrank the
