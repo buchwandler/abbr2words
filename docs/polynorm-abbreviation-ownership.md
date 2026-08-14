@@ -87,12 +87,14 @@ compound when it is specifically reviewed and represented by the unit registry.
 ## Opt-in residual initialism policy
 
 Unknown undotted uppercase tokens are intentionally unchanged by the default
-API. A downstream speech normalizer may first claim typed structured spans and
-then call `initialism_mode="spell_undotted"` for residual standalone ASCII
-uppercase tokens. The bounded matcher covers two through eight letters and
-reports `abbr:initialism-undotted` provenance; it skips Roman-like strings,
-mixed/alphanumeric identifiers, and hyphenated code fragments. Protected spans
-remain untouched.
+API. A downstream speech normalizer should first claim typed structured spans
+and then normally call `initialism_mode="conservative_undotted"` for residual
+standalone ASCII uppercase tokens. This middle-ground matcher covers bounded
+high-confidence shapes, rejects lexical/headline runs, ambiguous words,
+Roman-like strings, mixed/alphanumeric identifiers, and hyphenated code
+fragments, and reports `abbr:initialism-conservative` provenance. The explicit
+`spell_undotted` mode remains available when a caller knowingly wants broad
+spelling. Protected spans remain untouched.
 
 The output case is independent of recognition: `initialism_case` may be
 `source`, `upper`, or `lower`. Registered entries retain their semantic
@@ -108,6 +110,13 @@ The intended orchestration is:
 2. `abbr2words` applies reviewed lexical abbreviations and units.
 3. The caller optionally enables residual undotted initialism spelling for
    spans still unclaimed by its structured recognizers.
+
+Use `iter_initialism_diagnostics()` to inspect why a candidate was accepted or
+preserved. Diagnostics expose source offsets and stable reasons such as
+`registered-semantic`, `unknown-conservative-accepted`, `lexical-acronym`,
+`headline-run`, `roman-like`, `alphanumeric-identifier`, and `protected`;
+benchmark triage must not infer these decisions from a downstream rendering
+failure alone.
 
 This policy does not make benchmark-specific rules for `MIT`, `v.`, `Co.`,
 `e.g.`, `D.C.`, or language-data disagreements such as Italian `Onlus`.

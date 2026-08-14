@@ -17,7 +17,12 @@ from .core import (
     PosConstraints,
     ProtectedSpan,
 )
-from .initialisms import InitialismCase, InitialismMode, RegisteredInitialismMode
+from .initialisms import (
+    InitialismCase,
+    InitialismDiagnostic,
+    InitialismMode,
+    RegisteredInitialismMode,
+)
 from .language_registry import (
     LANGUAGE_SPECS,
     language_spec,
@@ -87,6 +92,30 @@ def iter_unit_diagnostics(
         suppressed=suppressed,
         protected_spans=protected_spans,
     )
+
+
+def iter_initialism_diagnostics(
+    text: str,
+    language: str = "en",
+    *,
+    context: bool = True,
+    initialism_mode: InitialismMode = "dotted_only",
+    initialism_case: InitialismCase = "source",
+    registered_initialism_mode: RegisteredInitialismMode = "expand",
+    protected_spans: Iterable[ProtectedSpan | tuple[int, int] | tuple[int, int, str | None]]
+    | None = None,
+) -> Iterator[InitialismDiagnostic]:
+    """Yield source-aligned decisions for initialism-shaped candidates."""
+    if not isinstance(text, str):
+        raise TypeError("text must be a string")
+    code = normalize_language(language)
+    return get_shared_expander(
+        code,
+        context=context,
+        initialism_mode=initialism_mode,
+        initialism_case=initialism_case,
+        registered_initialism_mode=registered_initialism_mode,
+    ).iter_initialism_diagnostics(text, protected_spans=protected_spans or ())
 
 
 def _expander_class(lang: str) -> type[AbbreviationExpander]:
@@ -277,6 +306,16 @@ class Expander:
         return self.expand_with_replacements(
             text, annotations=annotations, protected_spans=protected_spans
         )
+
+    def iter_initialism_diagnostics(
+        self,
+        text: str,
+        *,
+        protected_spans: Iterable[ProtectedSpan | tuple[int, int] | tuple[int, int, str | None]]
+        | None = None,
+    ) -> Iterator[InitialismDiagnostic]:
+        """Yield source-aligned initialism decisions for this expander."""
+        return self._impl.iter_initialism_diagnostics(text, protected_spans=protected_spans or ())
 
     __call__ = expand
 

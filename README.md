@@ -143,7 +143,11 @@ or product identifiers; those belong to a downstream speech normalizer.
 
 Unknown undotted uppercase initialisms are preserved by default. A downstream
 speech normalizer that has already reserved its structured spans can opt into a
-bounded residual fallback:
+bounded residual fallback. `conservative_undotted` is the recommended
+middle-ground; it spells only high-confidence residual shapes and fails closed
+for headlines, lexical acronyms, ambiguous words, Roman numerals, and
+identifiers. The existing `spell_undotted` mode remains an intentionally broad
+explicit opt-in:
 
 ```python
 abbr2words("BBC News", initialism_mode="spell_undotted")
@@ -155,26 +159,32 @@ abbr2words(
     initialism_case="lower",
 )
 # "b b c p d f"
+
+abbr2words("NGO WORLD FIRST", initialism_mode="conservative_undotted")
+# "N G O WORLD FIRST"
 ```
 
 `initialism_case` (`source`, `upper`, or `lower`) controls rendering separately
-from detection. The fallback accepts only standalone ASCII uppercase tokens of
-two through eight letters, skips Roman-like and hyphenated identifier fragments,
-and leaves protected spans unchanged. Registered semantic entries continue to
+from detection. Conservative fallback accepts only high-confidence standalone
+ASCII uppercase tokens of two through eight letters, skips Roman-like,
+identifier, headline, lexical-acronym, and ambiguous-word candidates, and
+leaves protected spans unchanged. Registered semantic entries continue to
 win; `registered_initialism_mode="spell"` is a separate opt-in that applies only
-to reviewed entries tagged for source spelling. The API is included in the
-planned v0.2.7 feature release; callers should require that release (or a newer
-compatible release) before using these options.
+to reviewed entries tagged for source spelling. These options are available in
+v0.2.7 and remain backward-compatible for callers using the default policy.
 
 The reviewed registry owns a small, audited set of common initialisms such as
 `BBC`, `CBS`, `US`, `UK`, `USA`, `ISBN`, `HTML`, `ISO`, `IEC`, `TV`, `NFL`,
 `NHL`, and `MLB`. These entries use `speech_strategy="spell_source"` and emit
 source graphemes in the default mode. Lexical acronyms such as `NASA`, `NATO`,
 `FIFA`, and `UNESCO`, ordinary uppercase words, stock tickers, and unknown
-codes remain unchanged unless a caller explicitly selects broad undotted
-spelling. Reviewed replacements report stable `abbr:<canonical>` provenance;
-the generic dotted and undotted fallbacks remain `abbr:initialism` and
-`abbr:initialism-undotted`.
+codes remain unchanged in conservative mode unless a caller explicitly selects
+broad undotted spelling. Reviewed replacements report stable
+`abbr:<canonical>` provenance; the generic dotted, conservative, and broad
+undotted fallbacks report `abbr:initialism`, `abbr:initialism-conservative`, and
+`abbr:initialism-undotted`. Use `iter_initialism_diagnostics()` when a caller
+needs candidate reasons, decisions, source offsets, or registered entry ids
+without inferring policy from generated text.
 
 `abbr2words` recognizes and identifies quantity symbols; it does not decide how
 a complete numeric quantity is spoken. Number words, grammatical number,

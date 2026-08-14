@@ -21,12 +21,16 @@ from .annotations import AnnotationIndex, TokenAnnotation, normalize_annotations
 from .context import profile_for
 from .initialisms import (
     InitialismCase,
+    InitialismDiagnostic,
     InitialismMode,
     InitialismPolicy,
     RegisteredInitialismMode,
     iter_initialism_replacements,
     render_initialism_source,
     should_preserve_sentence_final_period,
+)
+from .initialisms import (
+    iter_initialism_diagnostics as _iter_initialism_diagnostics,
 )
 from .registry_keys import normalize_entry_key
 from .units import (
@@ -713,6 +717,28 @@ class AbbreviationExpander(ABC):
             protected_spans=protected_spans,
         )
 
+    def iter_initialism_diagnostics(
+        self,
+        text: str,
+        *,
+        protected_spans: Iterable[
+            ProtectedSpan | tuple[int, int] | tuple[int, int, str | None]
+        ] = (),
+    ) -> Iterator[InitialismDiagnostic]:
+        """Yield initialism decisions using this expander's registry and policy."""
+        if not isinstance(text, str):
+            raise TypeError("text must be a string")
+        spans = _normalize_protected_spans(text, protected_spans)
+        language = getattr(self, "UNIT_LANGUAGE", "en")
+        return _iter_initialism_diagnostics(
+            text,
+            language=language,
+            mode=self.initialism_policy.mode,
+            registered_mode=self.initialism_policy.registered_mode,
+            protected_spans=((span.start, span.end) for span in spans),
+            registered_entries=self.entries.values(),
+        )
+
     def remove_abbreviation(self, abbreviation: str, case_sensitive: bool = False) -> bool:
         """Remove an abbreviation entry.
 
@@ -821,6 +847,7 @@ class AbbreviationExpander(ABC):
         annotation_index = (
             AnnotationIndex(normalized_annotations) if annotations is not None else None
         )
+        language = getattr(self, "UNIT_LANGUAGE", "en")
         entries = tuple(self.entries.values())
         unit_overrides = dict(self._unit_overrides)
         suppressed_units = frozenset(self._suppressed_units)
@@ -842,6 +869,8 @@ class AbbreviationExpander(ABC):
                 text,
                 mode=self.initialism_policy.mode,
                 case=self.initialism_policy.case,
+                language=language,
+                protected_spans=((span.start, span.end) for span in spans),
             )
             if not _overlaps_spans(candidate, spans)
         )
@@ -863,7 +892,6 @@ class AbbreviationExpander(ABC):
             )
 
         selected = resolve_replacements(candidates)
-        language = getattr(self, "UNIT_LANGUAGE", "en")
         return ExpansionResult(
             source_text=text,
             text=apply_replacements(text, selected),

@@ -13,6 +13,7 @@ from .api import (
     expand,
     get_expander,
     get_shared_expander,
+    iter_initialism_diagnostics,
     iter_unit_diagnostics,
     iter_unit_matches,
     normalize_language,
@@ -32,6 +33,8 @@ from .core import (
 )
 from .initialisms import (
     InitialismCase,
+    InitialismDiagnostic,
+    InitialismDiagnosticDecision,
     InitialismMode,
     InitialismPolicy,
     RegisteredInitialismMode,
@@ -43,6 +46,8 @@ __all__ = [
     "AbbreviationEntry",
     "AbbreviationExpander",
     "InitialismCase",
+    "InitialismDiagnostic",
+    "InitialismDiagnosticDecision",
     "InitialismMode",
     "InitialismPolicy",
     "RegisteredInitialismMode",
@@ -66,6 +71,7 @@ __all__ = [
     "get_expander",
     "get_shared_expander",
     "iter_unit_matches",
+    "iter_initialism_diagnostics",
     "iter_unit_diagnostics",
     "normalize_language",
     "reset_expanders",

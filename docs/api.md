@@ -18,6 +18,10 @@
 
 ```
 
+```{autofunction} abbr2words.iter_initialism_diagnostics
+
+```
+
 `abbr2words(..., annotations=...)` accepts an iterable of source-aligned
 `TokenAnnotation` objects. Their offsets refer to the original input text;
 labels are normalized and overlapping or invalid spans raise `ValueError`.
@@ -68,8 +72,8 @@ and `Expander` accept these optional policy arguments:
 
 ```python
 abbr2words(
-    "BBC PDF",
-    initialism_mode="spell_undotted",   # default: "dotted_only"
+    "NGO BBC PDF",
+    initialism_mode="conservative_undotted",  # default: "dotted_only"
     initialism_case="lower",             # "source", "upper", or "lower"
     registered_initialism_mode="expand", # or explicit "spell"
 )
@@ -78,12 +82,15 @@ abbr2words(
 The default preserves existing behavior for unknown uppercase text. The
 reviewed registry intentionally owns a small set of common initialisms such as
 `BBC`, `US`, `UK`, `ISBN`, `HTML`, and `TV`, which render source graphemes as
-ordinary abbreviation entries. `spell_undotted` recognizes only standalone
-ASCII uppercase tokens from two through eight letters and renders
-source-aligned graphemes. It does not parse numbers, URLs, e-mail addresses,
-versions, product codes, phone numbers, stock tickers, or Roman numerals.
-Callers should reserve typed structured spans first, then use this policy for
-remaining uppercase tokens. `registered_initialism_mode="spell"` affects only
+ordinary abbreviation entries. `conservative_undotted` recognizes only
+high-confidence standalone ASCII uppercase residuals from two through eight
+letters and rejects reviewed lexical acronyms, ambiguous words, headline runs,
+Roman numerals, and structured identifiers. `spell_undotted` retains the broad
+historical opt-in behavior and renders standalone source-aligned graphemes.
+Neither mode parses numbers, URLs, e-mail addresses, versions, product codes,
+phone numbers, stock tickers, or Roman numerals. Callers should reserve typed
+structured spans first, then use the conservative policy for remaining
+uppercase tokens. `registered_initialism_mode="spell"` affects only
 reviewed registry entries carrying the explicit `speech_strategy="spell_source"`
 metadata; semantic registry expansions remain the default.
 
@@ -92,6 +99,7 @@ The compatibility surface is intentionally conservative:
 | Source   | Detection mode   | Case     | Registered mode | Result                   |
 | -------- | ---------------- | -------- | --------------- | ------------------------ |
 | `ABC`    | `dotted_only`    | `source` | `expand`        | `A B C` (reviewed entry) |
+| `NGO`    | `conservative_undotted` | `source` | `expand` | `N G O` (high-confidence residual) |
 | `ABC`    | `spell_undotted` | `upper`  | `expand`        | `A B C`                  |
 | `ABC`    | `spell_undotted` | `lower`  | `expand`        | `a b c`                  |
 | `U.S.`   | dotted           | `lower`  | `spell`         | `u s.`                   |
@@ -105,7 +113,11 @@ components remain excluded.
 The shared-expander cache includes all policy values, so expanders with
 different initialism behavior are independent instances. Fallback replacement
 records use `abbr:initialism` for dotted matches and
-`abbr:initialism-undotted` for the opt-in undotted matcher.
+`abbr:initialism-conservative` or `abbr:initialism-undotted` for undotted
+matches. `iter_initialism_diagnostics()` reports source-aligned `start`/`end`,
+`source_text`, `language`, `candidate_kind`, `decision`, stable `reason`, and
+`registered_entry_id` fields. Protected spans are reported as
+`reason="protected"` and are never claimed.
 
 The bundled language registry follows a 66-key current-master parity snapshot:
 49 base keys plus the explicit locale overlays `en_GB`, `en_IN`, `en_NG`,
