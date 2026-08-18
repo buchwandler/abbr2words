@@ -166,7 +166,7 @@ abbr2words("NGO WORLD FIRST", initialism_mode="conservative_undotted")
 
 `initialism_case` (`source`, `upper`, or `lower`) controls rendering separately
 from detection. Conservative fallback accepts only high-confidence standalone
-ASCII uppercase tokens of two through eight letters, skips Roman-like,
+ASCII uppercase tokens of three through six letters, skips Roman-like,
 identifier, headline, lexical-acronym, and ambiguous-word candidates, and
 leaves protected spans unchanged. Registered semantic entries continue to
 win; `registered_initialism_mode="spell"` is a separate opt-in that applies only
@@ -185,6 +185,23 @@ undotted fallbacks report `abbr:initialism`, `abbr:initialism-conservative`, and
 `abbr:initialism-undotted`. Use `iter_initialism_diagnostics()` when a caller
 needs candidate reasons, decisions, source offsets, or registered entry ids
 without inferring policy from generated text.
+
+For benchmark review workflows, the repository also ships a maintenance helper
+that groups unresolved candidate tokens from fresh failure reports without
+changing runtime behavior:
+
+```bash
+python scripts/report_initialism_candidates.py failures.jsonl
+python scripts/report_initialism_candidates.py failures.json --format json
+```
+
+The helper accepts JSONL or JSON failure rows with source text, language,
+expected output, and optional actual output. It reuses the current
+`conservative_undotted` diagnostics and registry data to report grouped tokens,
+locales, diagnostic reasons, Roman/vowel/two-letter flags, registry coverage,
+uppercase-run/protection flags, and sample source sentences. This is intended
+for reviewed initialism triage after rerunning benchmark suites; it does not
+introduce a new matching engine or broaden fallback recognition.
 
 `abbr2words` recognizes and identifies quantity symbols; it does not decide how
 a complete numeric quantity is spoken. Number words, grammatical number,

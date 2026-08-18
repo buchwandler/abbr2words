@@ -83,7 +83,7 @@ The default preserves existing behavior for unknown uppercase text. The
 reviewed registry intentionally owns a small set of common initialisms such as
 `BBC`, `US`, `UK`, `ISBN`, `HTML`, and `TV`, which render source graphemes as
 ordinary abbreviation entries. `conservative_undotted` recognizes only
-high-confidence standalone ASCII uppercase residuals from two through eight
+high-confidence standalone ASCII uppercase residuals from three through six
 letters and rejects reviewed lexical acronyms, ambiguous words, headline runs,
 Roman numerals, and structured identifiers. `spell_undotted` retains the broad
 historical opt-in behavior and renders standalone source-aligned graphemes.
@@ -117,7 +117,16 @@ records use `abbr:initialism` for dotted matches and
 matches. `iter_initialism_diagnostics()` reports source-aligned `start`/`end`,
 `source_text`, `language`, `candidate_kind`, `decision`, stable `reason`, and
 `registered_entry_id` fields. Protected spans are reported as
-`reason="protected"` and are never claimed.
+`reason="protected-span"` and are never claimed.
+
+For repository maintenance, `scripts/report_initialism_candidates.py` groups
+fresh benchmark failures by unresolved candidate token using the same
+diagnostic surface. It accepts JSONL or JSON rows with source text, language,
+expected output, and optional actual output, then reports grouped token counts,
+locales, reasons, Roman/vowel/two-letter flags, registry coverage, protection
+flags, uppercase-run evidence, and sample source sentences. The helper is for
+reviewing candidate additions after benchmark reruns; it does not change the
+runtime matching policy.
 
 The bundled language registry follows a 66-key current-master parity snapshot:
 49 base keys plus the explicit locale overlays `en_GB`, `en_IN`, `en_NG`,
