@@ -148,9 +148,7 @@ def test_chinese_mainland_does_not_localize_sibling_units() -> None:
         ("WTO规则", "世界贸易组织规则"),
     ],
 )
-def test_chinese_mainland_reviewed_latin_abbreviations(
-    source: str, expected: str
-) -> None:
+def test_chinese_mainland_reviewed_latin_abbreviations(source: str, expected: str) -> None:
     assert abbr2words(source, lang="zh_CN") == expected
 
 
