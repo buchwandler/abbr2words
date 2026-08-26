@@ -869,12 +869,11 @@ class AbbreviationExpander(ABC):
         protected_spans: Iterable[ProtectedSpan | tuple[int, int] | tuple[int, int, str | None]]
         | None = None,
     ) -> ExpansionResult:
-        """Expand text and return exact immutable source-aligned replacement metadata.
+        """Expand text and return the immutable source-aligned accepted-edit plan.
 
-        Offsets refer to the original input. Records are deterministic and
-        non-overlapping, include their matched source surface, and carry stable
-        rule provenance; unit records may also expose canonical identity. Callers
-        should consume ``result.replacements`` instead of diffing source and output.
+        Offsets refer to the original input. Returned records are ordered,
+        non-overlapping, expose exact matched source text, and reconstruct
+        ``result.text`` when applied right-to-left.
         """
         return self._expand_result(text, annotations=annotations, protected_spans=protected_spans)
 
@@ -963,9 +962,7 @@ class AbbreviationExpander(ABC):
                     source=item.source,
                     kind=item.kind,
                     language=language,
-                    abbreviation=(
-                        item.source.removeprefix("abbr:") if item.kind == "abbreviation" else None
-                    ),
+                    abbreviation=item.abbreviation,
                     rule=item.entry_id or item.source,
                     priority=item.priority,
                     context=item.context if isinstance(item.context, AbbreviationContext) else None,
@@ -1077,6 +1074,7 @@ class AbbreviationExpander(ABC):
                     kind="abbreviation",
                     entry_id=f"abbr:{entry.abbreviation}",
                     context=context,
+                    abbreviation=entry.abbreviation,
                 )
 
     def get_abbreviations_list(self) -> list[str]:

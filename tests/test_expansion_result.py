@@ -2,7 +2,13 @@ from dataclasses import FrozenInstanceError
 
 import pytest
 
-from abbr2words import ExpansionResult, abbr2words, abbr2words_with_replacements, iter_unit_matches
+from abbr2words import (
+    Expander,
+    ExpansionResult,
+    abbr2words,
+    abbr2words_with_replacements,
+    iter_unit_matches,
+)
 
 
 def test_string_api_and_structured_api_remain_available() -> None:
@@ -108,3 +114,87 @@ def test_replacement_records_are_immutable() -> None:
 
     with pytest.raises(FrozenInstanceError):
         item.text = "changed"  # type: ignore[misc]
+
+
+def test_generic_initialism_does_not_leak_rule_name_into_abbreviation() -> None:
+    item = abbr2words_with_replacements("E.D.", lang="en").replacements[0]
+
+    assert item.matched_text == "E.D."
+    assert item.rule_id == "abbr:initialism"
+    assert item.abbreviation is None
+    assert item.source == "abbr:initialism"
+
+
+@pytest.mark.parametrize(
+    ("mode", "expected_rule"),
+    [
+        ("conservative_undotted", "abbr:initialism-conservative"),
+        ("spell_undotted", "abbr:initialism-undotted"),
+    ],
+)
+def test_unknown_initialism_fallback_keeps_source_surface_separate(
+    mode: str, expected_rule: str
+) -> None:
+    item = abbr2words_with_replacements(
+        "TSK",
+        lang="en",
+        initialism_mode=mode,  # type: ignore[arg-type]
+    ).replacements[0]
+
+    assert item.matched_text == "TSK"
+    assert item.rule_id == expected_rule
+    assert item.abbreviation is None
+
+
+def test_alias_keeps_exact_surface_and_canonical_abbreviation_identity() -> None:
+    item = abbr2words_with_replacements("z. B.", lang="de").replacements[0]
+
+    assert item.matched_text == "z. B."
+    assert item.abbreviation == "z.B."
+    assert item.rule_id == "abbr:z.B."
+
+
+@pytest.mark.parametrize("source", ["2 µg", "2 μg"])
+def test_unit_aliases_share_canonical_identity(source: str) -> None:
+    item = abbr2words_with_replacements(source, lang="en").replacements[0]
+
+    assert item.kind == "unit"
+    assert item.matched_text == source
+    assert item.canonical_id == "mass-microgram"
+
+
+@pytest.mark.parametrize(
+    ("language", "source", "canonical_id"),
+    [
+        ("ja", "5 km", "length-kilometer"),
+        ("ko", "5 km", "length-kilometer"),
+        ("zh_CN", "5 km", "length-kilometer"),
+    ],
+)
+def test_localized_unit_replacement_keeps_canonical_identity(
+    language: str, source: str, canonical_id: str
+) -> None:
+    item = abbr2words_with_replacements(source, lang=language).replacements[0]
+
+    assert item.language == language
+    assert item.matched_text == source
+    assert item.canonical_id == canonical_id
+
+
+def test_custom_unit_replacement_retains_bundled_identity() -> None:
+    expander = Expander("en")
+    expander.set_unit("kg", "custom kilogram")
+
+    item = expander.expand_with_replacements("2 kg").replacements[0]
+
+    assert item.canonical_id == "mass-kilogram"
+
+
+def test_custom_unit_without_identity_exposes_none() -> None:
+    expander = Expander("en")
+    expander.set_unit("zz", "custom z")
+
+    item = expander.expand_with_replacements("2 zz").replacements[0]
+
+    assert item.matched_text == "2 zz"
+    assert item.canonical_id is None

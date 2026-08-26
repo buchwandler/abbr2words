@@ -90,6 +90,11 @@ for item in result.replacements:
 
 See [the API reference](docs/api.md) for replacement invariants and unit identity.
 
+`matched_text` is the exact consumed source surface. `rule_id` is stable rule
+provenance, while `abbreviation` is populated only for a registered lexical
+identity; generic initialism fallbacks leave it as `None`. The legacy `source`
+field remains provenance metadata and must not be used to recover source text.
+
 Japanese organization abbreviations and localized quantities are handled conservatively:
 
 ```python

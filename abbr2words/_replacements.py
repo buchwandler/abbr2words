@@ -23,6 +23,7 @@ class Replacement:
     entry_id: str = ""
     context: object | None = None
     canonical_id: str | None = None
+    abbreviation: str | None = None
 
 
 def resolve_replacements(candidates: Iterable[Replacement]) -> tuple[Replacement, ...]:
