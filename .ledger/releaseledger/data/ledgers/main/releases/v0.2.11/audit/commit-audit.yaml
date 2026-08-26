@@ -2,14 +2,14 @@ schema_version: 1
 object_type: commit_audit_sheet
 versioning:
   schema_version: 1
-  revision: 2
+  revision: 5
 release_version: v0.2.11
 git_base_ref: v0.2.10
 git_base_sha: 52a5b476bd9b61c9ab89adac2a266e3a9b9b0c2e
 git_head_ref: HEAD
-git_head_sha: 37eb9b2a5b62131209ba9cbbe01bdcb8a31a5e25
-git_range: 52a5b476bd9b61c9ab89adac2a266e3a9b9b0c2e..37eb9b2a5b62131209ba9cbbe01bdcb8a31a5e25
-commit_count: 1
+git_head_sha: 2edf586d6d89bf2431008e44f8be3fe3854813a7
+git_range: 52a5b476bd9b61c9ab89adac2a266e3a9b9b0c2e..2edf586d6d89bf2431008e44f8be3fe3854813a7
+commit_count: 4
 rows:
   - sha: 37eb9b2a5b62131209ba9cbbe01bdcb8a31a5e25
     source_ref: git:37eb9b2a5b62131209ba9cbbe01bdcb8a31a5e25
@@ -55,6 +55,92 @@ rows:
     decision: accepted
     evidence_subject: "feat: improve api for downstream consumers"
     target_entry_key: source-aligned-replacement-contract
+    target_entry_id: entry-0001
     notes:
       The semantic replacement contract is covered by the accepted v0.2.11 release
       entry and focused replacement tests.
+  - sha: edad31b7d2e7bf79b78fbaca862044ae70a15c53
+    source_ref: git:edad31b7d2e7bf79b78fbaca862044ae70a15c53
+    short_sha: edad31b
+    changed_paths:
+      - .ledger/releaseledger/data/ledgers/main/events/events.jsonl
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.11/audit/commit-audit.yaml
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.11/entries/entry-0001.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.11/release.md
+      - README.md
+      - abbr2words/_replacements.py
+      - abbr2words/core.py
+      - docs/api.md
+      - tests/test_expansion_result.py
+    stats:
+      files_changed: 0
+      insertions: 254
+      deletions: 9
+    inspected: true
+    inspected_paths:
+      - README.md
+      - abbr2words/_replacements.py
+      - abbr2words/core.py
+      - docs/api.md
+      - tests/test_expansion_result.py
+    observed_behavior:
+      Clarified replacement metadata semantics by separating exact
+      matched source text from provenance, exposing explicit lexical abbreviation identity,
+      and preserving canonical unit identity across aliases, with focused tests and
+      API documentation.
+    public_impact: public
+    decision: accepted
+    evidence_subject: "fix: metadata semantic"
+    target_entry_key: source-aligned-replacement-contract
+    target_entry_id: entry-0001
+    notes:
+      This commit extends the public replacement metadata contract introduced by
+      the preceding commit.
+  - sha: 6c6141cb01082f5354db5662230b3b077c26e1ff
+    source_ref: git:6c6141cb01082f5354db5662230b3b077c26e1ff
+    short_sha: 6c6141c
+    changed_paths:
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.11/audit/commit-audit.yaml
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.11/entries/entry-0001.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.11/release.md
+      - docs/api.md
+    stats:
+      files_changed: 0
+      insertions: 79
+      deletions: 75
+    inspected: true
+    inspected_paths:
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.11/audit/commit-audit.yaml
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.11/entries/entry-0001.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.11/release.md
+      - docs/api.md
+    observed_behavior:
+      Reformatted the API reference table and updated releaseledger
+      metadata without changing product behavior or the documented contract.
+    public_impact: internal
+    decision: internal
+    evidence_subject: "chore: pre-commit"
+    target_entry_id: entry-0002
+    notes:
+      Internal release bookkeeping and formatter-only documentation changes are
+      intentionally omitted from public release notes.
+  - sha: 2edf586d6d89bf2431008e44f8be3fe3854813a7
+    source_ref: git:2edf586d6d89bf2431008e44f8be3fe3854813a7
+    short_sha: 2edf586
+    changed_paths:
+      - .github/workflows/pre-commit.yml
+    stats:
+      files_changed: 0
+      insertions: 1
+      deletions: 1
+    inspected: true
+    inspected_paths:
+      - .github/workflows/pre-commit.yml
+    observed_behavior:
+      Updated the CI pre-commit workflow to use the newer pinned Ruff
+      release.
+    public_impact: internal
+    decision: internal
+    evidence_subject: "chore: fix ci"
+    target_entry_id: entry-0003
+    notes: CI tooling maintenance has no user-facing product behavior.

@@ -3,19 +3,20 @@ schema_version: 2
 object_type: release_entry
 versioning:
   schema_version: 1
-  revision: 1
+  revision: 2
 entry_id: entry-0001
 release_version: v0.2.11
 kind: added
 summary:
-  Added immutable source-aligned expansion replacements with exact matched
-  text, stable rule identities, and canonical unit identities for downstream normalization
+  Added immutable source-aligned replacements with exact text, rule IDs, lexical
+  metadata, and canonical unit identities
 status: accepted
 audience: null
 scopes: []
 source_refs:
   - tl:task-0039
   - git:37eb9b2a5b62131209ba9cbbe01bdcb8a31a5e25
+  - git:edad31b7d2e7bf79b78fbaca862044ae70a15c53
 paths:
   - abbr2words/core.py
   - abbr2words/_replacements.py
