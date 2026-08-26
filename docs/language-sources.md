@@ -34,7 +34,8 @@ The source/review ledger for the newly added bases is intentionally explicit:
 | Cyrillic             | `be`, `kz`, `mn`, `sr`, `tg`, `uk`                                                              | national orthography and abbreviation guidance               | BIPM SI + CLDR  | conservative agent seed; native review pending                  |
 | RTL                  | `ar`, `fa`, `he`                                                                                | national orthography guidance                                | BIPM SI + CLDR  | conservative agent seed; native review pending                  |
 | Indic                | `bn`, `hi`, `kn`, `te`                                                                          | national orthography guidance                                | BIPM SI + CLDR  | conservative agent seed; native review pending                  |
-| East/Southeast Asian | `th`, `zh`                                                                                      | national orthography guidance                                | BIPM SI + CLDR  | conservative agent seed; native review pending                  |
+| East/Southeast Asian | `th`                                                                                        | national orthography guidance                                | BIPM SI + CLDR  | conservative agent seed; native review pending                  |
+| Mandarin Chinese     | `zh`                                                                                        | PRC legal measurement terminology; MOE translation guidance | GB 3100 + CLDR  | conservative generic Chinese base; Mainland locale reviewed      |
 | Korean               | `ko`                                                                                            | NIKL corporate/terminology guidance; KRISS SI terminology    | KRISS SI + CLDR | source-backed reviewed baseline; broader lexical review pending |
 | Japanese             | `ja`                                                                                            | NTA organization and government usage guidance               | NMIJ SI + CLDR  | reviewed baseline / source-backed; native review pending        |
 | Specialist           | `am`, `az`, `ce`, `hy`                                                                          | national orthography guidance                                | BIPM SI + CLDR  | conservative agent seed; native review pending                  |
@@ -42,6 +43,8 @@ The source/review ledger for the newly added bases is intentionally explicit:
 Locale overlays are `en_IN`, `en_NG`, `es_CO`, `es_CR`, `es_GT`, `es_NI`,
 `es_VE`, `fr_BE`, `fr_CH`, `fr_DZ`, `pt_BR`, `zh_CN`, `zh_HK`, and `zh_TW`.
 
+
+For Mainland Chinese, the runtime terminology follows the currently effective GB 3100-1993 and the pinned CLDR 48.2.1 data. As of 2026-08-26, GB 3100-1993 remains current; SAMR opened consultation on a replacement draft published 2026-08-17. Draft terminology is not treated as normative until a replacement standard is formally issued.
 Czech, English, French, Italian, Portuguese, and Spanish expose reviewed
 structured currency identities. Czech recognizes `Kč`/`CZK` as
 `currency-czech-koruna`; Portuguese recognizes `R$`/`BRL` as
@@ -80,27 +83,36 @@ first-release policy.
 - National Institute of Korean Language: `(주)`/`㈜` corporate abbreviation guidance, `기압`/`atm` terminology, and reviewed Korean initialism spellings.
 - KRISS: Korean names and symbols for the International System of Units.
 - Unicode CLDR 48.2.1: Korean locale and common-unit quantity guidance.
+- PRC State Council legal measurement-unit order and Ministry of Justice database: GB 3100-1993 terminology and statutory units.
+- State Administration for Market Regulation: current GB 3100-1993 record and 2026 revision consultation status.
+- Ministry of Education / State Language Commission: recommended Chinese translations for reviewed foreign abbreviations.
+- Unicode CLDR 48.2.1: Mainland Chinese unit names and quantity patterns.
 
 The checked-in source IDs are `legacy-abbr2words` for compatibility-preserved
 entries, `language-style-baseline` for baseline lexical rules, and
 `unicode-cldr-48.2.1` for the pinned locale-data baseline. Japanese additionally
 uses `ja-nta-organization-abbreviations`, `ja-nmij-si`, and
 `ja-government-page-reference-examples`. Korean additionally uses
-`ko-nikl-corporate-ju`, `ko-kriss-si`, and `ko-nikl-atmosphere`. Review status is
+`ko-nikl-corporate-ju`, `ko-kriss-si`, and `ko-nikl-atmosphere`. Mainland Chinese
+uses `zh-cn-prc-legal-units`, `zh-cn-moe-foreign-terms-batch-1`,
+`zh-cn-moe-foreign-terms-batch-6-7`, and `unicode-cldr-48.2.1`. Review status is
 `legacy-preserved`, `generated-reviewed`, or `linguistically-reviewed` as
-appropriate. Japanese is reviewed baseline and source-backed, while Korean is a
-source-backed reviewed baseline with broader lexical abbreviation review pending;
-this repository does not claim native-speaker sign-off for the complete registries.
+appropriate. Japanese is reviewed baseline and Korean is a source-backed reviewed
+baseline with broader lexical abbreviation review pending; Mainland Chinese is a
+source-backed locale enhancement. This repository does not claim native-speaker
+sign-off for the complete registries.
 
 ## Per-language ledger
 
 | Codes                                                                                           | Source ID                                                                                                         | Categories                                                                    | Status                                                          |
 | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| `am ar az be bn ca ce cy da eo fa fi he hi kn kz lt lv mn no ro sk sl sr te tet tg th uk vi zh` | `language-style-baseline`, `unicode-cldr-48.2.1`                                                                  | guarded reference/title baseline and neutral units                            | linguistically-reviewed pending native review                   |
+| `am ar az be bn ca ce cy da eo fa fi he hi kn kz lt lv mn no ro sk sl sr te tet tg th uk vi` | `language-style-baseline`, `unicode-cldr-48.2.1` | guarded reference/title baseline and neutral units | linguistically-reviewed pending native review |
+| `zh`                                                                                            | `legacy-abbr2words`, `unicode-cldr-48.2.1`                                                                  | guarded № reference and neutral generic units                                  | conservative generic base; plain Han words remain unchanged                   |
 | `ko`                                                                                            | `ko-nikl-corporate-ju`, `ko-kriss-si`, `ko-nikl-atmosphere`, `unicode-cldr-48.2.1`                                | № and organization abbreviations; complete common units; reviewed initialisms | source-backed reviewed baseline; broader lexical review pending |
 | `ja`                                                                                            | `ja-nta-organization-abbreviations`, `ja-nmij-si`, `ja-government-page-reference-examples`, `unicode-cldr-48.2.1` | guarded № and structural organization abbreviations; complete common units    | reviewed baseline / source-backed; native review pending        |
 | `cs de en es fr it nl pl pt ru sv tr`                                                           | `legacy-<code>` plus pinned common sources                                                                        | preserved mature lexical registry and structured quantities                   | legacy-preserved; parity tested                                 |
-| `en_IN en_NG es_CO es_CR es_GT es_NI es_VE fr_BE fr_CH fr_DZ pt_BR zh_CN zh_HK zh_TW`           | locale overlay modules plus ISO 4217/CLDR                                                                         | numeric currency and locale-specific overlay data                             | generated-reviewed                                              |
+| `en_IN en_NG es_CO es_CR es_GT es_NI es_VE fr_BE fr_CH fr_DZ pt_BR zh_HK zh_TW`                 | locale overlay modules plus ISO 4217/CLDR                                                                         | numeric currency and locale-specific overlay data                             | generated-reviewed                                              |
+| `zh_CN`                                                                                          | `zh-cn-prc-legal-units`, `zh-cn-moe-foreign-terms-batch-1`, `zh-cn-moe-foreign-terms-batch-6-7`, `unicode-cldr-48.2.1` | Mainland semantic abbreviations and complete localized common units | source-backed reviewed locale |
 
 The brief that introduced this registry was reviewed on 2026-08-06. The
 implementation preserves a source description on each seed category and keeps

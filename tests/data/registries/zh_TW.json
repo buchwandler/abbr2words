@@ -14,34 +14,6 @@
       "only_if_preceded_by": null,
       "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d",
       "variants": []
-    },
-    {
-      "language": "zh_TW",
-      "key": "号",
-      "abbreviation": "号",
-      "expansion": "号码",
-      "aliases": [],
-      "context_expansions": null,
-      "case_sensitive": true,
-      "case_policy": "fixed",
-      "description": "Number marker",
-      "only_if_preceded_by": null,
-      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d",
-      "variants": []
-    },
-    {
-      "language": "zh_TW",
-      "key": "页",
-      "abbreviation": "页",
-      "expansion": "页码",
-      "aliases": [],
-      "context_expansions": null,
-      "case_sensitive": true,
-      "case_policy": "fixed",
-      "description": "Page marker",
-      "only_if_preceded_by": null,
-      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d",
-      "variants": []
     }
   ]
 }

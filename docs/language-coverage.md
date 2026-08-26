@@ -66,7 +66,7 @@ Do not edit this table manually; run `python scripts/generate_language_coverage.
 | `tr`    | `tr` / base   |              15 |                  0 |              62 | reviewed extended | neutral labels; source ledger applies |
 | `uk`    | `uk` / base   |               3 |                  0 |              38 | reviewed baseline | neutral labels; source ledger applies |
 | `vi`    | `vi` / base   |               2 |                  0 |              38 | reviewed baseline | neutral labels; source ledger applies |
-| `zh`    | `zh` / base   |               3 |                  0 |              38 | reviewed baseline | neutral labels; source ledger applies |
-| `zh_CN` | `zh` / locale |               3 |                  0 |              39 | locale overlay    | neutral labels; source ledger applies |
-| `zh_HK` | `zh` / locale |               3 |                  0 |              39 | locale overlay    | neutral labels; source ledger applies |
-| `zh_TW` | `zh` / locale |               3 |                  0 |              39 | locale overlay    | neutral labels; source ledger applies |
+| `zh`    | `zh` / base   |               1 |                  0 |              38 | reviewed baseline | conservative generic Chinese base; source ledger applies |
+| `zh_CN` | `zh` / locale |              10 |                  0 |              39 | locale overlay    | source-backed Mainland locale; 38 localized common units + RMB |
+| `zh_HK` | `zh` / locale |               1 |                  0 |              39 | locale overlay    | dedicated Hong Kong review pending; inherits generic units |
+| `zh_TW` | `zh` / locale |               1 |                  0 |              39 | locale overlay    | dedicated Taiwan review pending; inherits generic units |

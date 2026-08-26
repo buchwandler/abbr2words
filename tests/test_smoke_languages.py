@@ -58,7 +58,7 @@ def test_language_smoke(lang: str, source: str, expected: str) -> None:
         ("th", "ม. test", "มหาวิทยาลัย test", "มห. text"),
         ("uk", "стор. 12", "сторінка 12", "стор. text"),
         ("vi", "tr. 12", "trang 12", "tr. text"),
-        ("zh", "页 12", "页码 12", "页 text"),
+        ("zh", "№ 12", "编号 12", "№ text"),
     ],
 )
 def test_baseline_languages_have_guarded_meaningful_transformations(

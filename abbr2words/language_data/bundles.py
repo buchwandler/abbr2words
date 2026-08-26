@@ -823,27 +823,7 @@ _EXTRA = {
             source_id="language-style-baseline",
         ),
     ),
-    "zh": (
-        _seed(
-            "页",
-            "页码",
-            "Page marker",
-            case_sensitive=True,
-            category="reference",
-            source_id="language-style-baseline",
-            only_if_followed_by=_N,
-        ),
-        _seed(
-            "号",
-            "号码",
-            "Number marker",
-            case_sensitive=True,
-            boundary="custom",
-            only_if_followed_by=_N,
-            category="reference",
-            source_id="language-style-baseline",
-        ),
-    ),
+    "zh": (),
 }
 
 for _language, _extra in _EXTRA.items():

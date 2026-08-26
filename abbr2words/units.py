@@ -1401,15 +1401,6 @@ def unit_entries(language: str) -> tuple[UnitEntry, ...]:
     if language in UNIT_ENTRIES:
         return UNIT_ENTRIES[language]
     external = external_unit_entries(language)
-    if external is None:
-        # Conservative language modules register their external inventory as a
-        # side effect, but the public unit API must also work when queried
-        # before a language expander has been imported.
-        from .unit_data.common import UNIT_LABELS, register_common_units
-
-        if language in UNIT_LABELS:
-            register_common_units(language)
-            external = external_unit_entries(language)
     if external is None and "_" in language:
         # Materialize locale overlays lazily for callers using the structured
         # unit API before the locale expander itself has been imported.
@@ -1419,6 +1410,15 @@ def unit_entries(language: str) -> tuple[UnitEntry, ...]:
 
         import_module(language_spec(language).module)
         external = external_unit_entries(language)
+    if external is None:
+        # Conservative language modules register their external inventory as a
+        # side effect, but the public unit API must also work when queried
+        # before a language expander has been imported.
+        from .unit_data.common import UNIT_LABELS, register_common_units
+
+        if language in UNIT_LABELS:
+            register_common_units(language)
+            external = external_unit_entries(language)
     if external is None:
         raise KeyError(language)
     return external

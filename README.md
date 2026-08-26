@@ -84,6 +84,13 @@ abbr2words("（株）東京商事は500 MBのデータを5 km先へ送った。"
 # 株式会社東京商事は500 メガバイトのデータを5 キロメートル先へ送った。
 ```
 
+Mainland Chinese (`zh_CN`) uses reviewed semantic abbreviations and localized units:
+
+```python
+abbr2words("AI技术需要 16 GB 内存，速度为 5 m/s。", lang="zh_CN")
+# "人工智能技术需要 16 吉字节 内存，速度为 每秒5米。"
+```
+
 Context can be disabled:
 
 ```python

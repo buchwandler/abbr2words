@@ -250,21 +250,21 @@
       "sha256": "fd93c4de522be00f1a2bef0e38afc56bd598822db8bea67d5a9dfa245ab36e6e"
     },
     "zh": {
-      "count": 3,
-      "sha256": "4a062758ceb71df19f86ab42eccfb0deddad46b0afca669d59a34a083b5d0c23"
+      "count": 1,
+      "sha256": "c8954a2c54e09307a36b67cf67835dda4f1d98f17396d1e2317da6e113693c9d"
     },
     "zh_CN": {
-      "count": 3,
-      "sha256": "6653f6db764582fb6c4395e11a9423a5e23bca5178eddfa95294e761d95a2b14"
+      "count": 10,
+      "sha256": "435612ec177fe69ffcfe8dfec5309483a797c445d99fe44990dfe06598131e5d"
     },
     "zh_HK": {
-      "count": 3,
-      "sha256": "2d16dcd20e1a5db783f2325040aa48df5a89db48742fddd3b521aa4fd7453035"
+      "count": 1,
+      "sha256": "cd95c5ec675f6f16937cac3aebd6b5410c26dd247c471e72ae489255cb813a32"
     },
     "zh_TW": {
-      "count": 3,
-      "sha256": "8501a5cbce9526c4e0503e6a0a8b91803efa02711b6f041b644f2c7e6f9e4950"
+      "count": 1,
+      "sha256": "5de8dbd5ec86b4fca916249f00cc67d69719bd5b7272645ad74aebe568c9c6a4"
     }
   },
-  "all_sha256": "3e05abe5c5020ae6f81fc31e0d9a86923e6de01e726dcfe040683186c5f9394b"
+  "all_sha256": "9e88a15f4858f42f94185eb213e8ff9fb59af3c5a135f2f9da49e4204d60a293"
 }

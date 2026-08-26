@@ -63,6 +63,10 @@ Japanese (`ja`) keeps unknown initialisms disabled and uses source-backed, struc
 
 The shared 38-unit inventory has Japanese labels. CLDR-style quantity templates render `20°C` as `摂氏 20 度` and `80 km/h` as `時速 80 キロメートル`. This is a reviewed baseline and source-backed registry, not a claim of complete native-speaker review.
 
+## Mandarin Chinese support
+
+Mainland Chinese (`zh_CN`) is a separate Simplified-Mandarin locale overlay. It localizes the common unit inventory, uses explicit ASCII-token boundaries so reviewed Latin abbreviations can touch Han characters, and expands only the reviewed semantic terms by default. Unknown uppercase identifiers remain unchanged. The `zh_HK` and `zh_TW` overlays remain separate and do not implicitly inherit Mainland terminology.
+
 ## Known ambiguity
 
 Some inventories contain collisions whose effective winner follows the source
