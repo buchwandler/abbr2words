@@ -150,8 +150,8 @@
       "sha256": "073f7ea8fb1b1c3513f1d00622e80c4575e7b38b3fdb4f8837ece955c7c65d9d"
     },
     "ja": {
-      "count": 3,
-      "sha256": "636b3c46d110b7fed56bd74045712147335bd642cc9e4da045cb5ab6b22da1d1"
+      "count": 7,
+      "sha256": "e697b4b6d6c7de57042c4355b46906801a78c56490428e77e8a967871ca8946c"
     },
     "kn": {
       "count": 3,
@@ -266,5 +266,5 @@
       "sha256": "8501a5cbce9526c4e0503e6a0a8b91803efa02711b6f041b644f2c7e6f9e4950"
     }
   },
-  "all_sha256": "ef21e4f42c4afd7ca4afe02e669070ddd78fd4d5b6e32df9bbfa4c7d8744177a"
+  "all_sha256": "20345649a85ef2c4ca9da50ffa9cfd1c254e66b3a02b4adf74e6f978fdbc8c98"
 }

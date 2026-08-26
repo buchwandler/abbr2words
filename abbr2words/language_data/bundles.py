@@ -14,6 +14,33 @@ _LEGACY = SourceRef(
     "reconstructed-2026-08-10",
 )
 
+_JA_SOURCES = (
+    SourceRef(
+        "ja-nta-organization-abbreviations",
+        "National Tax Agency organization-name abbreviation guidance",
+        "https://www.nta.go.jp/taxes/tetsuzuki/shinsei/hoteichosho/06.htm",
+        "reviewed-2026-08-26",
+    ),
+    SourceRef(
+        "ja-nmij-si",
+        "NMIJ/AIST International System of Units in Japanese",
+        "https://unit.aist.go.jp/nmij/library/si-units/",
+        "reviewed-2026-08-26",
+    ),
+    SourceRef(
+        "ja-government-page-reference-examples",
+        "Japanese government page and address usage examples",
+        "https://www.nta.go.jp/about/organization/tokyo/shiryo/simple.htm",
+        "reviewed-2026-08-26",
+    ),
+    SourceRef(
+        "unicode-cldr-48.2.1",
+        "Unicode CLDR Japanese locale and unit data",
+        "https://github.com/unicode-org/cldr/blob/main/common/main/ja.xml",
+        "48.2.1",
+    ),
+)
+
 
 def _seed(
     abbreviation: str,
@@ -22,6 +49,7 @@ def _seed(
     *,
     case_sensitive: bool = False,
     boundary: str = "word",
+    only_if_preceded_by: str | None = None,
     only_if_followed_by: str | None = None,
     category: str = "other",
     source_id: str = "legacy-abbr2words",
@@ -37,6 +65,7 @@ def _seed(
         aliases=aliases,
         speech_strategy=speech_strategy,  # type: ignore[arg-type]
         boundary=boundary,  # type: ignore[arg-type]
+        only_if_preceded_by=only_if_preceded_by,
         only_if_followed_by=only_if_followed_by,
         source_ids=(source_id,),
         review_note="Checked-in baseline rule; review status is recorded in docs/language-sources.md.",
@@ -62,7 +91,15 @@ _SEEDS: dict[str, tuple[AbbreviationSeed, ...]] = {
     "hy": (_seed("հ.", "համար", "Number reference", case_sensitive=True),),
     "id": (_seed("No.", "nomor", "Number reference"),),
     "is": (_seed("nr.", "númer", "Number reference"),),
-    "ja": (_seed("№", "番号", "Number sign", case_sensitive=True),),
+    "ja": (
+        _seed(
+            "№",
+            "番号",
+            "Number sign",
+            case_sensitive=True,
+            source_id="ja-government-page-reference-examples",
+        ),
+    ),
     "kn": (_seed("ನಂ.", "ಸಂಖ್ಯೆ", "Number reference", case_sensitive=True),),
     "ko": (_seed("№", "번호", "Number sign", case_sensitive=True),),
     "kz": (_seed("№", "нөмір", "Number sign", case_sensitive=True),),
@@ -404,23 +441,58 @@ _EXTRA = {
     ),
     "ja": (
         _seed(
-            "頁",
-            "ページ",
-            "Page marker",
-            case_sensitive=True,
-            category="reference",
-            source_id="language-style-baseline",
-            only_if_followed_by=_N,
-        ),
-        _seed(
-            "番",
-            "番号",
-            "Number marker",
+            "（株）",
+            "株式会社",
+            "Organization abbreviation",
             case_sensitive=True,
             boundary="custom",
-            only_if_followed_by=_N,
-            category="reference",
-            source_id="language-style-baseline",
+            category="organization",
+            source_id="ja-nta-organization-abbreviations",
+        ),
+        _seed(
+            "(株)",
+            "株式会社",
+            "Organization abbreviation",
+            case_sensitive=True,
+            boundary="custom",
+            category="organization",
+            source_id="ja-nta-organization-abbreviations",
+        ),
+        _seed(
+            "㈱",
+            "株式会社",
+            "Organization abbreviation",
+            case_sensitive=True,
+            boundary="custom",
+            category="organization",
+            source_id="ja-nta-organization-abbreviations",
+        ),
+        _seed(
+            "（有）",
+            "有限会社",
+            "Organization abbreviation",
+            case_sensitive=True,
+            boundary="custom",
+            category="organization",
+            source_id="ja-nta-organization-abbreviations",
+        ),
+        _seed(
+            "(有)",
+            "有限会社",
+            "Organization abbreviation",
+            case_sensitive=True,
+            boundary="custom",
+            category="organization",
+            source_id="ja-nta-organization-abbreviations",
+        ),
+        _seed(
+            "㈲",
+            "有限会社",
+            "Organization abbreviation",
+            case_sensitive=True,
+            boundary="custom",
+            category="organization",
+            source_id="ja-nta-organization-abbreviations",
         ),
     ),
     "kn": (
@@ -763,7 +835,9 @@ BUNDLES = {
         key,
         seeds,
         {},
-        (
+        _JA_SOURCES
+        if key == "ja"
+        else (
             _LEGACY,
             SourceRef(
                 "language-style-baseline",
@@ -771,7 +845,12 @@ BUNDLES = {
                 "docs/language-sources.md",
                 "2026-08-10",
             ),
-            SourceRef("unicode-cldr-48.2.1", "Unicode CLDR", "https://cldr.unicode.org/", "48.2.1"),
+            SourceRef(
+                "unicode-cldr-48.2.1",
+                "Unicode CLDR",
+                "https://cldr.unicode.org/",
+                "48.2.1",
+            ),
         ),
         coverage="baseline",
     )

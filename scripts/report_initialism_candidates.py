@@ -49,7 +49,9 @@ _ROMAN_ONLY = re.compile(r"^[IVXLCDM]+$")
 _VOWELS = frozenset("AEIOUY")
 
 
-def _first_string(record: Mapping[str, Any], keys: Sequence[str], *, required: bool = True) -> str | None:
+def _first_string(
+    record: Mapping[str, Any], keys: Sequence[str], *, required: bool = True
+) -> str | None:
     for key in keys:
         value = record.get(key)
         if isinstance(value, str):
@@ -185,9 +187,7 @@ def _reason_summary(reasons: Counter[str]) -> str:
     ordered = sorted(reasons.items(), key=lambda item: (-item[1], item[0]))
     if len(ordered) == 1:
         return ordered[0][0]
-    return "; ".join(
-        reason if count == 1 else f"{reason}:{count}" for reason, count in ordered
-    )
+    return "; ".join(reason if count == 1 else f"{reason}:{count}" for reason, count in ordered)
 
 
 def _sample_summary(samples: Sequence[str]) -> str:
@@ -259,7 +259,9 @@ def analyze_records(
             group["registered_in_observed_locale"] = (
                 group["registered_in_observed_locale"] or diagnostic.registered_entry_id is not None
             )
-            group["actual_compact"] = group["actual_compact"] or _contains_compact_token(actual, token)
+            group["actual_compact"] = group["actual_compact"] or _contains_compact_token(
+                actual, token
+            )
             if source not in group["samples"] and len(group["samples"]) < sample_limit:
                 group["samples"].append(source)
 
@@ -286,7 +288,9 @@ def analyze_records(
                 "samples": list(group["samples"]),
             }
         )
-    rows.sort(key=lambda row: (-int(row["semantic_failures"]), -int(row["count"]), str(row["token"])))
+    rows.sort(
+        key=lambda row: (-int(row["semantic_failures"]), -int(row["count"]), str(row["token"]))
+    )
     return rows
 
 

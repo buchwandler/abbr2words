@@ -28,14 +28,15 @@ import, build, or normal runtime.
 
 The source/review ledger for the newly added bases is intentionally explicit:
 
-| Group                | Codes                                                                                           | Primary language/orthography source                          | Unit source    | Review status                                  |
-| -------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | -------------- | ---------------------------------------------- |
-| Latin                | `ca`, `cy`, `da`, `eo`, `fi`, `hu`, `id`, `is`, `lt`, `lv`, `no`, `ro`, `sk`, `sl`, `tet`, `vi` | national orthography/abbreviation guidance; CLDR locale data | BIPM SI + CLDR | conservative agent seed; native review pending |
-| Cyrillic             | `be`, `kz`, `mn`, `sr`, `tg`, `uk`                                                              | national orthography and abbreviation guidance               | BIPM SI + CLDR | conservative agent seed; native review pending |
-| RTL                  | `ar`, `fa`, `he`                                                                                | national orthography guidance                                | BIPM SI + CLDR | conservative agent seed; native review pending |
-| Indic                | `bn`, `hi`, `kn`, `te`                                                                          | national orthography guidance                                | BIPM SI + CLDR | conservative agent seed; native review pending |
-| East/Southeast Asian | `ja`, `ko`, `th`, `zh`                                                                          | national orthography guidance                                | BIPM SI + CLDR | conservative agent seed; native review pending |
-| Specialist           | `am`, `az`, `ce`, `hy`                                                                          | national orthography guidance                                | BIPM SI + CLDR | conservative agent seed; native review pending |
+| Group                | Codes                                                                                           | Primary language/orthography source                          | Unit source    | Review status                                            |
+| -------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | -------------- | -------------------------------------------------------- |
+| Latin                | `ca`, `cy`, `da`, `eo`, `fi`, `hu`, `id`, `is`, `lt`, `lv`, `no`, `ro`, `sk`, `sl`, `tet`, `vi` | national orthography/abbreviation guidance; CLDR locale data | BIPM SI + CLDR | conservative agent seed; native review pending           |
+| Cyrillic             | `be`, `kz`, `mn`, `sr`, `tg`, `uk`                                                              | national orthography and abbreviation guidance               | BIPM SI + CLDR | conservative agent seed; native review pending           |
+| RTL                  | `ar`, `fa`, `he`                                                                                | national orthography guidance                                | BIPM SI + CLDR | conservative agent seed; native review pending           |
+| Indic                | `bn`, `hi`, `kn`, `te`                                                                          | national orthography guidance                                | BIPM SI + CLDR | conservative agent seed; native review pending           |
+| East/Southeast Asian | `ko`, `th`, `zh`                                                                                | national orthography guidance                                | BIPM SI + CLDR | conservative agent seed; native review pending           |
+| Japanese             | `ja`                                                                                            | NTA organization and government usage guidance               | NMIJ SI + CLDR | reviewed baseline / source-backed; native review pending |
+| Specialist           | `am`, `az`, `ce`, `hy`                                                                          | national orthography guidance                                | BIPM SI + CLDR | conservative agent seed; native review pending           |
 
 Locale overlays are `en_IN`, `en_NG`, `es_CO`, `es_CR`, `es_GT`, `es_NI`,
 `es_VE`, `fr_BE`, `fr_CH`, `fr_DZ`, `pt_BR`, `zh_CN`, `zh_HK`, and `zh_TW`.
@@ -71,20 +72,28 @@ first-release policy.
 - Türk Dil Kurumu: Turkish abbreviation, abbreviation-index, and punctuation
   guidance.
 - ISO 4217: currency codes and locale currency identities.
+- National Tax Agency: organization-name abbreviations and parenthesized `(株)`/`(有)` forms.
+- NMIJ/AIST: Japanese SI terminology and unit names.
+- Unicode CLDR Japanese locale data: localized display names and quantity patterns.
+- Japanese government usage examples: suffixal page markers and address counters.
 
 The checked-in source IDs are `legacy-abbr2words` for compatibility-preserved
 entries, `language-style-baseline` for baseline lexical rules, and
-`unicode-cldr-48.2.1` for the pinned locale-data baseline. Review status is
+`unicode-cldr-48.2.1` for the pinned locale-data baseline. Japanese additionally
+uses `ja-nta-organization-abbreviations`, `ja-nmij-si`, and
+`ja-government-page-reference-examples`. Review status is
 `legacy-preserved`, `generated-reviewed`, or `linguistically-reviewed` as
-appropriate; this repository does not claim native-speaker sign-off.
+appropriate; Japanese is reviewed baseline and source-backed, but this repository
+does not claim native-speaker sign-off for the complete registry.
 
 ## Per-language ledger
 
-| Codes                                                                                                             | Source ID                                        | Categories                                                  | Status                                        |
-| ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | ----------------------------------------------------------- | --------------------------------------------- |
-| `am ar az be bn ca ce cy da eo fa fi he hi hu hy id is ja kn ko kz lt lv mn no ro sk sl sr te tet tg th uk vi zh` | `language-style-baseline`, `unicode-cldr-48.2.1` | guarded reference/title baseline and neutral units          | linguistically-reviewed pending native review |
-| `cs de en es fr it nl pl pt ru sv tr`                                                                             | `legacy-<code>` plus pinned common sources       | preserved mature lexical registry and structured quantities | legacy-preserved; parity tested               |
-| `en_IN en_NG es_CO es_CR es_GT es_NI es_VE fr_BE fr_CH fr_DZ pt_BR zh_CN zh_HK zh_TW`                             | locale overlay modules plus ISO 4217/CLDR        | numeric currency and locale-specific overlay data           | generated-reviewed                            |
+| Codes                                                                                              | Source ID                                                                                                         | Categories                                                                 | Status                                                   |
+| -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- | -------------------------------------------------------- |
+| `am ar az be bn ca ce cy da eo fa fi he hi kn ko kz lt lv mn no ro sk sl sr te tet tg th uk vi zh` | `language-style-baseline`, `unicode-cldr-48.2.1`                                                                  | guarded reference/title baseline and neutral units                         | linguistically-reviewed pending native review            |
+| `ja`                                                                                               | `ja-nta-organization-abbreviations`, `ja-nmij-si`, `ja-government-page-reference-examples`, `unicode-cldr-48.2.1` | guarded № and structural organization abbreviations; complete common units | reviewed baseline / source-backed; native review pending |
+| `cs de en es fr it nl pl pt ru sv tr`                                                              | `legacy-<code>` plus pinned common sources                                                                        | preserved mature lexical registry and structured quantities                | legacy-preserved; parity tested                          |
+| `en_IN en_NG es_CO es_CR es_GT es_NI es_VE fr_BE fr_CH fr_DZ pt_BR zh_CN zh_HK zh_TW`              | locale overlay modules plus ISO 4217/CLDR                                                                         | numeric currency and locale-specific overlay data                          | generated-reviewed                                       |
 
 The brief that introduced this registry was reviewed on 2026-08-06. The
 implementation preserves a source description on each seed category and keeps

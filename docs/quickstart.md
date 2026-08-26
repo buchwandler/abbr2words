@@ -24,7 +24,7 @@ Context detection is enabled by default. For German `Fr.`, the surrounding text
 can distinguish a title from the weekday:
 
 ```python
-abbr2words("Fr. Klein", lang="de")       # Frau Klein
+abbr2words("Fr. Klein", lang="de")  # Frau Klein
 abbr2words("Fr. Klein", lang="de", context=False)  # Freitag Klein
 ```
 

@@ -74,8 +74,8 @@ and `Expander` accept these optional policy arguments:
 abbr2words(
     "NGO BBC PDF",
     initialism_mode="conservative_undotted",  # default: "dotted_only"
-    initialism_case="lower",             # "source", "upper", or "lower"
-    registered_initialism_mode="expand", # or explicit "spell"
+    initialism_case="lower",  # "source", "upper", or "lower"
+    registered_initialism_mode="expand",  # or explicit "spell"
 )
 ```
 

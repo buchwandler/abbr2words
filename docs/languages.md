@@ -57,6 +57,12 @@ for example, `2 mA` matches but `2 ma` does not. Dotted German aliases and
 their base symbols share canonical IDs, so `h`/`Std.`, `min`/`Min.`, and
 `l`/`Ltr.` cannot acquire separate semantic identities.
 
+## Japanese support
+
+Japanese (`ja`) keeps unknown initialisms disabled and uses source-backed, structural rules. `№ 12` expands to `番号 12`; parenthesized or compatibility organization forms such as `（株）`, `(有)`, `㈱`, and `㈲` expand to their full company names. Bare kanji such as `番`, `株`, and `有` remain unchanged, as do ordinary forms such as `一番`, `13番10号`, and `頁 12`.
+
+The shared 38-unit inventory has Japanese labels. CLDR-style quantity templates render `20°C` as `摂氏 20 度` and `80 km/h` as `時速 80 キロメートル`. This is a reviewed baseline and source-backed registry, not a claim of complete native-speaker review.
+
 ## Known ambiguity
 
 Some inventories contain collisions whose effective winner follows the source

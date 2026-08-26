@@ -174,10 +174,44 @@ UNIT_LABELS = {
         "duration-minute": "mínúta",
     },
     "ja": {
+        "duration-second": "秒",
+        "duration-minute": "分",
+        "duration-hour": "時間",
+        "duration-day": "日",
+        "length-millimeter": "ミリメートル",
+        "length-centimeter": "センチメートル",
+        "length-meter": "メートル",
+        "length-kilometer": "キロメートル",
+        "volume-milliliter": "ミリリットル",
+        "volume-liter": "リットル",
+        "mass-microgram": "マイクログラム",
+        "mass-milligram": "ミリグラム",
         "mass-gram": "グラム",
         "mass-kilogram": "キログラム",
-        "length-kilometer": "キロメートル",
-        "duration-minute": "分",
+        "mass-tonne": "トン",
+        "temperature-kelvin": "ケルビン",
+        "temperature-celsius": "セルシウス度",
+        "temperature-fahrenheit": "華氏度",
+        "speed-meter-per-second": "メートル毎秒",
+        "speed-kilometer-per-hour": "キロメートル毎時",
+        "speed-mile-per-hour": "マイル毎時",
+        "pressure-pascal": "パスカル",
+        "pressure-kilopascal": "キロパスカル",
+        "pressure-atmosphere": "気圧",
+        "data-byte": "バイト",
+        "data-kilobyte": "キロバイト",
+        "data-megabyte": "メガバイト",
+        "data-gigabyte": "ギガバイト",
+        "fuel-consumption-liter-per-100-kilometer": "リットル毎100キロメートル",
+        "flow-cubic-meter-per-second": "立方メートル毎秒",
+        "area-square-millimeter": "平方ミリメートル",
+        "area-square-centimeter": "平方センチメートル",
+        "area-square-meter": "平方メートル",
+        "area-square-kilometer": "平方キロメートル",
+        "area-hectare": "ヘクタール",
+        "volume-cubic-millimeter": "立方ミリメートル",
+        "volume-cubic-centimeter": "立方センチメートル",
+        "volume-cubic-meter": "立方メートル",
     },
     "kn": {
         "mass-gram": "ಗ್ರಾಂ",
@@ -290,6 +324,16 @@ UNIT_LABELS = {
     },
 }
 
+UNIT_TEMPLATES = {
+    "ja": {
+        "temperature-celsius": "摂氏 {value} 度",
+        "temperature-fahrenheit": "華氏 {value} 度",
+        "speed-meter-per-second": "秒速 {value} メートル",
+        "speed-kilometer-per-hour": "時速 {value} キロメートル",
+        "speed-mile-per-hour": "時速 {value} マイル",
+    },
+}
+
 
 def common_unit_entries(language: str, *, expansion_prefix: str = "") -> tuple[object, ...]:
     """Build a stable common inventory using the public unit model."""
@@ -297,6 +341,7 @@ def common_unit_entries(language: str, *, expansion_prefix: str = "") -> tuple[o
 
     prefix = f"{expansion_prefix} " if expansion_prefix else ""
     labels = UNIT_LABELS.get(language, {})
+    templates = UNIT_TEMPLATES.get(language, {})
     return tuple(
         UnitEntry(
             symbols=definition.symbols,
@@ -305,6 +350,7 @@ def common_unit_entries(language: str, *, expansion_prefix: str = "") -> tuple[o
             canonical_symbol=definition.canonical_symbol,
             canonical_id=definition.canonical_id,
             requires_separator=definition.requires_separator,
+            quantity_template=templates.get(definition.canonical_id),
         )
         for definition in COMMON_UNIT_DEFINITIONS
     )
@@ -351,6 +397,7 @@ __all__ = [
     "COMMON_UNIT_DEFINITIONS",
     "UnitDefinition",
     "UNIT_LABELS",
+    "UNIT_TEMPLATES",
     "common_unit_entries",
     "locale_currency",
     "register_common_units",

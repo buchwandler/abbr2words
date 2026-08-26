@@ -77,6 +77,13 @@ print(abbr2words(text, lang="de"))
 # Professor Klein kommt gegebenenfalls am Freitag
 ```
 
+Japanese organization abbreviations and localized quantities are handled conservatively:
+
+```python
+abbr2words("（株）東京商事は500 MBのデータを5 km先へ送った。", lang="ja")
+# 株式会社東京商事は500 メガバイトのデータを5 キロメートル先へ送った。
+```
+
 Context can be disabled:
 
 ```python
@@ -224,8 +231,8 @@ prefix or suffix position:
 from abbr2words import iter_unit_matches
 
 match = next(iter_unit_matches("12,80 EUR", "it"))
-match.value           # "12,80"
-match.canonical_id    # "currency-euro"
+match.value  # "12,80"
+match.canonical_id  # "currency-euro"
 match.canonical_symbol  # "€"
 ```
 

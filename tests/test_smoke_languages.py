@@ -40,7 +40,7 @@ def test_language_smoke(lang: str, source: str, expected: str) -> None:
         ("hy", "էջ. 12", "էջ 12", "էջ. text"),
         ("id", "hal. 12", "halaman 12", "hal. text"),
         ("is", "bls. 12", "blaðsíða 12", "bls. text"),
-        ("ja", "頁 12", "ページ 12", "頁 text"),
+        ("ja", "№ 12", "番号 12", "№ text"),
         ("kn", "ಪು. 12", "ಪುಟ 12", "ಪು. text"),
         ("ko", "p. 12", "페이지 12", "p. text"),
         ("kz", "бет. 12", "бет 12", "бет. text"),

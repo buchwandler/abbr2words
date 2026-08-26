@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from collections.abc import Iterable, Iterator, Mapping, Set
 from dataclasses import dataclass, replace
+from string import Formatter
 from typing import Literal
 
 from ._replacements import Replacement, apply_replacements
@@ -71,6 +72,7 @@ class UnitEntry:
     preserve_sentence_final_period: bool = False
     reject_following_period: bool = False
     requires_separator: bool = False
+    quantity_template: str | None = None
 
     def __post_init__(self) -> None:
         if not self.symbols or any(
@@ -81,6 +83,21 @@ class UnitEntry:
             raise TypeError("unit expansion must be a string")
         if not self.expansion:
             raise ValueError("unit expansion must not be empty")
+        if self.quantity_template is not None:
+            if not isinstance(self.quantity_template, str):
+                raise TypeError("unit quantity_template must be a string or None")
+            try:
+                fields = [
+                    field_name
+                    for _, field_name, _, _ in Formatter().parse(self.quantity_template)
+                    if field_name is not None
+                ]
+            except ValueError as exc:
+                raise ValueError("unit quantity_template must be valid format syntax") from exc
+            if fields != ["value"]:
+                raise ValueError(
+                    "unit quantity_template must contain exactly one {value} placeholder"
+                )
         if type(self.case_sensitive) is not bool:
             raise TypeError("unit case_sensitive must be a bool")
         if type(self.requires_numeric_value) is not bool:
@@ -124,6 +141,7 @@ class UnitMatch:
     category: str = "unit"
     ambiguity: UnitAmbiguity = "none"
     separator: str = ""
+    quantity_template: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -166,6 +184,7 @@ def _entry(
     preserve_sentence_final_period: bool = False,
     reject_following_period: bool = False,
     requires_separator: bool = False,
+    quantity_template: str | None = None,
 ) -> UnitEntry:
     if isinstance(symbols, str):
         symbols = (symbols,)
@@ -183,6 +202,7 @@ def _entry(
         preserve_sentence_final_period=preserve_sentence_final_period,
         reject_following_period=reject_following_period,
         requires_separator=requires_separator,
+        quantity_template=quantity_template,
     )
 
 
@@ -1540,6 +1560,7 @@ def _unit_match(
         category=entry.category,
         ambiguity=_unit_match_ambiguity(entry, symbol),
         separator=separator,
+        quantity_template=entry.quantity_template,
     )
 
 
@@ -1557,7 +1578,10 @@ def _unit_replacement_text(
     text: str, unit_match: UnitMatch, *, preserve_sentence_final_period: bool
 ) -> str:
     """Render a lexical unit expansion without inventing sentence punctuation."""
-    replacement = f"{unit_match.value} {unit_match.expansion}"
+    if unit_match.quantity_template is not None:
+        replacement = unit_match.quantity_template.format(value=unit_match.value)
+    else:
+        replacement = f"{unit_match.value} {unit_match.expansion}"
     if (
         not preserve_sentence_final_period
         or unit_match.category != "unit"
