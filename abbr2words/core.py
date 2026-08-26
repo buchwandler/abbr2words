@@ -59,6 +59,7 @@ class AbbreviationContext(Enum):
 
 
 PosConstraints: TypeAlias = str | Collection[str] | None
+ExpansionKind: TypeAlias = Literal["abbreviation", "unit"]
 
 
 def _abbreviation_pattern(value: str) -> str:
@@ -159,12 +160,14 @@ class ExpansionReplacement:
     end: int
     text: str
     source: str
-    kind: str
+    kind: ExpansionKind
     language: str
     abbreviation: str | None = None
     rule: str | None = None
     priority: int = 0
     context: AbbreviationContext | None = field(default=None, repr=False)
+    matched_text: str = ""
+    canonical_id: str | None = None
 
     @property
     def replacement(self) -> str:
@@ -172,9 +175,19 @@ class ExpansionReplacement:
         return self.text
 
     @property
+    def source_text(self) -> str:
+        """Original source substring consumed by this replacement."""
+        return self.matched_text
+
+    @property
+    def rule_id(self) -> str:
+        """Stable identifier for the rule that produced this replacement."""
+        return self.rule or self.source
+
+    @property
     def entry_id(self) -> str:
         """Compatibility alias for the stable rule/source identifier."""
-        return self.rule or self.source
+        return self.rule_id
 
 
 @dataclass(frozen=True, slots=True)
@@ -856,7 +869,13 @@ class AbbreviationExpander(ABC):
         protected_spans: Iterable[ProtectedSpan | tuple[int, int] | tuple[int, int, str | None]]
         | None = None,
     ) -> ExpansionResult:
-        """Expand text and return exact immutable replacement metadata."""
+        """Expand text and return exact immutable source-aligned replacement metadata.
+
+        Offsets refer to the original input. Records are deterministic and
+        non-overlapping, include their matched source surface, and carry stable
+        rule provenance; unit records may also expose canonical identity. Callers
+        should consume ``result.replacements`` instead of diffing source and output.
+        """
         return self._expand_result(text, annotations=annotations, protected_spans=protected_spans)
 
     def expand_with_trace(
@@ -950,6 +969,8 @@ class AbbreviationExpander(ABC):
                     rule=item.entry_id or item.source,
                     priority=item.priority,
                     context=item.context if isinstance(item.context, AbbreviationContext) else None,
+                    matched_text=text[item.start : item.end],
+                    canonical_id=item.canonical_id,
                 )
                 for item in selected
             ),

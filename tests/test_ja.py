@@ -88,7 +88,7 @@ def test_japanese_quantity_templates(source: str, expected: str) -> None:
 def test_japanese_common_inventory_is_complete_and_localized() -> None:
     entries = unit_entries("ja")
 
-    assert len(entries) == 38
+    assert len(entries) == 39
     assert all(entry.expansion != entry.canonical_symbol for entry in entries)
     assert {entry.canonical_id for entry in entries} == {
         "duration-second",
@@ -129,6 +129,7 @@ def test_japanese_common_inventory_is_complete_and_localized() -> None:
         "volume-cubic-millimeter",
         "volume-cubic-centimeter",
         "volume-cubic-meter",
+        "currency-japanese-yen",
     }
 
 

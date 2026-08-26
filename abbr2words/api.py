@@ -220,7 +220,14 @@ def abbr2words_with_replacements(
     protected_spans: Iterable[ProtectedSpan | tuple[int, int] | tuple[int, int, str | None]]
     | None = None,
 ) -> ExpansionResult:
-    """Expand *text* and return exact source-aligned replacement metadata."""
+    """Expand *text* and return exact, immutable source-aligned replacement metadata.
+
+    Offsets refer to the original input. Records are deterministic and
+    non-overlapping, include their matched source surface, and carry stable rule
+    provenance; unit records may also expose canonical identity. Callers should
+    consume ``result.replacements`` instead of diffing ``result.source_text`` and
+    ``result.text``.
+    """
     if not isinstance(text, str):
         raise TypeError("text must be a string")
     code = normalize_language(lang)

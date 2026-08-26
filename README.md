@@ -77,6 +77,19 @@ print(abbr2words(text, lang="de"))
 # Professor Klein kommt gegebenenfalls am Freitag
 ```
 
+For downstream consumers that need exact edits and provenance, use the structured
+result instead of diffing expanded text:
+
+```python
+from abbr2words import abbr2words_with_replacements
+
+result = abbr2words_with_replacements("Prof. Klein", lang="de")
+for item in result.replacements:
+    print(item.matched_text, item.text, item.rule_id, item.canonical_id)
+```
+
+See [the API reference](docs/api.md) for replacement invariants and unit identity.
+
 Japanese organization abbreviations and localized quantities are handled conservatively:
 
 ```python

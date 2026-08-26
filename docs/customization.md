@@ -165,11 +165,19 @@ the same boundary policy and replacement metadata. Aliases are registry data,
 not global regular-expression substitutions, so attached strings such as
 `pizzaB`, `ModellzB12`, and `du.a.test` remain unchanged.
 
-Use the replacement result when a caller needs semantic provenance instead of
-reconstructing edits with a text diff:
+Use the replacement result when a caller needs semantic provenance or exact
+source-aligned edits. `ExpansionResult.replacements` is the authoritative edit
+plan; do not reconstruct these edits with a text diff:
 
 ```python
 result = expander.expand_with_replacements("Prof. Klein, S. 12")
 for replacement in result.replacements:
-    print(replacement.source, replacement.start, replacement.end)
+    print(
+        replacement.matched_text,
+        replacement.start,
+        replacement.end,
+        replacement.text,
+        replacement.rule_id,
+        replacement.canonical_id,
+    )
 ```

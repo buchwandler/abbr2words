@@ -52,18 +52,38 @@ For source-aligned diagnostics or downstream text alignment, use
 `Expander.expand_with_replacements(...)`. The immutable `ExpansionResult`
 contains the original `source_text`, expanded `text`, and deterministic,
 non-overlapping `ExpansionReplacement` records. Replacement offsets refer to
-the original input, and applying the records from right to left reproduces the
-result exactly. `expand_with_trace(...)` remains as a compatibility view of the
-same result. Existing convenience calls continue to return strings.
+the original input, and applying records from right to left reproduces the
+result exactly. Each record is self-contained: `matched_text` and its
+`source_text` alias contain the consumed source surface, `rule_id` identifies
+the producing rule, and unit records expose `canonical_id` when available.
+The records are the authoritative accepted-edit plan. Do not reconstruct these
+edits by diffing `source_text` and `text`. Existing convenience calls continue
+to return strings.
 
 ```python
 from abbr2words import abbr2words_with_replacements
 
-result = abbr2words_with_replacements("Prof. Klein, S. 12", lang="de")
+source = "Prof. Klein, 500 g"
+result = abbr2words_with_replacements(source, lang="de")
 print(result.text)
 for replacement in result.replacements:
-    print(replacement.start, replacement.end, replacement.text, replacement.kind)
+    print(
+        replacement.start,
+        replacement.end,
+        replacement.matched_text,
+        replacement.text,
+        replacement.kind,
+        replacement.language,
+        replacement.rule_id,
+        replacement.canonical_id,
+        replacement.context,
+    )
 ```
+
+For every replacement, `0 <= start <= end <= len(source_text)`, the source
+surface equals `source_text[start:end]`, records are ordered and non-overlapping,
+and an unchanged input has `text == source_text` and no replacements. Protected
+spans are never claimed.
 
 ## Initialism policies
 

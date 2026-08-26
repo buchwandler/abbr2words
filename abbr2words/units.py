@@ -1965,6 +1965,7 @@ def iter_unit_replacements(
             source=f"unit:{language}:{unit_match.symbol}",
             kind="unit",
             entry_id=f"unit:{language}:{unit_match.canonical_id or unit_match.symbol}",
+            canonical_id=unit_match.canonical_id,
         )
 
     # Honor metadata for future reviewed entries that intentionally do not
@@ -1986,6 +1987,7 @@ def iter_unit_replacements(
                 source=f"unit:{language}:{symbol}",
                 kind="unit",
                 entry_id=f"unit:{language}:{entry.canonical_id or symbol}",
+                canonical_id=entry.canonical_id,
             )
 
 

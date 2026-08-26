@@ -432,7 +432,7 @@ def common_unit_entries(language: str, *, expansion_prefix: str = "") -> tuple[o
     prefix = f"{expansion_prefix} " if expansion_prefix else ""
     labels = UNIT_LABELS.get(language, {})
     templates = UNIT_TEMPLATES.get(language, {})
-    return tuple(
+    entries = tuple(
         UnitEntry(
             symbols=definition.symbols,
             expansion=f"{prefix}{labels.get(definition.canonical_id, definition.canonical_symbol)}",
@@ -444,6 +444,11 @@ def common_unit_entries(language: str, *, expansion_prefix: str = "") -> tuple[o
         )
         for definition in COMMON_UNIT_DEFINITIONS
     )
+    if language == "ja":
+        entries += (locale_currency(("¥", "JPY"), "円", "currency-japanese-yen"),)
+    elif language == "ko":
+        entries += (locale_currency(("₩", "KRW"), "원", "currency-south-korean-won"),)
+    return entries
 
 
 def register_common_units(language: str, *, expansion_prefix: str = "") -> None:

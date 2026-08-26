@@ -5,6 +5,9 @@ from __future__ import annotations
 from bisect import bisect_left
 from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
+from typing import Literal, TypeAlias
+
+ReplacementKind: TypeAlias = Literal["abbreviation", "unit"]
 
 
 @dataclass(frozen=True, slots=True)
@@ -16,9 +19,10 @@ class Replacement:
     text: str
     priority: int
     source: str
-    kind: str = "abbreviation"
+    kind: ReplacementKind = "abbreviation"
     entry_id: str = ""
     context: object | None = None
+    canonical_id: str | None = None
 
 
 def resolve_replacements(candidates: Iterable[Replacement]) -> tuple[Replacement, ...]:
