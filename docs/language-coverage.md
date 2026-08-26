@@ -43,7 +43,7 @@ Do not edit this table manually; run `python scripts/generate_language_coverage.
 | `it`    | `it` / base   |             112 |                  2 |              69 | reviewed extended | neutral labels; source ledger applies |
 | `ja`    | `ja` / base   |               7 |                  0 |              38 | reviewed baseline | neutral labels; source ledger applies |
 | `kn`    | `kn` / base   |               3 |                  0 |              38 | reviewed baseline | neutral labels; source ledger applies |
-| `ko`    | `ko` / base   |               3 |                  0 |              38 | reviewed baseline | neutral labels; source ledger applies |
+| `ko`    | `ko` / base   |              10 |                  0 |              38 | reviewed baseline | neutral labels; source ledger applies |
 | `kz`    | `kz` / base   |               3 |                  0 |              38 | reviewed baseline | neutral labels; source ledger applies |
 | `lt`    | `lt` / base   |               3 |                  0 |              38 | reviewed baseline | neutral labels; source ledger applies |
 | `lv`    | `lv` / base   |               3 |                  0 |              38 | reviewed baseline | neutral labels; source ledger applies |

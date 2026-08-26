@@ -114,6 +114,39 @@ ITALIAN_REVIEWED_INITIALISMS = tuple(
 )
 
 
+KOREAN_REVIEWED_INITIALISMS = (
+    ReviewedInitialism(
+        "AI",
+        expansion="에이아이",
+        description="Artificial intelligence initialism",
+    ),
+    ReviewedInitialism(
+        "KTX",
+        expansion="케이티엑스",
+        description="Korea Train Express initialism",
+    ),
+    ReviewedInitialism(
+        "TV",
+        expansion="티브이",
+        description="Television initialism",
+    ),
+    ReviewedInitialism(
+        "PC",
+        expansion="피시",
+        description="Personal computer initialism",
+    ),
+    ReviewedInitialism(
+        "ICT",
+        expansion="아이시티",
+        description="Information and communications technology initialism",
+    ),
+    ReviewedInitialism(
+        "LED",
+        expansion="엘이디",
+        description="Light-emitting diode initialism",
+    ),
+)
+
 # These records are policy metadata for the unknown-initialism fallback. They
 # deliberately do not create replacements: lexical acronyms and ordinary words
 # must remain visible to callers as preserved source text.
@@ -171,6 +204,7 @@ def preserve_initialism_tokens(language: str) -> tuple[InitialismPreserveToken, 
 
 __all__ = [
     "PRESERVE_INITIALISM_TOKENS",
+    "KOREAN_REVIEWED_INITIALISMS",
     "ENGLISH_REVIEWED_INITIALISMS",
     "FRENCH_REVIEWED_INITIALISMS",
     "GERMAN_REVIEWED_INITIALISMS",

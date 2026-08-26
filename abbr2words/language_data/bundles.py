@@ -42,6 +42,41 @@ _JA_SOURCES = (
 )
 
 
+_KO_SOURCES = (
+    _LEGACY,
+    SourceRef(
+        "language-style-baseline",
+        "Language style and orthography baseline",
+        "docs/language-sources.md",
+        "2026-08-10",
+    ),
+    SourceRef(
+        "ko-nikl-corporate-ju",
+        "National Institute of Korean Language guidance for (주)",
+        "https://www.korean.go.kr/front/mcfaq/mcfaqView.do?mcfaq_seq=5919",
+        "reviewed-2026-08-26",
+    ),
+    SourceRef(
+        "ko-kriss-si",
+        "KRISS International System of Units Korean terminology",
+        "https://www.kriss.re.kr/menu.es?mid=a10302060000",
+        "reviewed-2026-08-26",
+    ),
+    SourceRef(
+        "ko-nikl-atmosphere",
+        "National Institute of Korean Language terminology for 기압 / atm",
+        "https://kli.korean.go.kr/term/trgtWord/indexTrgtWord.do?trgtWordNo=151949",
+        "reviewed-2026-08-26",
+    ),
+    SourceRef(
+        "unicode-cldr-48.2.1",
+        "Unicode CLDR Korean locale and unit data",
+        "https://www.unicode.org/cldr/charts/48/",
+        "48.2.1",
+    ),
+)
+
+
 def _seed(
     abbreviation: str,
     expansion: str,
@@ -525,14 +560,22 @@ _EXTRA = {
             only_if_followed_by=_N,
         ),
         _seed(
-            "번",
-            "번호",
-            "Number marker",
+            "(주)",
+            "주식회사",
+            "Organization abbreviation",
             case_sensitive=True,
             boundary="custom",
-            only_if_followed_by=_N,
-            category="reference",
-            source_id="language-style-baseline",
+            category="organization",
+            source_id="ko-nikl-corporate-ju",
+        ),
+        _seed(
+            "㈜",
+            "주식회사",
+            "Organization abbreviation",
+            case_sensitive=True,
+            boundary="custom",
+            category="organization",
+            source_id="ko-nikl-corporate-ju",
         ),
     ),
     "kz": (
@@ -837,6 +880,8 @@ BUNDLES = {
         {},
         _JA_SOURCES
         if key == "ja"
+        else _KO_SOURCES
+        if key == "ko"
         else (
             _LEGACY,
             SourceRef(
