@@ -14,7 +14,7 @@ superseded_by: null
 changelog_file: docs/changelog.md
 boundary_ref: git:37eb9b2a5b62131209ba9cbbe01bdcb8a31a5e25
 source_refs:
-- tl:task-0039
+  - tl:task-0039
 source_count: null
 entry_count: 1
 artifact_count: 0
