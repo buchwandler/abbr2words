@@ -17,6 +17,20 @@
     },
     {
       "language": "ar",
+      "key": "ص",
+      "abbreviation": "ص",
+      "expansion": "صفحة",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "case_policy": "fixed",
+      "description": "Dotless page reference",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]+\\d",
+      "variants": []
+    },
+    {
+      "language": "ar",
       "key": "ص.",
       "abbreviation": "ص.",
       "expansion": "صفحة",
@@ -31,6 +45,34 @@
     },
     {
       "language": "ar",
+      "key": "ق.م",
+      "abbreviation": "ق.م",
+      "expansion": "قبل الميلاد",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "case_policy": "fixed",
+      "description": "Gregorian BC era marker",
+      "only_if_preceded_by": "(?<!\\d)\\d{1,4}[ \\t\\u00a0\\u202f]*$",
+      "only_if_followed_by": null,
+      "variants": []
+    },
+    {
+      "language": "ar",
+      "key": "م",
+      "abbreviation": "م",
+      "expansion": "ميلادي",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "case_policy": "fixed",
+      "description": "Gregorian era marker",
+      "only_if_preceded_by": "(?<!\\d)\\d{3,4}[ \\t\\u00a0\\u202f]*$",
+      "only_if_followed_by": null,
+      "variants": []
+    },
+    {
+      "language": "ar",
       "key": "م.",
       "abbreviation": "م.",
       "expansion": "مهندس",
@@ -39,7 +81,21 @@
       "case_sensitive": true,
       "case_policy": "fixed",
       "description": "Professional title",
-      "only_if_preceded_by": null,
+      "only_if_preceded_by": "(?:^|[^\\d\\s])[ \\t\\u00a0\\u202f]*$",
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]+[^\\W\\d_]",
+      "variants": []
+    },
+    {
+      "language": "ar",
+      "key": "هـ",
+      "abbreviation": "هـ",
+      "expansion": "هجري",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "case_policy": "fixed",
+      "description": "Hijri era marker",
+      "only_if_preceded_by": "(?<!\\d)\\d{3,4}[ \\t\\u00a0\\u202f]*$",
       "only_if_followed_by": null,
       "variants": []
     }

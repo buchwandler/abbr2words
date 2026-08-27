@@ -155,6 +155,45 @@ _TH_SOURCES = (
     ),
 )
 
+_AR_SOURCES = (
+    SourceRef(
+        "ar-unicode-cldr-48-units",
+        "Unicode CLDR 48 Arabic unit data",
+        "https://www.unicode.org/cldr/charts/48/grammar/ar.html",
+        "48",
+    ),
+    SourceRef(
+        "ar-unicode-cldr-48-calendar-eras",
+        "Unicode CLDR 48 Arabic calendar and era data",
+        "https://www.unicode.org/cldr/charts/48/summary/ar.html",
+        "48",
+    ),
+    SourceRef(
+        "ar-ksu-official-correspondence-titles",
+        "King Saud University official correspondence title abbreviations",
+        "https://faculty.ksu.edu.sa/sites/default/files/190710_dlyl_lmrslt.pdf",
+        "reviewed-2026-08-27",
+    ),
+    SourceRef(
+        "ar-saudi-official-era-usage",
+        "Saudi institutional usage of Arabic Gregorian and Hijri era markers",
+        "https://cma.org.sa/Market/Circulars/Documents/SAAB_Shareholder_Circular.pdf",
+        "reviewed-2026-08-27",
+    ),
+    SourceRef(
+        "ar-ksu-reference-style",
+        "King Saud University Arabic reference and page-marker usage",
+        "https://engineering.ksu.edu.sa/ar/CE_faculty",
+        "reviewed-2026-08-27",
+    ),
+    SourceRef(
+        "bipm-si",
+        "BIPM International System of Units",
+        "https://www.bipm.org/en/measurement-units/si-base-units",
+        "current",
+    ),
+)
+
 
 def _seed(
     abbreviation: str,
@@ -200,7 +239,15 @@ _VI_PHONE = rf"^{_VI_WS}*:?[ \t\u00a0\u202f]*(?:\+?\d|\(\d)"
 
 _SEEDS: dict[str, tuple[AbbreviationSeed, ...]] = {
     "am": (_seed("№", "ቁጥር", "Number sign", case_sensitive=True, boundary="custom"),),
-    "ar": (_seed("د.", "دكتور", "Doctor", case_sensitive=True),),
+    "ar": (
+        _seed(
+            "د.",
+            "دكتور",
+            "Doctor",
+            case_sensitive=True,
+            source_id="ar-ksu-official-correspondence-titles",
+        ),
+    ),
     "az": (_seed("№", "nömrə", "Number sign", case_sensitive=True),),
     "be": (_seed("гл.", "галоўны", "Reference abbreviation"),),
     "bn": (_seed("নং", "নম্বর", "Number sign", case_sensitive=True),),
@@ -265,6 +312,14 @@ _SEEDS: dict[str, tuple[AbbreviationSeed, ...]] = {
 }
 
 _N = r"^[ \t\u00a0\u202f]*\d"
+
+_AR_TITLE_BEFORE = r"(?:^|[^\d\s])[ \t\u00a0\u202f]*$"
+_AR_TITLE_AFTER = r"^[ \t\u00a0\u202f]+[^\W\d_]"
+_AR_REFERENCE_AFTER = r"^[ \t\u00a0\u202f]+\d"
+_AR_YEAR_BEFORE = r"(?<!\d)\d{3,4}[ \t\u00a0\u202f]*$"
+_AR_HISTORICAL_YEAR_BEFORE = r"(?<!\d)\d{1,4}[ \t\u00a0\u202f]*$"
+_AR_ATTACHED_LEFT = r"(?<![^\W\d_])"
+_AR_ATTACHED_RIGHT = r"(?![^\W\d_])"
 _THAI_TOKEN_LEFT = r"(?<![A-Za-z0-9_])"
 _THAI_TOKEN_RIGHT = r"(?![A-Za-z0-9_])"
 _THAI_DAY_BEFORE = r"(?<!\d)\d{1,2}[ \t\u00a0\u202f]*$"
@@ -317,8 +372,17 @@ _EXTRA = {
             "Page reference",
             case_sensitive=True,
             category="reference",
-            source_id="language-style-baseline",
+            source_id="ar-ksu-reference-style",
             only_if_followed_by=_N,
+        ),
+        _seed(
+            "ص",
+            "صفحة",
+            "Dotless page reference",
+            case_sensitive=True,
+            category="reference",
+            source_id="ar-ksu-reference-style",
+            only_if_followed_by=_AR_REFERENCE_AFTER,
         ),
         _seed(
             "م.",
@@ -326,7 +390,45 @@ _EXTRA = {
             "Professional title",
             case_sensitive=True,
             category="title",
-            source_id="language-style-baseline",
+            source_id="ar-ksu-official-correspondence-titles",
+            only_if_preceded_by=_AR_TITLE_BEFORE,
+            only_if_followed_by=_AR_TITLE_AFTER,
+        ),
+        _seed(
+            "هـ",
+            "هجري",
+            "Hijri era marker",
+            case_sensitive=True,
+            boundary="custom",
+            left_boundary=_AR_ATTACHED_LEFT,
+            right_boundary=_AR_ATTACHED_RIGHT,
+            only_if_preceded_by=_AR_YEAR_BEFORE,
+            category="calendar",
+            source_id="ar-unicode-cldr-48-calendar-eras",
+        ),
+        _seed(
+            "م",
+            "ميلادي",
+            "Gregorian era marker",
+            case_sensitive=True,
+            boundary="custom",
+            left_boundary=_AR_ATTACHED_LEFT,
+            right_boundary=_AR_ATTACHED_RIGHT,
+            only_if_preceded_by=_AR_YEAR_BEFORE,
+            category="calendar",
+            source_id="ar-unicode-cldr-48-calendar-eras",
+        ),
+        _seed(
+            "ق.م",
+            "قبل الميلاد",
+            "Gregorian BC era marker",
+            case_sensitive=True,
+            boundary="custom",
+            left_boundary=_AR_ATTACHED_LEFT,
+            right_boundary=_AR_ATTACHED_RIGHT,
+            only_if_preceded_by=_AR_HISTORICAL_YEAR_BEFORE,
+            category="calendar",
+            source_id="ar-unicode-cldr-48-calendar-eras",
         ),
     ),
     "az": (
@@ -1145,6 +1247,8 @@ BUNDLES = {
         if key == "th"
         else _VI_SOURCES
         if key == "vi"
+        else _AR_SOURCES
+        if key == "ar"
         else (
             _LEGACY,
             SourceRef(

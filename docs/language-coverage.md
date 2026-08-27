@@ -5,7 +5,7 @@ Do not edit this table manually; run `python scripts/generate_language_coverage.
 | Code    | Base/locale   | Lexical entries | Contextual entries | Unit identities | Localized unit labels | Source status     | Notes                                 |
 | ------- | ------------- | --------------: | -----------------: | --------------: | --------------------: | ----------------- | ------------------------------------- |
 | `am`    | `am` / base   |               2 |                  0 |              38 |                     4 | reviewed baseline | neutral labels; source ledger applies |
-| `ar`    | `ar` / base   |               3 |                  0 |              38 |                     5 | reviewed baseline | neutral labels; source ledger applies |
+| `ar`    | `ar` / base   |               7 |                  0 |              38 |                    38 | reviewed baseline | neutral labels; source ledger applies |
 | `az`    | `az` / base   |               3 |                  0 |              38 |                     5 | reviewed baseline | neutral labels; source ledger applies |
 | `be`    | `be` / base   |               3 |                  0 |              38 |                     5 | reviewed baseline | neutral labels; source ledger applies |
 | `bn`    | `bn` / base   |               3 |                  0 |              38 |                     4 | reviewed baseline | neutral labels; source ledger applies |

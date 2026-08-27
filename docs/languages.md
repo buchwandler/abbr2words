@@ -69,6 +69,10 @@ Japanese (`ja`) keeps unknown initialisms disabled and uses source-backed, struc
 
 The shared 38-unit inventory has Japanese labels. CLDR-style quantity templates render `20°C` as `摂氏 20 度` and `80 km/h` as `時速 80 キロメートル`. This is a reviewed baseline and source-backed registry, not a claim of complete native-speaker review.
 
+## Arabic support
+
+Arabic (`ar`) provides a source-backed conservative baseline with localized labels for all 38 shared common-unit identities. It expands `د.` and guarded `م.` titles, numeric page references such as `ص.` and `ص`, and numeric Gregorian, Hijri, and BC markers such as `م`, `هـ`, and `ق.م`. Arabic output preserves source number characters and does not perform number agreement, case, gender, dialect selection, or region-specific currency or academic-rank expansion.
+
 ## Thai support
 
 Thai (`th`) provides a source-backed conservative baseline for professional and academic titles, Buddhist and Gregorian eras, date-guarded month abbreviations, and clock-time markers. Common Latin/SI symbols and Thai short forms such as `ม.` and `กม.` resolve to Thai unit labels only with numeric quantity evidence. For example:
