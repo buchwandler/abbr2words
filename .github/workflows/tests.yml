@@ -17,6 +17,8 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install -e ".[dev,examples]"
+    - name: Compile package
+      run: python -m compileall -q abbr2words
     - name: Build distributions
       run: python -m build
     - name: Run tests
