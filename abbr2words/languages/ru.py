@@ -32,6 +32,25 @@ class RussianAbbreviationExpander(AbbreviationExpander):
         for abbreviation, expansion in common:
             self.add_abbreviation(AbbreviationEntry(abbreviation, expansion))
 
+
+        guarded_additions = (
+            ("№", "номер", r"\s*\d", "Numeric reference abbreviation"),
+            ("г-н", "господин", r"\s+[А-ЯЁA-Z]", "Title abbreviation"),
+            ("г-жа", "госпожа", r"\s+[А-ЯЁA-Z]", "Title abbreviation"),
+            ("тел.", "телефон", r":?\s*(?:\+7|8)\s*\d", "Phone reference abbreviation"),
+            ("рис.", "рисунок", r"\s*(?:\d|№)", "Numeric figure reference abbreviation"),
+            ("табл.", "таблица", r"\s*(?:\d|№)", "Numeric table reference abbreviation"),
+            ("разд.", "раздел", r"\s*(?:\d|№)", "Numeric section reference abbreviation"),
+        )
+        for abbreviation, expansion, guard, description in guarded_additions:
+            self.add_abbreviation(
+                AbbreviationEntry(
+                    abbreviation,
+                    expansion,
+                    description=description,
+                    only_if_followed_by=guard,
+                )
+            )
         self.add_abbreviation(
             AbbreviationEntry(
                 "стр.",

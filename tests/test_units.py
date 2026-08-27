@@ -562,3 +562,36 @@ def test_swedish_currency_symbols_share_one_structured_entry() -> None:
     assert len(entries) == 1
     assert entries[0].symbols == ("kr", "SEK")
     assert entries[0].canonical_symbol == "SEK"
+
+def test_russian_aliases_reuse_existing_canonical_identities() -> None:
+    entries = unit_entries("ru")
+    assert not any(
+        entry.canonical_id is not None and ("russian" in entry.canonical_id or "cyrillic" in entry.canonical_id)
+        for entry in entries
+    )
+    aliases = {symbol: entry.canonical_id for entry in entries for symbol in entry.symbols}
+    assert {
+        aliases["кг"],
+        aliases["Гц"],
+        aliases["Вт"],
+        aliases["В"],
+        aliases["кПа"],
+    } == {
+        "mass-kilogram",
+        "frequency-hertz",
+        "power-watt",
+        "voltage-volt",
+        "pressure-kilopascal",
+    }
+    assert all(entry.canonical_id != "concentration-molar" for entry in entries)
+
+def test_russian_polynorm_currency_labels_are_localized() -> None:
+    expected = {
+        "currency-japanese-yen": "японская иена",
+        "currency-swiss-franc": "швейцарский франк",
+        "currency-indian-rupee": "индийская рупия",
+        "currency-south-korean-won": "южнокорейская вона",
+        "currency-mexican-peso": "мексиканское песо",
+    }
+    entries = {entry.canonical_id: entry for entry in unit_entries("ru") if entry.category == "currency"}
+    assert {canonical_id: entries[canonical_id].expansion for canonical_id in expected} == expected

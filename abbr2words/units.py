@@ -679,6 +679,65 @@ _LOCALIZED_ALIASES = {
     ),
 }
 
+_LOCALIZED_SYMBOL_ALIASES: dict[str, dict[str, tuple[str, ...]]] = {
+    "ru": {
+        "duration-second": ("с",),
+        "duration-minute": ("мин",),
+        "duration-hour": ("ч",),
+        "duration-day": ("сут",),
+        "length-millimeter": ("мм",),
+        "length-centimeter": ("см",),
+        "length-meter": ("м",),
+        "length-kilometer": ("км",),
+        "volume-milliliter": ("мл",),
+        "volume-liter": ("л",),
+        "mass-microgram": ("мкг",),
+        "mass-milligram": ("мг",),
+        "mass-gram": ("г",),
+        "mass-kilogram": ("кг",),
+        "mass-tonne": ("т",),
+        "temperature-kelvin": ("К",),
+        "temperature-celsius": ("°С",),
+        "speed-meter-per-second": ("м/с",),
+        "speed-kilometer-per-hour": ("км/ч",),
+        "area-square-millimeter": ("мм²", "мм2"),
+        "area-square-centimeter": ("см²", "см2"),
+        "area-square-meter": ("м²", "м2"),
+        "area-square-kilometer": ("км²", "км2"),
+        "area-hectare": ("га",),
+        "volume-cubic-millimeter": ("мм³", "мм3"),
+        "volume-cubic-centimeter": ("см³", "см3"),
+        "volume-cubic-meter": ("м³", "м3"),
+        "pressure-pascal": ("Па",),
+        "pressure-kilopascal": ("кПа",),
+        "pressure-atmosphere": ("атм",),
+        "data-byte": ("Б",),
+        "data-kilobyte": ("кБ",),
+        "data-megabyte": ("МБ",),
+        "data-gigabyte": ("ГБ",),
+        "fuel-consumption-liter-per-100-kilometer": ("л/100км", "л/100 км", "л/100\u00a0км", "л/100\u202fкм"),
+        "flow-cubic-meter-per-second": ("м³/с", "м3/с"),
+        "power-watt": ("Вт",),
+        "power-kilowatt": ("кВт",),
+        "energy-watt-hour": ("Вт·ч",),
+        "energy-kilowatt-hour": ("кВт·ч",),
+        "frequency-hertz": ("Гц",),
+        "frequency-kilohertz": ("кГц",),
+        "frequency-megahertz": ("МГц",),
+        "frequency-gigahertz": ("ГГц",),
+        "length-nanometer": ("нм",),
+        "current-ampere": ("А",),
+        "current-milliampere": ("мА",),
+        "charge-milliampere-hour": ("мА·ч",),
+        "voltage-volt": ("В",),
+        "luminous-flux-lumen": ("лм",),
+        "force-newton": ("Н",),
+        "energy-joule": ("Дж",),
+        "pressure-millimeter-mercury": ("мм рт. ст.", "мм\u00a0рт.\u00a0ст.", "мм\u202fрт.\u202fст."),
+        "amount-mole": ("моль",),
+    },
+}
+
 _STRUCTURED_CURRENCY_ENTRIES = {
     "en": (
         _entry(
@@ -1185,6 +1244,37 @@ _POLYNORM_UNIT_LABELS = {
         "mol",
         "molar",
     ),
+    "ru": (
+        "миля в час",
+        "паскаль",
+        "килопаскаль",
+        "атмосфера",
+        "байт",
+        "килобайт",
+        "мегабайт",
+        "гигабайт",
+        "литр на 100 километров",
+        "кубический метр в секунду",
+        "ватт",
+        "киловатт",
+        "ватт-час",
+        "киловатт-час",
+        "герц",
+        "килогерц",
+        "мегагерц",
+        "гигагерц",
+        "нанометр",
+        "ампер",
+        "миллиампер",
+        "миллиампер-час",
+        "вольт",
+        "люмен",
+        "ньютон",
+        "джоуль",
+        "миллиметр ртутного столба",
+        "моль",
+    ),
+
 }
 
 _POLYNORM_CURRENCY_LABELS = {
@@ -1212,11 +1302,23 @@ _POLYNORM_CURRENCY_LABELS = {
         "sydkoreansk won",
         "mexikansk peso",
     ),
+    "ru": (
+        "японская иена",
+        "швейцарский франк",
+        "индийская рупия",
+        "южнокорейская вона",
+        "мексиканское песо",
+    ),
 }
 
 
 def _polynorm_unit_entries(language: str) -> tuple[UnitEntry, ...]:
     labels = _POLYNORM_UNIT_LABELS.get(language, _POLYNORM_UNIT_LABELS["en"])
+    definitions = tuple(
+        definition
+        for definition in _POLYNORM_DEFINITIONS
+        if not (language == "ru" and definition.canonical_id == "concentration-molar")
+    )
     return tuple(
         _entry(
             definition.symbols,
@@ -1226,9 +1328,8 @@ def _polynorm_unit_entries(language: str) -> tuple[UnitEntry, ...]:
             reject_following_period=definition.reject_following_period,
             requires_separator=definition.requires_separator,
         )
-        for index, definition in enumerate(_POLYNORM_DEFINITIONS)
+        for index, definition in enumerate(definitions)
     )
-
 
 _POLYNORM_POUND_LABELS = {
     "de": "Pfund",
@@ -1442,6 +1543,37 @@ for _lang in tuple(UNIT_ENTRIES):
     UNIT_ENTRIES[_lang] += _polynorm_unit_entries(_lang)
     UNIT_ENTRIES[_lang] += _polynorm_pound_entries(_lang)
     UNIT_ENTRIES[_lang] += _polynorm_currency_entries(_lang)
+
+for _lang, _aliases in _LOCALIZED_SYMBOL_ALIASES.items():
+    _canonical_entries = {
+        entry.canonical_id: entry
+        for entry in UNIT_ENTRIES[_lang]
+        if entry.canonical_id is not None
+    }
+    _registered_symbols = {
+        symbol for entry in UNIT_ENTRIES[_lang] for symbol in entry.symbols
+    }
+    _alias_entries: list[UnitEntry] = []
+    for _canonical_id, _symbols in _aliases.items():
+        _canonical_entry = _canonical_entries[_canonical_id]
+        for _symbol in _symbols:
+            if _symbol in _registered_symbols:
+                continue
+            _alias_entries.append(
+                _entry(
+                    _symbol,
+                    _canonical_entry.expansion,
+                    _canonical_entry.description,
+                    canonical_id=_canonical_id,
+                    case_sensitive=_canonical_entry.case_sensitive,
+                    category=_canonical_entry.category,
+                    quantity_position=_canonical_entry.quantity_position,
+                    requires_separator=_canonical_entry.requires_separator,
+                    reject_following_period=(_canonical_id == "mass-gram"),
+                )
+            )
+            _registered_symbols.add(_symbol)
+    UNIT_ENTRIES[_lang] += tuple(_alias_entries)
 
 UNIT_ENTRIES["fr"] += _FRENCH_DOTTED_DURATION_ENTRIES
 

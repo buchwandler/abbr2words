@@ -34,6 +34,10 @@ lexical entries are case-sensitive. Unit output is a canonical singular lemma;
 the stable API does not realize plural, case, numeral-government, or suffix
 morphology.
 
+## Russian support
+
+Russian (`ru`) accepts both international symbols such as `kg`, `W`, and `Hz` and standard Cyrillic symbols such as `кг`, `Вт`, and `Гц`. These aliases resolve to the same canonical unit identities, so `5 кг` expands to `5 килограмм` and `100 Вт` expands to `100 ватт`. Unit output remains a canonical singular lemma; Russian plural, case, and numeral-government inflection is handled outside `abbr2words`. Ambiguous one-letter abbreviations such as `г.` and `р.` remain unchanged unless a future context mechanism can disambiguate them.
+
 Vietnamese (`vi`) remains in the reviewed baseline tier. Its source-backed rules expand guarded `TP.`, `ĐT`, `SĐT`, and academic-title forms, while legal identifiers and ambiguous uppercase tokens remain unchanged. The common-unit inventory has 38 identity entries and now exposes 38 localized spoken labels; the separate numeric currency identity `VND`/`₫` is `currency-vietnamese-dong`. Coverage reports distinguish unit identities from localized labels.
 
 English, French, Italian, Portuguese, and Spanish structured quantities recognize

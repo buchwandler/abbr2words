@@ -62,6 +62,17 @@ case, numeral government, gender, vowel harmony, or apostrophe-attached suffixes
 Turkish unit symbols followed by `'` or `’` remain unchanged under the restricted
 first-release policy.
 
+## Russian source ledger
+
+The Russian registry uses the following sources by scope:
+
+- **Gramota.ru, Графические сокращения**. Standard graphical abbreviations, including multi-part forms, reference forms, and conservative handling of ambiguous one-letter abbreviations. https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/graficheskie-sokrashcheniya
+- **Gramota.ru, Как правильно сокращать слова?**. Conventional title, address, railway, and reference abbreviations used selectively with local guards. https://gramota.ru/biblioteka/spravochniki/pismovnik/kak-pravilno-sokrashchat-slova
+- **ГОСТ Р 7.0.12-2011**. Bibliographic abbreviation guidance only; its complete appendix is not imported into general prose normalization. https://protect.gost.ru/gost/details/d3976f19-de4b-4509-a799-4f1073690522
+- **ГОСТ 8.417-2024**. Active measurement-unit standard effective 2024-09-30, replacing ГОСТ 8.417-2002. It is the primary source for Russian unit symbols and designations. https://protect.gost.ru/gost/details/fa1165d5-0547-429a-9c3e-f16f4bdb101f
+- **Unicode CLDR, Russian unit grammar**. Supports the architectural boundary that numeral and case inflection belongs downstream. https://unicode.org/cldr/charts/46/grammar/ru.html
+
+The checked-in Russian source IDs are `ru-gramota-graphical-abbreviations`, `ru-gost-r-7-0-12-2011`, and `ru-gost-8-417-2024`. The unit implementation maps international and Cyrillic symbols to shared canonical identities and emits canonical lemmas without Russian numeral inflection.
 ## Swedish source ledger
 
 The Swedish registry uses the following sources by scope:
@@ -95,6 +106,7 @@ Vietnamese remains a reviewed baseline with source-backed data and native-langua
 - Rada Języka Polskiego: current Polish spelling, abbreviations, month names, and
   unit-spacing guidance, including the 2026 spelling change notice.
 - Gramota and GOST R 7.0.12-2011 guidance: Russian graphical abbreviations.
+- ГОСТ 8.417-2024: current Russian measurement-unit names and symbols; it replaced ГОСТ 8.417-2002.
 - Türk Dil Kurumu: Turkish abbreviation, abbreviation-index, and punctuation
   guidance.
 - ISO 4217: currency codes and locale currency identities.
@@ -133,7 +145,8 @@ sign-off for the complete registries.
 | `zh`                                                                                         | `legacy-abbr2words`, `unicode-cldr-48.2.1`                                                                             | guarded № reference and neutral generic units                                 | conservative generic base; plain Han words remain unchanged     |
 | `ko`                                                                                         | `ko-nikl-corporate-ju`, `ko-kriss-si`, `ko-nikl-atmosphere`, `unicode-cldr-48.2.1`                                     | № and organization abbreviations; complete common units; reviewed initialisms | source-backed reviewed baseline; broader lexical review pending |
 | `ja`                                                                                         | `ja-nta-organization-abbreviations`, `ja-nmij-si`, `ja-government-page-reference-examples`, `unicode-cldr-48.2.1`      | guarded № and structural organization abbreviations; complete common units    | reviewed baseline / source-backed; native review pending        |
-| `cs de en es fr it nl pl pt ru sv tr`                                                        | `legacy-<code>` plus pinned common sources                                                                             | preserved mature lexical registry and structured quantities                   | legacy-preserved; parity tested                                 |
+| `ru`                                                                                         | `ru-gramota-graphical-abbreviations`, `ru-gost-r-7-0-12-2011`, `ru-gost-8-417-2024`, `unicode-cldr-48.2.1`                | guarded lexical abbreviations; Cyrillic and international unit aliases; canonical lemma labels | active standards; conservative review |
+| `cs de en es fr it nl pl pt sv tr`                                                        | `legacy-<code>` plus pinned common sources                                                                             | preserved mature lexical registry and structured quantities                   | legacy-preserved; parity tested                                 |
 | `en_IN en_NG es_CO es_CR es_GT es_NI es_VE fr_BE fr_CH fr_DZ pt_BR zh_HK zh_TW`              | locale overlay modules plus ISO 4217/CLDR                                                                              | numeric currency and locale-specific overlay data                             | generated-reviewed                                              |
 | `zh_CN`                                                                                      | `zh-cn-prc-legal-units`, `zh-cn-moe-foreign-terms-batch-1`, `zh-cn-moe-foreign-terms-batch-6-7`, `unicode-cldr-48.2.1` | Mainland semantic abbreviations and complete localized common units           | source-backed reviewed locale                                   |
 

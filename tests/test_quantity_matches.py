@@ -860,3 +860,22 @@ def test_match_type_is_immutable_and_matches_are_non_overlapping() -> None:
 def test_invalid_category_metadata_fails_eagerly() -> None:
     with pytest.raises(ValueError, match="category"):
         UnitEntry(("x",), "x", category="")
+
+@pytest.mark.parametrize(
+    ("source", "canonical_id"),
+    [
+        ("5 кг", "mass-kilogram"),
+        ("60 Гц", "frequency-hertz"),
+        ("100 Вт", "power-watt"),
+        ("220 В", "voltage-volt"),
+        ("101 кПа", "pressure-kilopascal"),
+        ("20 °С", "temperature-celsius"),
+    ],
+)
+def test_russian_aliases_preserve_complete_source_spans(
+    source: str, canonical_id: str
+) -> None:
+    matches = list(iter_unit_matches(source, "ru"))
+    assert len(matches) == 1
+    assert source[matches[0].start : matches[0].end] == source
+    assert matches[0].canonical_id == canonical_id

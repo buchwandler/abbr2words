@@ -202,8 +202,8 @@
       "sha256": "b288042b2ac762fc1810aba2ab9c66e36083bdfc0af7c428c94e4fb62211d5de"
     },
     "ru": {
-      "count": 16,
-      "sha256": "4e12f2a742e2baa64c57a81e707653bf5b300a49abd295b7e747ccd63dd820b0"
+      "count": 23,
+      "sha256": "e3fa3cac5c28c2e483b09543a81000c2e9d6035bf7cbdf4158b03e28c25698c6"
     },
     "sk": {
       "count": 3,
@@ -266,5 +266,5 @@
       "sha256": "5de8dbd5ec86b4fca916249f00cc67d69719bd5b7272645ad74aebe568c9c6a4"
     }
   },
-  "all_sha256": "e3e45573c9fbb2c2c5277c3f4cdc2e1bb7616e20aed73f81e6f6cf19e271fdbe"
+  "all_sha256": "56f17591af3deacbaab55a183b2e33e0a0987c29d6bb2f94744a901dc4125a0b"
 }
