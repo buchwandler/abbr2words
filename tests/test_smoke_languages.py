@@ -55,7 +55,7 @@ def test_language_smoke(lang: str, source: str, expected: str) -> None:
         ("te", "పు. 12", "పుట 12", "పు. text"),
         ("tet", "pág. 12", "pájina 12", "pág. text"),
         ("tg", "саҳ. 12", "саҳифа 12", "саҳ. text"),
-        ("th", "ม. test", "มหาวิทยาลัย test", "มห. text"),
+        ("th", "นพ. สมชาย", "นายแพทย์ สมชาย", "กข. สมชาย"),
         ("uk", "стор. 12", "сторінка 12", "стор. text"),
         ("vi", "tr. 12", "trang 12", "tr. text"),
         ("zh", "№ 12", "编号 12", "№ text"),

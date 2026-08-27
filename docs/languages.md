@@ -69,6 +69,19 @@ Japanese (`ja`) keeps unknown initialisms disabled and uses source-backed, struc
 
 The shared 38-unit inventory has Japanese labels. CLDR-style quantity templates render `20°C` as `摂氏 20 度` and `80 km/h` as `時速 80 キロメートル`. This is a reviewed baseline and source-backed registry, not a claim of complete native-speaker review.
 
+## Thai support
+
+Thai (`th`) provides a source-backed conservative baseline for professional and academic titles, Buddhist and Gregorian eras, date-guarded month abbreviations, and clock-time markers. Common Latin/SI symbols and Thai short forms such as `ม.` and `กม.` resolve to Thai unit labels only with numeric quantity evidence. For example:
+
+```python
+from abbr2words import abbr2words
+
+assert abbr2words("ระยะ 5 กม.", lang="th") == "ระยะ 5 กิโลเมตร"
+assert abbr2words("27 ส.ค. 2569", lang="th") == "27 สิงหาคม 2569"
+```
+
+Ambiguous forms such as `ม.เชียงใหม่` remain unchanged because `ม.` is also the Thai meter symbol. Broader address, administrative, and institution abbreviation coverage still requires native review.
+
 ## Mandarin Chinese support
 
 Mainland Chinese (`zh_CN`) is a separate Simplified-Mandarin locale overlay. It localizes the common unit inventory, uses explicit ASCII-token boundaries so reviewed Latin abbreviations can touch Han characters, and expands only the reviewed semantic terms by default. Unknown uppercase identifiers remain unchanged. The `zh_HK` and `zh_TW` overlays remain separate and do not implicitly inherit Mainland terminology.

@@ -54,7 +54,7 @@ Do not edit this table manually; run `python scripts/generate_language_coverage.
 | `pt`    | `pt` / base   |              72 |                  0 |              69 |                    38 | reviewed extended | neutral labels; source ledger applies |
 | `pt_BR` | `pt` / locale |              73 |                  0 |              69 |                    38 | reviewed extended | neutral labels; source ledger applies |
 | `ro`    | `ro` / base   |               3 |                  0 |              38 |                     4 | reviewed baseline | neutral labels; source ledger applies |
-| `ru`    | `ru` / base   |              23 |                  0 |             129 |                    38 | reviewed extended | neutral labels; source ledger applies |
+| `ru`    | `ru` / base   |              23 |                  0 |             128 |                    38 | reviewed extended | neutral labels; source ledger applies |
 | `sk`    | `sk` / base   |               3 |                  0 |              38 |                     4 | reviewed baseline | neutral labels; source ledger applies |
 | `sl`    | `sl` / base   |               3 |                  0 |              38 |                     4 | reviewed baseline | neutral labels; source ledger applies |
 | `sr`    | `sr` / base   |               3 |                  0 |              38 |                     4 | reviewed baseline | neutral labels; source ledger applies |
@@ -62,7 +62,7 @@ Do not edit this table manually; run `python scripts/generate_language_coverage.
 | `te`    | `te` / base   |               3 |                  0 |              38 |                     4 | reviewed baseline | neutral labels; source ledger applies |
 | `tet`   | `tet` / base  |               3 |                  0 |              38 |                     4 | reviewed baseline | neutral labels; source ledger applies |
 | `tg`    | `tg` / base   |               3 |                  0 |              38 |                     4 | reviewed baseline | neutral labels; source ledger applies |
-| `th`    | `th` / base   |               3 |                  0 |              38 |                     4 | reviewed baseline | neutral labels; source ledger applies |
+| `th`    | `th` / base   |              23 |                  0 |              39 |                    38 | reviewed baseline | neutral labels; source ledger applies |
 | `tr`    | `tr` / base   |              15 |                  0 |              62 |                    38 | reviewed extended | neutral labels; source ledger applies |
 | `uk`    | `uk` / base   |               3 |                  0 |              38 |                     4 | reviewed baseline | neutral labels; source ledger applies |
 | `vi`    | `vi` / base   |               8 |                  0 |              39 |                    38 | reviewed baseline | neutral labels; source ledger applies |

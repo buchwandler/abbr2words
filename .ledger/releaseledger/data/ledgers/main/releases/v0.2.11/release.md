@@ -3,7 +3,7 @@ schema_version: 2
 object_type: release
 versioning:
   schema_version: 1
-  revision: 6
+  revision: 7
 version: v0.2.11
 status: released
 title: Release v0.2.11
@@ -16,7 +16,7 @@ boundary_ref: git:37eb9b2a5b62131209ba9cbbe01bdcb8a31a5e25
 source_refs:
   - tl:task-0039
 source_count: null
-entry_count: 3
+entry_count: 4
 artifact_count: 0
 git_base_ref: v0.2.10
 git_base_sha: 52a5b476bd9b61c9ab89adac2a266e3a9b9b0c2e

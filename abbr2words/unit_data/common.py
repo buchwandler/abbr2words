@@ -62,6 +62,31 @@ COMMON_UNIT_DEFINITIONS = (
     UnitDefinition("volume-cubic-meter", ("m³", "m3"), "m³"),
 )
 
+UNIT_SYMBOL_ALIASES: dict[str, dict[str, tuple[str, ...]]] = {
+    "th": {
+        "duration-second": ("วิ",),
+        "duration-hour": ("ชม.",),
+        "length-millimeter": ("มม.",),
+        "length-centimeter": ("ซม.",),
+        "length-meter": ("ม.",),
+        "length-kilometer": ("กม.",),
+        "volume-liter": ("ล.",),
+        "mass-microgram": ("มคก.",),
+        "mass-milligram": ("มก.",),
+        "mass-gram": ("ก.",),
+        "mass-kilogram": ("กก.",),
+        "mass-tonne": ("ต.",),
+        "area-square-millimeter": ("ตร.มม.",),
+        "area-square-centimeter": ("ตร.ซม.",),
+        "area-square-meter": ("ตร.ม.",),
+        "area-square-kilometer": ("ตร.กม.",),
+        "volume-cubic-millimeter": ("ลบ.มม.",),
+        "volume-cubic-centimeter": ("ลบ.ซม.",),
+        "volume-cubic-meter": ("ลบ.ม.",),
+    },
+}
+
+
 UNIT_LABELS = {
     "ar": {
         "mass-gram": "غرام",
@@ -335,10 +360,44 @@ UNIT_LABELS = {
         "duration-minute": "дақиқа",
     },
     "th": {
+        "duration-second": "วินาที",
+        "duration-minute": "นาที",
+        "duration-hour": "ชั่วโมง",
+        "duration-day": "วัน",
+        "length-millimeter": "มิลลิเมตร",
+        "length-centimeter": "เซนติเมตร",
+        "length-meter": "เมตร",
+        "length-kilometer": "กิโลเมตร",
+        "volume-milliliter": "มิลลิลิตร",
+        "volume-liter": "ลิตร",
+        "mass-microgram": "ไมโครกรัม",
+        "mass-milligram": "มิลลิกรัม",
         "mass-gram": "กรัม",
         "mass-kilogram": "กิโลกรัม",
-        "length-kilometer": "กิโลเมตร",
-        "duration-minute": "นาที",
+        "mass-tonne": "เมตริกตัน",
+        "temperature-kelvin": "เคลวิน",
+        "temperature-celsius": "องศาเซลเซียส",
+        "temperature-fahrenheit": "องศาฟาเรนไฮต์",
+        "speed-meter-per-second": "เมตรต่อวินาที",
+        "speed-kilometer-per-hour": "กิโลเมตรต่อชั่วโมง",
+        "speed-mile-per-hour": "ไมล์ต่อชั่วโมง",
+        "pressure-pascal": "ปาสกาล",
+        "pressure-kilopascal": "กิโลปาสกาล",
+        "pressure-atmosphere": "บรรยากาศ",
+        "data-byte": "ไบต์",
+        "data-kilobyte": "กิโลไบต์",
+        "data-megabyte": "เมกะไบต์",
+        "data-gigabyte": "กิกะไบต์",
+        "fuel-consumption-liter-per-100-kilometer": "ลิตรต่อ 100 กิโลเมตร",
+        "flow-cubic-meter-per-second": "ลูกบาศก์เมตรต่อวินาที",
+        "area-square-millimeter": "ตารางมิลลิเมตร",
+        "area-square-centimeter": "ตารางเซนติเมตร",
+        "area-square-meter": "ตารางเมตร",
+        "area-square-kilometer": "ตารางกิโลเมตร",
+        "area-hectare": "เฮกตาร์",
+        "volume-cubic-millimeter": "ลูกบาศก์มิลลิเมตร",
+        "volume-cubic-centimeter": "ลูกบาศก์เซนติเมตร",
+        "volume-cubic-meter": "ลูกบาศก์เมตร",
     },
     "uk": {
         "mass-gram": "грам",
@@ -469,9 +528,12 @@ def common_unit_entries(language: str, *, expansion_prefix: str = "") -> tuple[U
     prefix = f"{expansion_prefix} " if expansion_prefix else ""
     labels = UNIT_LABELS.get(language, {})
     templates = UNIT_TEMPLATES.get(language, {})
+    aliases = UNIT_SYMBOL_ALIASES.get(language, {})
     entries = tuple(
         UnitEntry(
-            symbols=definition.symbols,
+            symbols=tuple(
+                dict.fromkeys((*definition.symbols, *aliases.get(definition.canonical_id, ())))
+            ),
             expansion=f"{prefix}{labels.get(definition.canonical_id, definition.canonical_symbol)}",
             description=f"Reviewed common unit ({language})",
             canonical_symbol=definition.canonical_symbol,
@@ -487,6 +549,8 @@ def common_unit_entries(language: str, *, expansion_prefix: str = "") -> tuple[U
         entries += (locale_currency(("₩", "KRW"), "원", "currency-south-korean-won"),)
     elif language == "vi":
         entries += (locale_currency(("₫", "VND"), "đồng Việt Nam", "currency-vietnamese-dong"),)
+    elif language == "th":
+        entries += (locale_currency(("฿", "THB"), "บาท", "currency-thai-baht"),)
     return entries
 
 
@@ -531,6 +595,7 @@ __all__ = [
     "COMMON_UNIT_DEFINITIONS",
     "UnitDefinition",
     "UNIT_LABELS",
+    "UNIT_SYMBOL_ALIASES",
     "UNIT_TEMPLATES",
     "common_unit_entries",
     "locale_currency",

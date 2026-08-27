@@ -102,6 +102,17 @@ abbr2words("（株）東京商事は500 MBのデータを5 km先へ送った。"
 # 株式会社東京商事は500 メガバイトのデータを5 キロメートル先へ送った。
 ```
 
+Thai uses a source-backed conservative baseline for titles, eras, dates, times, and localized quantities:
+
+```python
+from abbr2words import abbr2words
+
+assert abbr2words("ระยะ 5 กม.", lang="th") == "ระยะ 5 กิโลเมตร"
+assert abbr2words("27 ส.ค. 2569", lang="th") == "27 สิงหาคม 2569"
+```
+
+Ambiguous forms such as `ม.เชียงใหม่` may remain unchanged even though `ม.` is a Thai abbreviation for university, because numeric quantity context uses the same token for meter. Native review is still recommended for broader Thai administrative and institution abbreviations.
+
 Mainland Chinese (`zh_CN`) uses reviewed semantic abbreviations and localized units:
 
 ```python

@@ -1,0 +1,173 @@
+schema_version: 1
+object_type: commit_audit_sheet
+versioning:
+  schema_version: 1
+  revision: 3
+release_version: v0.2.12
+git_base_ref: v0.2.11
+git_base_sha: 8b50346ed66ac4c1dee7d200e43e45a10886d54f
+git_head_ref: HEAD
+git_head_sha: 6e569ee2706a842a8d90399988673626ec60c15b
+git_range: 8b50346ed66ac4c1dee7d200e43e45a10886d54f..6e569ee2706a842a8d90399988673626ec60c15b
+commit_count: 4
+rows:
+  - sha: 5ac1b3b7f1f2f6a9d4aaa8a2557bc34e87493701
+    source_ref: git:5ac1b3b7f1f2f6a9d4aaa8a2557bc34e87493701
+    short_sha: 5ac1b3b
+    changed_paths:
+      - abbr2words/languages/sv.py
+      - abbr2words/unit_data/common.py
+      - abbr2words/units.py
+      - docs/language-coverage.md
+      - docs/language-sources.md
+      - tests/data/registries/index.json
+      - tests/data/registries/sv.json
+      - tests/test_sv.py
+      - tests/test_units.py
+    stats:
+      files_changed: 0
+      insertions: 643
+      deletions: 74
+    inspected: true
+    inspected_paths:
+      - abbr2words/languages/sv.py
+      - abbr2words/unit_data/common.py
+      - abbr2words/units.py
+      - docs/language-coverage.md
+      - docs/language-sources.md
+      - tests/data/registries/index.json
+      - tests/data/registries/sv.json
+      - tests/test_sv.py
+      - tests/test_units.py
+    observed_behavior:
+      Added Swedish prose, numeric-reference, and telephone abbreviations
+      with guarded numeric matching and expanded Swedish unit coverage, with registry
+      and regression tests.
+    public_impact: public
+    decision: accepted
+    evidence_subject: "feat: improve support for swedish"
+    target_entry_key: swedish-abbreviation-and-unit-coverage
+    target_entry_id: entry-0001
+    notes:
+      The implementation adds user-visible Swedish normalization rules and canonical
+      unit labels while preserving ambiguous forms through context guards.
+  - sha: 8c0192532e9d187b8ccd0c6d532e9781d7fd78ec
+    source_ref: git:8c0192532e9d187b8ccd0c6d532e9781d7fd78ec
+    short_sha: 8c01925
+    changed_paths:
+      - abbr2words/language_data/bundles.py
+      - abbr2words/unit_data/common.py
+      - docs/language-coverage.md
+      - docs/language-sources.md
+      - docs/languages.md
+      - scripts/generate_language_coverage.py
+      - tests/data/registries/index.json
+      - tests/data/registries/vi.json
+      - tests/test_vi.py
+    stats:
+      files_changed: 0
+      insertions: 491
+      deletions: 83
+    inspected: true
+    inspected_paths:
+      - abbr2words/language_data/bundles.py
+      - abbr2words/unit_data/common.py
+      - docs/language-coverage.md
+      - docs/language-sources.md
+      - docs/languages.md
+      - scripts/generate_language_coverage.py
+      - tests/data/registries/index.json
+      - tests/data/registries/vi.json
+      - tests/test_vi.py
+    observed_behavior:
+      Added guarded Vietnamese address, phone, and academic-title rules
+      together with localized common units and a canonical Vietnamese dong currency
+      identity, backed by registry and regression tests.
+    public_impact: public
+    decision: accepted
+    evidence_subject: "feat: improve support for vietnamese"
+    target_entry_key: vietnamese-normalization-and-units
+    target_entry_id: entry-0002
+    notes:
+      The implementation exposes new Vietnamese normalization behavior and structured
+      unit identities while retaining conservative handling of ambiguous identifiers.
+  - sha: b1cb88d737f5174a9ae27858176e73b7fa144201
+    source_ref: git:b1cb88d737f5174a9ae27858176e73b7fa144201
+    short_sha: b1cb88d
+    changed_paths:
+      - abbr2words/languages/ru.py
+      - abbr2words/units.py
+      - docs/language-coverage.md
+      - docs/language-sources.md
+      - docs/languages.md
+      - tests/data/registries/index.json
+      - tests/data/registries/ru.json
+      - tests/test_quantity_matches.py
+      - tests/test_ru.py
+      - tests/test_units.py
+    stats:
+      files_changed: 0
+      insertions: 470
+      deletions: 7
+    inspected: true
+    inspected_paths:
+      - abbr2words/languages/ru.py
+      - abbr2words/units.py
+      - docs/language-coverage.md
+      - docs/language-sources.md
+      - docs/languages.md
+      - tests/data/registries/index.json
+      - tests/data/registries/ru.json
+      - tests/test_quantity_matches.py
+      - tests/test_ru.py
+      - tests/test_units.py
+    observed_behavior:
+      Added guarded Russian titles, phone and document references,
+      and Cyrillic aliases for shared unit identities, with localized canonical labels
+      and focused regression coverage.
+    public_impact: public
+    decision: accepted
+    evidence_subject: "feat: improve support for russian"
+    target_entry_key: russian-guarded-abbreviations-and-units
+    target_entry_id: entry-0003
+    notes:
+      The implementation broadens Russian user-visible normalization while keeping
+      single-letter and weak-context forms unchanged.
+  - sha: 6e569ee2706a842a8d90399988673626ec60c15b
+    source_ref: git:6e569ee2706a842a8d90399988673626ec60c15b
+    short_sha: 6e569ee
+    changed_paths:
+      - abbr2words/language_data/bundles.py
+      - abbr2words/units.py
+      - docs/language-coverage.md
+      - docs/language-sources.md
+      - scripts/generate_language_coverage.py
+      - tests/data/registries/vi.json
+      - tests/test_quantity_matches.py
+      - tests/test_ru.py
+      - tests/test_units.py
+    stats:
+      files_changed: 0
+      insertions: 136
+      deletions: 113
+    inspected: true
+    inspected_paths:
+      - abbr2words/language_data/bundles.py
+      - abbr2words/units.py
+      - docs/language-coverage.md
+      - docs/language-sources.md
+      - scripts/generate_language_coverage.py
+      - tests/data/registries/vi.json
+      - tests/test_quantity_matches.py
+      - tests/test_ru.py
+      - tests/test_units.py
+    observed_behavior:
+      Reformatted generated tables, long literals, and test declarations
+      without changing runtime behavior or public coverage.
+    public_impact: internal
+    decision: internal
+    evidence_subject: "chore: pre-commit"
+    target_entry_id: entry-0004
+    notes:
+      Formatting-only maintenance is intentionally omitted from public release
+      notes.

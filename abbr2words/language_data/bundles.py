@@ -116,6 +116,45 @@ _VI_SOURCES = (
     ),
 )
 
+_TH_SOURCES = (
+    SourceRef(
+        "th-orst-abbreviation-rules",
+        "Thai abbreviation-writing guidance from the Office of the Royal Society",
+        "https://www.orst.go.th/iwfm_table.asp?a=36",
+        "reviewed-2026-08-27",
+    ),
+    SourceRef(
+        "th-orst-professional-titles",
+        "Thai professional title abbreviation guidance",
+        "https://legacy.orst.go.th/?knowledges=%E0%B8%A2%E0%B9%88%E0%B8%AD%E0%B8%84%E0%B8%B3%E0%B9%83%E0%B8%AB%E0%B9%89%E0%B9%84%E0%B8%94%E0%B9%89%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1",
+        "reviewed-2026-08-27",
+    ),
+    SourceRef(
+        "th-education-title-source",
+        "Thai education guidance for ดร. title usage",
+        "https://www.moe.go.th/หลักเกณฑ์การเขียนคำย่อ/",
+        "reviewed-2026-08-27",
+    ),
+    SourceRef(
+        "th-academic-title-source",
+        "Thai academic title usage guidance",
+        "https://www.orst.go.th/iwfm_table.asp?a=36",
+        "reviewed-2026-08-27",
+    ),
+    SourceRef(
+        "unicode-cldr-48.2.1-th",
+        "Unicode CLDR 48.2.1 Thai locale and unit data",
+        "https://www.unicode.org/cldr/charts/48/summary/th.html",
+        "48.2.1",
+    ),
+    SourceRef(
+        "th-tisi-si-units",
+        "Thai Industrial Standard TIS 17-2561",
+        "https://service.tisi.go.th/fulltext/TIS-17_2561.pdf",
+        "TIS 17-2561",
+    ),
+)
+
 
 def _seed(
     abbreviation: str,
@@ -124,12 +163,15 @@ def _seed(
     *,
     case_sensitive: bool = False,
     boundary: str = "word",
+    left_boundary: str | None = None,
+    right_boundary: str | None = None,
     only_if_preceded_by: str | None = None,
     only_if_followed_by: str | None = None,
     category: str = "other",
     source_id: str = "legacy-abbr2words",
     aliases: tuple[str, ...] = (),
     speech_strategy: str = "expand",
+    preserve_sentence_final_period: bool = True,
 ) -> AbbreviationSeed:
     return AbbreviationSeed(
         abbreviation,
@@ -139,7 +181,10 @@ def _seed(
         category=category,  # type: ignore[arg-type]
         aliases=aliases,
         speech_strategy=speech_strategy,  # type: ignore[arg-type]
+        preserve_sentence_final_period=preserve_sentence_final_period,
         boundary=boundary,  # type: ignore[arg-type]
+        left_boundary=left_boundary,
+        right_boundary=right_boundary,
         only_if_preceded_by=only_if_preceded_by,
         only_if_followed_by=only_if_followed_by,
         source_ids=(source_id,),
@@ -195,7 +240,15 @@ _SEEDS: dict[str, tuple[AbbreviationSeed, ...]] = {
     "te": (_seed("నం.", "నంబరు", "Number reference", case_sensitive=True),),
     "tet": (_seed("núm.", "númeru", "Number reference"),),
     "tg": (_seed("№", "рақам", "Number sign", case_sensitive=True),),
-    "th": (_seed("№", "หมายเลข", "Number sign", case_sensitive=True),),
+    "th": (
+        _seed(
+            "№",
+            "หมายเลข",
+            "Number sign",
+            case_sensitive=True,
+            source_id="th-orst-abbreviation-rules",
+        ),
+    ),
     "uk": (_seed("№", "номер", "Number sign", case_sensitive=True),),
     "vi": (
         _seed(
@@ -212,6 +265,39 @@ _SEEDS: dict[str, tuple[AbbreviationSeed, ...]] = {
 }
 
 _N = r"^[ \t\u00a0\u202f]*\d"
+_THAI_TOKEN_LEFT = r"(?<![A-Za-z0-9_])"
+_THAI_TOKEN_RIGHT = r"(?![A-Za-z0-9_])"
+_THAI_DAY_BEFORE = r"(?<!\d)\d{1,2}[ \t\u00a0\u202f]*$"
+_THAI_CLOCK_BEFORE = r"\d{1,2}[.:]\d{2}[ \t\u00a0\u202f]*$"
+_THAI_MONTHS = (
+    ("ม.ค.", "มกราคม"),
+    ("ก.พ.", "กุมภาพันธ์"),
+    ("มี.ค.", "มีนาคม"),
+    ("เม.ย.", "เมษายน"),
+    ("พ.ค.", "พฤษภาคม"),
+    ("มิ.ย.", "มิถุนายน"),
+    ("ก.ค.", "กรกฎาคม"),
+    ("ส.ค.", "สิงหาคม"),
+    ("ก.ย.", "กันยายน"),
+    ("ต.ค.", "ตุลาคม"),
+    ("พ.ย.", "พฤศจิกายน"),
+    ("ธ.ค.", "ธันวาคม"),
+)
+_THAI_MONTH_SEEDS = tuple(
+    _seed(
+        abbreviation,
+        expansion,
+        "Thai Gregorian month abbreviation",
+        case_sensitive=True,
+        boundary="custom",
+        left_boundary=_THAI_TOKEN_LEFT,
+        right_boundary=_THAI_TOKEN_RIGHT,
+        only_if_preceded_by=_THAI_DAY_BEFORE,
+        category="calendar",
+        source_id="unicode-cldr-48.2.1-th",
+    )
+    for abbreviation, expansion in _THAI_MONTHS
+)
 _EXTRA = {
     "am": (
         _seed(
@@ -819,23 +905,121 @@ _EXTRA = {
     ),
     "th": (
         _seed(
-            "ม.",
-            "มหาวิทยาลัย",
-            "Institution marker",
+            "นพ.",
+            "นายแพทย์",
+            "Thai professional title",
             case_sensitive=True,
-            category="organization",
-            source_id="language-style-baseline",
+            boundary="custom",
+            left_boundary=_THAI_TOKEN_LEFT,
+            right_boundary=_THAI_TOKEN_RIGHT,
+            category="title",
+            source_id="th-orst-professional-titles",
         ),
         _seed(
-            "หน้า.",
-            "หน้า",
-            "Page marker",
+            "พญ.",
+            "แพทย์หญิง",
+            "Thai professional title",
             case_sensitive=True,
-            category="reference",
-            source_id="language-style-baseline",
-            only_if_followed_by=_N,
+            boundary="custom",
+            left_boundary=_THAI_TOKEN_LEFT,
+            right_boundary=_THAI_TOKEN_RIGHT,
+            category="title",
+            source_id="th-orst-professional-titles",
         ),
-    ),
+        _seed(
+            "ทพ.",
+            "ทันตแพทย์",
+            "Thai professional title",
+            case_sensitive=True,
+            boundary="custom",
+            left_boundary=_THAI_TOKEN_LEFT,
+            right_boundary=_THAI_TOKEN_RIGHT,
+            category="title",
+            source_id="th-orst-professional-titles",
+        ),
+        _seed(
+            "ทพญ.",
+            "ทันตแพทย์หญิง",
+            "Thai professional title",
+            case_sensitive=True,
+            boundary="custom",
+            left_boundary=_THAI_TOKEN_LEFT,
+            right_boundary=_THAI_TOKEN_RIGHT,
+            category="title",
+            source_id="th-orst-professional-titles",
+        ),
+        _seed(
+            "รศ.",
+            "รองศาสตราจารย์",
+            "Thai academic title",
+            case_sensitive=True,
+            boundary="custom",
+            left_boundary=_THAI_TOKEN_LEFT,
+            right_boundary=_THAI_TOKEN_RIGHT,
+            category="academic",
+            source_id="th-academic-title-source",
+        ),
+        _seed(
+            "ผศ.",
+            "ผู้ช่วยศาสตราจารย์",
+            "Thai academic title",
+            case_sensitive=True,
+            boundary="custom",
+            left_boundary=_THAI_TOKEN_LEFT,
+            right_boundary=_THAI_TOKEN_RIGHT,
+            category="academic",
+            source_id="th-academic-title-source",
+        ),
+        _seed(
+            "ดร.",
+            "ดอกเตอร์",
+            "Thai academic and professional title",
+            case_sensitive=True,
+            boundary="custom",
+            left_boundary=_THAI_TOKEN_LEFT,
+            right_boundary=_THAI_TOKEN_RIGHT,
+            category="title",
+            source_id="th-education-title-source",
+        ),
+        _seed(
+            "พ.ศ.",
+            "พุทธศักราช",
+            "Thai Buddhist era",
+            case_sensitive=True,
+            boundary="custom",
+            left_boundary=_THAI_TOKEN_LEFT,
+            right_boundary=_THAI_TOKEN_RIGHT,
+            only_if_followed_by=_N,
+            category="calendar",
+            source_id="th-orst-abbreviation-rules",
+        ),
+        _seed(
+            "ค.ศ.",
+            "คริสต์ศักราช",
+            "Thai Gregorian era",
+            case_sensitive=True,
+            boundary="custom",
+            left_boundary=_THAI_TOKEN_LEFT,
+            right_boundary=_THAI_TOKEN_RIGHT,
+            only_if_followed_by=_N,
+            category="calendar",
+            source_id="unicode-cldr-48.2.1-th",
+        ),
+        _seed(
+            "น.",
+            "นาฬิกา",
+            "Thai clock-time marker",
+            case_sensitive=True,
+            preserve_sentence_final_period=False,
+            boundary="custom",
+            left_boundary=_THAI_TOKEN_LEFT,
+            right_boundary=_THAI_TOKEN_RIGHT,
+            only_if_preceded_by=_THAI_CLOCK_BEFORE,
+            category="calendar",
+            source_id="th-orst-abbreviation-rules",
+        ),
+    )
+    + _THAI_MONTH_SEEDS,
     "uk": (
         _seed(
             "стор.",
@@ -957,6 +1141,8 @@ BUNDLES = {
         if key == "ja"
         else _KO_SOURCES
         if key == "ko"
+        else _TH_SOURCES
+        if key == "th"
         else _VI_SOURCES
         if key == "vi"
         else (

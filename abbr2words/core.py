@@ -257,6 +257,7 @@ class AbbreviationEntry:
     aliases: tuple[str, ...] = ()
     case_policy: Literal["fixed", "sentence"] = "fixed"
     speech_strategy: Literal["expand", "spell_source"] = "expand"
+    preserve_sentence_final_period: bool = True
     _pattern: Pattern[str] = field(init=False, repr=False, compare=False)
     _patterns: tuple[Pattern[str], ...] = field(init=False, repr=False, compare=False)
     _preceding_pattern: Pattern[str] | None = field(init=False, repr=False, compare=False)
@@ -279,6 +280,8 @@ class AbbreviationEntry:
             raise ValueError("case_policy must be 'fixed' or 'sentence'")
         if self.speech_strategy not in {"expand", "spell_source"}:
             raise ValueError("speech_strategy must be 'expand' or 'spell_source'")
+        if type(self.preserve_sentence_final_period) is not bool:
+            raise TypeError("preserve_sentence_final_period must be a bool")
         if self.boundary not in {"word", "custom"}:
             raise ValueError("boundary must be 'word' or 'custom'")
         for name in ("left_boundary", "right_boundary"):
@@ -1062,7 +1065,9 @@ class AbbreviationExpander(ABC):
                     expansion = render_initialism_source(
                         match.group(), case=self.initialism_policy.case
                     )
-                if should_preserve_sentence_final_period(text, end, match.group(), expansion):
+                if entry.preserve_sentence_final_period and should_preserve_sentence_final_period(
+                    text, end, match.group(), expansion
+                ):
                     expansion += "."
 
                 yield Replacement(
