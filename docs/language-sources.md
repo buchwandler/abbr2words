@@ -62,6 +62,19 @@ case, numeral government, gender, vowel harmony, or apostrophe-attached suffixes
 Turkish unit symbols followed by `'` or `’` remain unchanged under the restricted
 first-release policy.
 
+## Swedish source ledger
+
+The Swedish registry uses the following sources by scope:
+
+- **ISOF, Språkrådet, Snabba skrivregler, 2024**. Lexical abbreviation spelling, including `ca`, prose abbreviations, and weekday forms. https://www.isof.se/utforska/publikationer/publikationer/2024-01-22-snabba-skrivregler
+- **ISOF, Myndigheternas skrivregler, section 11.4**. Numeric and reference abbreviations such as `bil.`, `ca`, `kap.`, `kl.`, `nr`, `s.`, `tfn`, and `tim`. https://www.isof.se/download/18.17dda5f1791cdbd2873a99/1620030264840/Mynd-skrivreg2014-1.pdf
+- **ISOF Frågelådan, FAQ 22308**. Formal spelling recommendation for `p.g.a.`. https://frageladan.isof.se/faqs/22308
+- **ISOF Frågelådan, FAQ 22191**. Current dotted weekday abbreviations. https://frageladan.isof.se/faqs/22191
+- **Unicode CLDR 49 Swedish locale data**. Localized unit and shared currency display labels. https://unicode.org/cldr/charts/49/summary/sv.html and https://www.unicode.org/cldr/charts/49/by_type/units.energy_and_power.html
+- **Sveriges Riksbank, Valutakoder**. Swedish krona identity, `SEK`, and `krona`. https://www.riksbank.se/sv/statistik/rantor-och-valutakurser/forklaringar---rantor-och-valutakurser/valutakoder/
+
+The Swedish implementation keeps compact undotted weekday and month table forms, initialisms, ambiguous abbreviations, pluralization, and time normalization out of this change. Unit expansions remain canonical labels without Swedish inflection.
+
 ## Source authority
 
 - `num2words` v0.5.14 release registry: candidate-language compatibility baseline.

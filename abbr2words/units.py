@@ -673,6 +673,10 @@ _LOCALIZED_ALIASES = {
         ("seg", "segundo", "duration-second", True),
         ("seg.", "segundo", "duration-second", True),
     ),
+    "sv": (
+        ("sek", "sekund", "duration-second", True),
+        ("tim", "timme", "duration-hour", True),
+    ),
 }
 
 _STRUCTURED_CURRENCY_ENTRIES = {
@@ -864,6 +868,17 @@ _STRUCTURED_CURRENCY_ENTRIES = {
             "Currency",
             canonical_id="currency-brazilian-real",
             canonical_symbol="R$",
+            category="currency",
+            quantity_position="both",
+        ),
+    ),
+    "sv": (
+        _entry(
+            ("kr", "SEK"),
+            "svensk krona",
+            "Currency",
+            canonical_id="currency-swedish-krona",
+            canonical_symbol="SEK",
             category="currency",
             quantity_position="both",
         ),
@@ -1139,6 +1154,37 @@ _POLYNORM_UNIT_LABELS = {
         "mole",
         "molare",
     ),
+    "sv": (
+        "mile per timme",
+        "pascal",
+        "kilopascal",
+        "atmosfär",
+        "byte",
+        "kilobyte",
+        "megabyte",
+        "gigabyte",
+        "liter per 100 kilometer",
+        "kubikmeter per sekund",
+        "watt",
+        "kilowatt",
+        "wattimme",
+        "kilowattimme",
+        "hertz",
+        "kilohertz",
+        "megahertz",
+        "gigahertz",
+        "nanometer",
+        "ampere",
+        "milliampere",
+        "milliamperetimme",
+        "volt",
+        "lumen",
+        "newton",
+        "joule",
+        "millimeter kvicksilver",
+        "mol",
+        "molar",
+    ),
 }
 
 _POLYNORM_CURRENCY_LABELS = {
@@ -1158,6 +1204,13 @@ _POLYNORM_CURRENCY_LABELS = {
         "rupia indiana",
         "won sudcoreano",
         "peso messicano",
+    ),
+    "sv": (
+        "japansk yen",
+        "schweizisk franc",
+        "indisk rupie",
+        "sydkoreansk won",
+        "mexikansk peso",
     ),
 }
 

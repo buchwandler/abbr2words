@@ -4,7 +4,10 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from abbr2words.units import UnitEntry
 from . import entries, register
 
 
@@ -425,7 +428,7 @@ UNIT_TEMPLATES = {
 }
 
 
-def common_unit_entries(language: str, *, expansion_prefix: str = "") -> tuple[object, ...]:
+def common_unit_entries(language: str, *, expansion_prefix: str = "") -> tuple[UnitEntry, ...]:
     """Build a stable common inventory using the public unit model."""
     from abbr2words.units import UnitEntry
 
@@ -458,7 +461,7 @@ def register_common_units(language: str, *, expansion_prefix: str = "") -> None:
     register(language, common_unit_entries(language, expansion_prefix=expansion_prefix))
 
 
-def locale_currency(symbol: str | tuple[str, ...], expansion: str, canonical_id: str) -> object:
+def locale_currency(symbol: str | tuple[str, ...], expansion: str, canonical_id: str) -> UnitEntry:
     """Build a locale-specific ISO-4217-aware currency identity."""
     from abbr2words.units import UnitEntry
 

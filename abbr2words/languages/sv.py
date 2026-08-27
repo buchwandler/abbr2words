@@ -24,6 +24,16 @@ class SwedishAbbreviationExpander(AbbreviationExpander):
             ("s.k.", "så kallad"),
             ("ung.", "ungefär"),
             ("ca.", "cirka"),
+            ("e.d.", "eller dylikt"),
+            ("etc.", "etcetera"),
+            ("f.d.", "före detta"),
+            ("forts.", "fortsättning"),
+            ("f.ö.", "för övrigt"),
+            ("jfr", "jämför"),
+            ("m.a.o.", "med andra ord"),
+            ("obs.", "observera"),
+            ("p.g.a.", "på grund av"),
+            ("resp.", "respektive"),
             ("mån.", "måndag"),
             ("tis.", "tisdag"),
             ("ons.", "onsdag"),
@@ -42,7 +52,31 @@ class SwedishAbbreviationExpander(AbbreviationExpander):
         )
         for abbreviation, expansion in entries:
             self.add_abbreviation(AbbreviationEntry(abbreviation, expansion))
-        for abbreviation, expansion in (("nr", "nummer"), ("sid.", "sida"), ("bil.", "bilaga")):
+        self.add_abbreviation(
+            AbbreviationEntry(
+                "ca",
+                "cirka",
+                description="Numeric approximation abbreviation",
+                only_if_followed_by=r"\s*\d",
+            )
+        )
+        for abbreviation, expansion in (
+            ("nr", "nummer"),
+            ("sid.", "sida"),
+            ("bil.", "bilaga"),
+            ("s.", "sida"),
+            ("kap.", "kapitel"),
+            ("fig.", "figur"),
+            ("tab.", "tabell"),
+            ("p.", "punkt"),
+            ("prop.", "proposition"),
+            ("dir.", "direktiv"),
+            ("dnr", "diarienummer"),
+            ("bet.", "betänkande"),
+            ("kl.", "klockan"),
+            ("tfn", "telefon"),
+            ("tel.", "telefon"),
+        ):
             self.add_abbreviation(
                 AbbreviationEntry(
                     abbreviation,

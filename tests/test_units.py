@@ -477,3 +477,88 @@ def test_dotted_unit_rendering_preserves_only_sentence_final_punctuation(
 ) -> None:
     language = "de" if "Min." in source else "fr"
     assert abbr2words(source, lang=language) == expected
+
+
+@pytest.mark.parametrize(
+    ("source", "expected"),
+    [
+        ("2 kWh", "2 kilowattimme"),
+        ("3 Wh", "3 wattimme"),
+        ("1 atm", "1 atmosfär"),
+        ("4 m³/s", "4 kubikmeter per sekund"),
+        ("4 m3/s", "4 kubikmeter per sekund"),
+        ("5 mmHg", "5 millimeter kvicksilver"),
+        ("2 mol", "2 mol"),
+        ("3 mph", "3 mile per timme"),
+        ("6 L/100km", "6 liter per 100 kilometer"),
+    ],
+)
+def test_swedish_polynorm_unit_labels(source: str, expected: str) -> None:
+    assert abbr2words(source, lang="sv") == expected
+
+
+def test_swedish_polynorm_units_have_explicit_labels() -> None:
+    expected = {
+        "speed-mile-per-hour": "mile per timme",
+        "pressure-pascal": "pascal",
+        "pressure-kilopascal": "kilopascal",
+        "pressure-atmosphere": "atmosfär",
+        "data-byte": "byte",
+        "data-kilobyte": "kilobyte",
+        "data-megabyte": "megabyte",
+        "data-gigabyte": "gigabyte",
+        "fuel-consumption-liter-per-100-kilometer": "liter per 100 kilometer",
+        "flow-cubic-meter-per-second": "kubikmeter per sekund",
+        "power-watt": "watt",
+        "power-kilowatt": "kilowatt",
+        "energy-watt-hour": "wattimme",
+        "energy-kilowatt-hour": "kilowattimme",
+        "frequency-hertz": "hertz",
+        "frequency-kilohertz": "kilohertz",
+        "frequency-megahertz": "megahertz",
+        "frequency-gigahertz": "gigahertz",
+        "length-nanometer": "nanometer",
+        "current-ampere": "ampere",
+        "current-milliampere": "milliampere",
+        "charge-milliampere-hour": "milliamperetimme",
+        "voltage-volt": "volt",
+        "luminous-flux-lumen": "lumen",
+        "force-newton": "newton",
+        "energy-joule": "joule",
+        "pressure-millimeter-mercury": "millimeter kvicksilver",
+        "amount-mole": "mol",
+        "concentration-molar": "molar",
+    }
+    entries = {entry.canonical_id: entry for entry in unit_entries("sv")}
+    assert {canonical_id: entries[canonical_id].expansion for canonical_id in expected} == expected
+
+
+@pytest.mark.parametrize(
+    ("source", "canonical_id", "expansion"),
+    [
+        ("50 kr", "currency-swedish-krona", "svensk krona"),
+        ("50 SEK", "currency-swedish-krona", "svensk krona"),
+        ("100 JPY", "currency-japanese-yen", "japansk yen"),
+        ("20 CHF", "currency-swiss-franc", "schweizisk franc"),
+        ("500 INR", "currency-indian-rupee", "indisk rupie"),
+        ("1000 KRW", "currency-south-korean-won", "sydkoreansk won"),
+        ("250 MXN", "currency-mexican-peso", "mexikansk peso"),
+    ],
+)
+def test_swedish_currency_matches_preserve_localized_identity(
+    source: str, canonical_id: str, expansion: str
+) -> None:
+    matches = tuple(iter_unit_matches(source, "sv"))
+    assert len(matches) == 1
+    assert matches[0].canonical_id == canonical_id
+    assert matches[0].expansion == expansion
+    assert matches[0].category == "currency"
+
+
+def test_swedish_currency_symbols_share_one_structured_entry() -> None:
+    entries = [
+        entry for entry in unit_entries("sv") if entry.canonical_id == "currency-swedish-krona"
+    ]
+    assert len(entries) == 1
+    assert entries[0].symbols == ("kr", "SEK")
+    assert entries[0].canonical_symbol == "SEK"
