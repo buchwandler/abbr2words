@@ -347,10 +347,44 @@ UNIT_LABELS = {
         "duration-minute": "хвилина",
     },
     "vi": {
+        "duration-second": "giây",
+        "duration-minute": "phút",
+        "duration-hour": "giờ",
+        "duration-day": "ngày",
+        "length-millimeter": "milimét",
+        "length-centimeter": "xentimét",
+        "length-meter": "mét",
+        "length-kilometer": "kilômét",
+        "volume-milliliter": "mililít",
+        "volume-liter": "lít",
+        "mass-microgram": "micrôgam",
+        "mass-milligram": "miligam",
         "mass-gram": "gam",
         "mass-kilogram": "kilôgam",
-        "length-kilometer": "kilômét",
-        "duration-minute": "phút",
+        "mass-tonne": "tấn",
+        "temperature-kelvin": "kenvin",
+        "temperature-celsius": "độ Celsius",
+        "temperature-fahrenheit": "độ Fahrenheit",
+        "speed-meter-per-second": "mét trên giây",
+        "speed-kilometer-per-hour": "kilômét trên giờ",
+        "speed-mile-per-hour": "dặm trên giờ",
+        "pressure-pascal": "pascan",
+        "pressure-kilopascal": "kilôpascan",
+        "pressure-atmosphere": "átmốtphe",
+        "data-byte": "byte",
+        "data-kilobyte": "kilobyte",
+        "data-megabyte": "megabyte",
+        "data-gigabyte": "gigabyte",
+        "fuel-consumption-liter-per-100-kilometer": "lít trên 100 kilômét",
+        "flow-cubic-meter-per-second": "mét khối trên giây",
+        "area-square-millimeter": "milimét vuông",
+        "area-square-centimeter": "xentimét vuông",
+        "area-square-meter": "mét vuông",
+        "area-square-kilometer": "kilômét vuông",
+        "area-hectare": "héc-ta",
+        "volume-cubic-millimeter": "milimét khối",
+        "volume-cubic-centimeter": "xentimét khối",
+        "volume-cubic-meter": "mét khối",
     },
     "zh": {
         "mass-gram": "克",
@@ -451,6 +485,8 @@ def common_unit_entries(language: str, *, expansion_prefix: str = "") -> tuple[U
         entries += (locale_currency(("¥", "JPY"), "円", "currency-japanese-yen"),)
     elif language == "ko":
         entries += (locale_currency(("₩", "KRW"), "원", "currency-south-korean-won"),)
+    elif language == "vi":
+        entries += (locale_currency(("₫", "VND"), "đồng Việt Nam", "currency-vietnamese-dong"),)
     return entries
 
 

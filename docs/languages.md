@@ -34,6 +34,8 @@ lexical entries are case-sensitive. Unit output is a canonical singular lemma;
 the stable API does not realize plural, case, numeral-government, or suffix
 morphology.
 
+Vietnamese (`vi`) remains in the reviewed baseline tier. Its source-backed rules expand guarded `TP.`, `ĐT`, `SĐT`, and academic-title forms, while legal identifiers and ambiguous uppercase tokens remain unchanged. The common-unit inventory has 38 identity entries and now exposes 38 localized spoken labels; the separate numeric currency identity `VND`/`₫` is `currency-vietnamese-dong`. Coverage reports distinguish unit identities from localized labels.
+
 English, French, Italian, Portuguese, and Spanish structured quantities recognize
 the reviewed shared currency identities `€`/`EUR`, `$`/`USD`, and `£`/`GBP` in
 either numeric-prefix or numeric-suffix position. Portuguese additionally

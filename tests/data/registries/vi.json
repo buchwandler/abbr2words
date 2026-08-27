@@ -3,6 +3,92 @@
   "entries": [
     {
       "language": "vi",
+      "key": "GS.TS.",
+      "abbreviation": "GS.TS.",
+      "expansion": "giáo sư tiến sĩ",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "case_policy": "fixed",
+      "description": "Academic title before a name",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]+[A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬĐÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴ]",
+      "variants": []
+    },
+    {
+      "language": "vi",
+      "key": "PGS.TS.",
+      "abbreviation": "PGS.TS.",
+      "expansion": "phó giáo sư tiến sĩ",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "case_policy": "fixed",
+      "description": "Academic title before a name",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]+[A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬĐÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴ]",
+      "variants": []
+    },
+    {
+      "language": "vi",
+      "key": "SĐT",
+      "abbreviation": "SĐT",
+      "expansion": "số điện thoại",
+      "aliases": [
+        "SĐT."
+      ],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "case_policy": "fixed",
+      "description": "Telephone-number marker",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*:?[ \\t\\u00a0\\u202f]*(?:\\+?\\d|\\(\\d)",
+      "variants": []
+    },
+    {
+      "language": "vi",
+      "key": "TP.",
+      "abbreviation": "TP.",
+      "expansion": "thành phố",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "case_policy": "fixed",
+      "description": "Administrative place marker",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]+[A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬĐÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴ]",
+      "variants": []
+    },
+    {
+      "language": "vi",
+      "key": "TS.",
+      "abbreviation": "TS.",
+      "expansion": "tiến sĩ",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "case_policy": "fixed",
+      "description": "Academic title before a name",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]+[A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬĐÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴ]",
+      "variants": []
+    },
+    {
+      "language": "vi",
+      "key": "ThS.",
+      "abbreviation": "ThS.",
+      "expansion": "thạc sĩ",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": true,
+      "case_policy": "fixed",
+      "description": "Academic title before a name",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]+[A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬĐÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴ]",
+      "variants": []
+    },
+    {
+      "language": "vi",
       "key": "tr.",
       "abbreviation": "tr.",
       "expansion": "trang",
@@ -20,13 +106,15 @@
       "key": "ĐT.",
       "abbreviation": "ĐT.",
       "expansion": "điện thoại",
-      "aliases": [],
+      "aliases": [
+        "ĐT"
+      ],
       "context_expansions": null,
       "case_sensitive": true,
       "case_policy": "fixed",
       "description": "Telephone marker",
       "only_if_preceded_by": null,
-      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*\\d",
+      "only_if_followed_by": "^[ \\t\\u00a0\\u202f]*:?[ \\t\\u00a0\\u202f]*(?:\\+?\\d|\\(\\d)",
       "variants": []
     }
   ]

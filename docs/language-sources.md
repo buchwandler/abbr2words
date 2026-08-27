@@ -75,6 +75,16 @@ The Swedish registry uses the following sources by scope:
 
 The Swedish implementation keeps compact undotted weekday and month table forms, initialisms, ambiguous abbreviations, pluralization, and time normalization out of this change. Unit expansions remain canonical labels without Swedish inflection.
 
+## Vietnamese source ledger
+
+The Vietnamese baseline uses the following source-backed additions:
+
+- **Vietnamese government contact/address usage**. `ĐT`, `ĐT.`, `SĐT`, and `TP.` examples in government directories. https://nongthonmoi.gov.vn/Pages/danh-ba-dien-thoai.aspx and https://langgiang.bacninh.gov.vn/web/bn/duong-day-nong
+- **TCVN 7870-1:2010**. Vietnamese SI names, quotient-unit terminology using `trên`, and squared/cubed forms. https://thuvienphapluat.vn/TCVN/Linh-vuc-khac/TCVN-7870-1-2010-Dai-luong-va-don-vi-Quy-dinh-chung-907745.aspx
+- **Unicode CLDR 48.2.1**. Vietnamese locale and unit data. https://www.unicode.org/cldr/charts/48/summary/vi.html
+- **Vietnam National University academic title usage**. `TS.`, `ThS.`, `GS.TS.`, and `PGS.TS.` examples. https://fes.hus.vnu.edu.vn/employees?status=working
+
+Vietnamese remains a reviewed baseline with source-backed data and native-language review pending. The registry deliberately does not expand ambiguous administrative abbreviations, legal/document identifiers, or arbitrary uppercase initialisms.
 ## Source authority
 
 - `num2words` v0.5.14 release registry: candidate-language compatibility baseline.
@@ -118,7 +128,8 @@ sign-off for the complete registries.
 
 | Codes                                                                                        | Source ID                                                                                                              | Categories                                                                    | Status                                                          |
 | -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| `am ar az be bn ca ce cy da eo fa fi he hi kn kz lt lv mn no ro sk sl sr te tet tg th uk vi` | `language-style-baseline`, `unicode-cldr-48.2.1`                                                                       | guarded reference/title baseline and neutral units                            | linguistically-reviewed pending native review                   |
+| `am ar az be bn ca ce cy da eo fa fi he hi kn kz lt lv mn no ro sk sl sr te tet tg th uk` | `language-style-baseline`, `unicode-cldr-48.2.1`                                                                       | guarded reference/title baseline and neutral units                            | linguistically-reviewed pending native review                   |
+| `vi`                                                                                       | `legacy-abbr2words`, `language-style-baseline`, `vi-government-contact-usage`, `vi-government-sdt-usage`, `vi-tcvn-7870-1`, `vi-vnu-academic-title-usage`, `unicode-cldr-48.2.1` | guarded address, phone, academic-title rules; complete localized units; VND/₫ identity | source-backed reviewed baseline; native review pending |
 | `zh`                                                                                         | `legacy-abbr2words`, `unicode-cldr-48.2.1`                                                                             | guarded № reference and neutral generic units                                 | conservative generic base; plain Han words remain unchanged     |
 | `ko`                                                                                         | `ko-nikl-corporate-ju`, `ko-kriss-si`, `ko-nikl-atmosphere`, `unicode-cldr-48.2.1`                                     | № and organization abbreviations; complete common units; reviewed initialisms | source-backed reviewed baseline; broader lexical review pending |
 | `ja`                                                                                         | `ja-nta-organization-abbreviations`, `ja-nmij-si`, `ja-government-page-reference-examples`, `unicode-cldr-48.2.1`      | guarded № and structural organization abbreviations; complete common units    | reviewed baseline / source-backed; native review pending        |

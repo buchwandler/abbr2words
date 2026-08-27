@@ -5,10 +5,21 @@ from __future__ import annotations
 from pathlib import Path
 
 from abbr2words import get_expander, supported_languages
+from abbr2words.unit_data.common import COMMON_UNIT_DEFINITIONS
 from abbr2words.units import unit_entries
 
 EXTENDED = frozenset({"cs", "de", "en", "es", "fr", "it", "nl", "pl", "pt", "ru", "sv", "tr"})
 
+
+def localized_unit_count(language: str) -> int:
+    entries = {entry.canonical_id: entry for entry in unit_entries(language)}
+    return sum(
+        int(
+            (entry := entries.get(definition.canonical_id)) is not None
+            and entry.expansion != entry.canonical_symbol
+        )
+        for definition in COMMON_UNIT_DEFINITIONS
+    )
 
 def render() -> str:
     rows = [
@@ -16,8 +27,8 @@ def render() -> str:
         "",
         "Do not edit this table manually; run `python scripts/generate_language_coverage.py`.",
         "",
-        "| Code | Base/locale | Lexical entries | Contextual entries | Unit identities | Source status | Notes |",
-        "| --- | --- | ---: | ---: | ---: | --- | --- |",
+        "| Code | Base/locale | Lexical entries | Contextual entries | Unit identities | Localized unit labels | Source status | Notes |",
+        "| --- | --- | ---: | ---: | ---: | ---: | --- | --- |",
     ]
     for language in supported_languages():
         expander = get_expander(language)
@@ -32,7 +43,7 @@ def render() -> str:
         rows.append(
             f"| `{language}` | `{base}` / {'locale' if '_' in language else 'base'} | "
             f"{len(entries)} | {contextual} | {len(unit_entries(language))} | "
-            f"{tier} | neutral labels; source ledger applies |"
+            f"{localized_unit_count(language)} | {tier} | neutral labels; source ledger applies |"
         )
     return "\n".join(rows) + "\n"
 

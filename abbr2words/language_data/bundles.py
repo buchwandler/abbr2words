@@ -76,6 +76,46 @@ _KO_SOURCES = (
     ),
 )
 
+_VI_SOURCES = (
+    _LEGACY,
+    SourceRef(
+        "language-style-baseline",
+        "Language style and orthography baseline",
+        "docs/language-sources.md",
+        "2026-08-10",
+    ),
+    SourceRef(
+        "vi-government-contact-usage",
+        "Vietnamese government contact/address usage examples",
+        "https://nongthonmoi.gov.vn/Pages/danh-ba-dien-thoai.aspx",
+        "reviewed-2026-08-27",
+    ),
+    SourceRef(
+        "vi-government-sdt-usage",
+        "Bắc Ninh government telephone directory using SĐT",
+        "https://langgiang.bacninh.gov.vn/web/bn/duong-day-nong",
+        "reviewed-2026-08-27",
+    ),
+    SourceRef(
+        "vi-tcvn-7870-1",
+        "TCVN 7870-1:2010 quantities and units",
+        "https://thuvienphapluat.vn/TCVN/Linh-vuc-khac/TCVN-7870-1-2010-Dai-luong-va-don-vi-Quy-dinh-chung-907745.aspx",
+        "TCVN 7870-1:2010",
+    ),
+    SourceRef(
+        "unicode-cldr-48.2.1",
+        "Unicode CLDR Vietnamese locale and unit data",
+        "https://www.unicode.org/cldr/charts/48/summary/vi.html",
+        "48.2.1",
+    ),
+    SourceRef(
+        "vi-vnu-academic-title-usage",
+        "Vietnam National University academic title usage",
+        "https://fes.hus.vnu.edu.vn/employees?status=working",
+        "reviewed-2026-08-27",
+    ),
+)
+
 
 def _seed(
     abbreviation: str,
@@ -105,6 +145,20 @@ def _seed(
         source_ids=(source_id,),
         review_note="Checked-in baseline rule; review status is recorded in docs/language-sources.md.",
     )
+
+_VI_WS = r"[ \t\u00a0\u202f]"
+_VI_UPPER = (
+    "A-Z"
+    "ÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬ"
+    "Đ"
+    "ÈÉẺẼẸÊỀẾỂỄỆ"
+    "ÌÍỈĨỊ"
+    "ÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢ"
+    "ÙÚỦŨỤƯỪỨỬỮỰ"
+    "ỲÝỶỸỴ"
+    )
+_VI_NAME = rf"^{_VI_WS}+[{_VI_UPPER}]"
+_VI_PHONE = rf"^{_VI_WS}*:?[ \t\u00a0\u202f]*(?:\+?\d|\(\d)"
 
 
 _SEEDS: dict[str, tuple[AbbreviationSeed, ...]] = {
@@ -156,8 +210,10 @@ _SEEDS: dict[str, tuple[AbbreviationSeed, ...]] = {
             "TP.",
             "thành phố",
             "Administrative place marker",
+            case_sensitive=True,
             category="address",
-            source_id="language-style-baseline",
+            source_id="vi-government-contact-usage",
+            only_if_followed_by=_VI_NAME,
         ),
     ),
     "zh": (_seed("№", "编号", "Number sign", case_sensitive=True),),
@@ -819,16 +875,63 @@ _EXTRA = {
             "điện thoại",
             "Telephone marker",
             case_sensitive=True,
+            aliases=("ĐT",),
             category="reference",
-            source_id="language-style-baseline",
+            source_id="vi-government-contact-usage",
+            only_if_followed_by=_VI_PHONE,
+        ),
+        _seed(
+            "SĐT",
+            "số điện thoại",
+            "Telephone-number marker",
+            case_sensitive=True,
+            aliases=("SĐT.",),
+            category="reference",
+            source_id="vi-government-sdt-usage",
+            only_if_followed_by=_VI_PHONE,
+        ),
+        _seed(
+            "PGS.TS.",
+            "phó giáo sư tiến sĩ",
+            "Academic title before a name",
+            case_sensitive=True,
+            category="academic",
+            source_id="vi-vnu-academic-title-usage",
+            only_if_followed_by=_VI_NAME,
+        ),
+        _seed(
+            "GS.TS.",
+            "giáo sư tiến sĩ",
+            "Academic title before a name",
+            case_sensitive=True,
+            category="academic",
+            source_id="vi-vnu-academic-title-usage",
+            only_if_followed_by=_VI_NAME,
+        ),
+        _seed(
+            "ThS.",
+            "thạc sĩ",
+            "Academic title before a name",
+            case_sensitive=True,
+            category="academic",
+            source_id="vi-vnu-academic-title-usage",
+            only_if_followed_by=_VI_NAME,
+        ),
+        _seed(
+            "TS.",
+            "tiến sĩ",
+            "Academic title before a name",
+            case_sensitive=True,
+            category="academic",
+            source_id="vi-vnu-academic-title-usage",
+            only_if_followed_by=_VI_NAME,
         ),
     ),
     "zh": (),
 }
 
 for _language, _extra in _EXTRA.items():
-    _SEEDS[_language] = (() if _language == "vi" else _SEEDS[_language]) + _extra
-
+    _SEEDS[_language] = _SEEDS[_language] + _extra
 for _language, _seeds_for_language in tuple(_SEEDS.items()):
     _SEEDS[_language] = tuple(
         replace(
@@ -862,6 +965,8 @@ BUNDLES = {
         if key == "ja"
         else _KO_SOURCES
         if key == "ko"
+        else _VI_SOURCES
+        if key == "vi"
         else (
             _LEGACY,
             SourceRef(
