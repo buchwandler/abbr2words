@@ -715,7 +715,12 @@ _LOCALIZED_SYMBOL_ALIASES: dict[str, dict[str, tuple[str, ...]]] = {
         "data-kilobyte": ("кБ",),
         "data-megabyte": ("МБ",),
         "data-gigabyte": ("ГБ",),
-        "fuel-consumption-liter-per-100-kilometer": ("л/100км", "л/100 км", "л/100\u00a0км", "л/100\u202fкм"),
+        "fuel-consumption-liter-per-100-kilometer": (
+            "л/100км",
+            "л/100 км",
+            "л/100\u00a0км",
+            "л/100\u202fкм",
+        ),
         "flow-cubic-meter-per-second": ("м³/с", "м3/с"),
         "power-watt": ("Вт",),
         "power-kilowatt": ("кВт",),
@@ -733,7 +738,11 @@ _LOCALIZED_SYMBOL_ALIASES: dict[str, dict[str, tuple[str, ...]]] = {
         "luminous-flux-lumen": ("лм",),
         "force-newton": ("Н",),
         "energy-joule": ("Дж",),
-        "pressure-millimeter-mercury": ("мм рт. ст.", "мм\u00a0рт.\u00a0ст.", "мм\u202fрт.\u202fст."),
+        "pressure-millimeter-mercury": (
+            "мм рт. ст.",
+            "мм\u00a0рт.\u00a0ст.",
+            "мм\u202fрт.\u202fст.",
+        ),
         "amount-mole": ("моль",),
     },
 }
@@ -1274,7 +1283,6 @@ _POLYNORM_UNIT_LABELS = {
         "миллиметр ртутного столба",
         "моль",
     ),
-
 }
 
 _POLYNORM_CURRENCY_LABELS = {
@@ -1330,6 +1338,7 @@ def _polynorm_unit_entries(language: str) -> tuple[UnitEntry, ...]:
         )
         for index, definition in enumerate(definitions)
     )
+
 
 _POLYNORM_POUND_LABELS = {
     "de": "Pfund",
@@ -1546,13 +1555,9 @@ for _lang in tuple(UNIT_ENTRIES):
 
 for _lang, _aliases in _LOCALIZED_SYMBOL_ALIASES.items():
     _canonical_entries = {
-        entry.canonical_id: entry
-        for entry in UNIT_ENTRIES[_lang]
-        if entry.canonical_id is not None
+        entry.canonical_id: entry for entry in UNIT_ENTRIES[_lang] if entry.canonical_id is not None
     }
-    _registered_symbols = {
-        symbol for entry in UNIT_ENTRIES[_lang] for symbol in entry.symbols
-    }
+    _registered_symbols = {symbol for entry in UNIT_ENTRIES[_lang] for symbol in entry.symbols}
     _alias_entries: list[UnitEntry] = []
     for _canonical_id, _symbols in _aliases.items():
         _canonical_entry = _canonical_entries[_canonical_id]

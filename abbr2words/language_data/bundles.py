@@ -146,17 +146,9 @@ def _seed(
         review_note="Checked-in baseline rule; review status is recorded in docs/language-sources.md.",
     )
 
+
 _VI_WS = r"[ \t\u00a0\u202f]"
-_VI_UPPER = (
-    "A-Z"
-    "ÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬ"
-    "Đ"
-    "ÈÉẺẼẸÊỀẾỂỄỆ"
-    "ÌÍỈĨỊ"
-    "ÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢ"
-    "ÙÚỦŨỤƯỪỨỬỮỰ"
-    "ỲÝỶỸỴ"
-    )
+_VI_UPPER = "A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬĐÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴ"
 _VI_NAME = rf"^{_VI_WS}+[{_VI_UPPER}]"
 _VI_PHONE = rf"^{_VI_WS}*:?[ \t\u00a0\u202f]*(?:\+?\d|\(\d)"
 

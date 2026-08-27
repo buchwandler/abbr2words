@@ -34,9 +34,7 @@
       "key": "SĐT",
       "abbreviation": "SĐT",
       "expansion": "số điện thoại",
-      "aliases": [
-        "SĐT."
-      ],
+      "aliases": ["SĐT."],
       "context_expansions": null,
       "case_sensitive": true,
       "case_policy": "fixed",
@@ -106,9 +104,7 @@
       "key": "ĐT.",
       "abbreviation": "ĐT.",
       "expansion": "điện thoại",
-      "aliases": [
-        "ĐT"
-      ],
+      "aliases": ["ĐT"],
       "context_expansions": null,
       "case_sensitive": true,
       "case_policy": "fixed",

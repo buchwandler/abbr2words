@@ -21,6 +21,7 @@ def localized_unit_count(language: str) -> int:
         for definition in COMMON_UNIT_DEFINITIONS
     )
 
+
 def render() -> str:
     rows = [
         "# Generated language coverage",

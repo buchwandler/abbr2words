@@ -48,7 +48,9 @@ def test_russian_guarded_entries(text: str, expected: str) -> None:
     assert abbr2words(text, lang="ru") == expected
 
 
-@pytest.mark.parametrize("text", ["стр. тест", "см. внимательно", "ср. показатель", "им. значение", "обл. данные"])
+@pytest.mark.parametrize(
+    "text", ["стр. тест", "см. внимательно", "ср. показатель", "им. значение", "обл. данные"]
+)
 def test_russian_guarded_entries_reject_weak_context(text: str) -> None:
     assert abbr2words(text, lang="ru") == text
 
@@ -70,10 +72,21 @@ def test_russian_safe_guarded_additions(text: str, expected: str) -> None:
     assert abbr2words(text, lang="ru") == expected
 
 
-@pytest.mark.parametrize("text", ["№ дома", "г-н", "г-жа.", "тел. версия", "тел.: нет", "рис. текст", "табл. данные", "разд. содержание"])
+@pytest.mark.parametrize(
+    "text",
+    [
+        "№ дома",
+        "г-н",
+        "г-жа.",
+        "тел. версия",
+        "тел.: нет",
+        "рис. текст",
+        "табл. данные",
+        "разд. содержание",
+    ],
+)
 def test_russian_safe_guarded_additions_reject_weak_context(text: str) -> None:
     assert abbr2words(text, lang="ru") == text
-
 
 
 def test_russian_ambiguous_one_letter_forms_are_unchanged() -> None:
@@ -132,7 +145,17 @@ def test_russian_single_letter_unit_symbols_require_quantity(text: str) -> None:
     assert abbr2words(text, lang="ru") == text
 
 
-@pytest.mark.parametrize("text", ["5 л/100 км", "5 л/100\u00a0км", "5 л/100\u202fкм", "5 мм рт. ст.", "5 мм\u00a0рт.\u00a0ст.", "5 мм\u202fрт.\u202fст."])
+@pytest.mark.parametrize(
+    "text",
+    [
+        "5 л/100 км",
+        "5 л/100\u00a0км",
+        "5 л/100\u202fкм",
+        "5 мм рт. ст.",
+        "5 мм\u00a0рт.\u00a0ст.",
+        "5 мм\u202fрт.\u202fст.",
+    ],
+)
 def test_russian_compound_unit_symbols_accept_horizontal_whitespace(text: str) -> None:
     assert abbr2words(text, lang="ru") != text
 

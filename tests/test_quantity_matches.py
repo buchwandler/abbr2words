@@ -861,6 +861,7 @@ def test_invalid_category_metadata_fails_eagerly() -> None:
     with pytest.raises(ValueError, match="category"):
         UnitEntry(("x",), "x", category="")
 
+
 @pytest.mark.parametrize(
     ("source", "canonical_id"),
     [
@@ -872,9 +873,7 @@ def test_invalid_category_metadata_fails_eagerly() -> None:
         ("20 °С", "temperature-celsius"),
     ],
 )
-def test_russian_aliases_preserve_complete_source_spans(
-    source: str, canonical_id: str
-) -> None:
+def test_russian_aliases_preserve_complete_source_spans(source: str, canonical_id: str) -> None:
     matches = list(iter_unit_matches(source, "ru"))
     assert len(matches) == 1
     assert source[matches[0].start : matches[0].end] == source
