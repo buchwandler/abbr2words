@@ -465,6 +465,20 @@
     },
     {
       "language": "de",
+      "key": "abt.",
+      "abbreviation": "Abt.",
+      "expansion": "Abteilung",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "case_policy": "fixed",
+      "description": "Department",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null,
+      "variants": []
+    },
+    {
+      "language": "de",
       "key": "allee",
       "abbreviation": "Allee",
       "expansion": "Allee",
@@ -778,6 +792,20 @@
       "case_sensitive": false,
       "case_policy": "fixed",
       "description": "Born",
+      "only_if_preceded_by": null,
+      "only_if_followed_by": null,
+      "variants": []
+    },
+    {
+      "language": "de",
+      "key": "gem.",
+      "abbreviation": "gem.",
+      "expansion": "gemäß",
+      "aliases": [],
+      "context_expansions": null,
+      "case_sensitive": false,
+      "case_policy": "fixed",
+      "description": "According to",
       "only_if_preceded_by": null,
       "only_if_followed_by": null,
       "variants": []

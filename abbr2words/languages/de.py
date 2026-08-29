@@ -330,6 +330,8 @@ class GermanAbbreviationExpander(AbbreviationExpander):
             ("ggü.", "gegenüber", "Opposite"),
             ("Kap.", "Kapitel", "Chapter"),
             ("Abs.", "Absatz", "Paragraph"),
+            ("gem.", "gemäß", "According to"),
+            ("Abt.", "Abteilung", "Department"),
             ("Abschn.", "Abschnitt", "Section"),
             ("Univ.", "Universität", "University"),
             ("Fa.", "Firma", "Company"),

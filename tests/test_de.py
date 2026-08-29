@@ -83,6 +83,52 @@ def test_german_high_confidence_entries_and_compounds(source: str, expected: str
     assert abbr2words(source, lang="de") == expected
 
 
+@pytest.mark.parametrize(
+    ("source", "expected"),
+    [
+        ("gem. 12 BGB", "gemäß 12 BGB"),
+        ("Abt. 3", "Abteilung 3"),
+        ("(gem.; Abt.)", "(gemäß; Abteilung.)"),
+        ("GEM. und ABT.", "gemäß und Abteilung."),
+    ],
+)
+def test_german_reviewed_ordinary_abbreviations_expand_with_case_and_punctuation(
+    source: str, expected: str
+) -> None:
+    assert abbr2words(source, lang="de") == expected
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        "angem.",
+        "gemäß",
+        "Gemäß",
+        "Abteilung",
+        "Abteilung.",
+        "xAbt.",
+        "AbtX",
+    ],
+)
+def test_german_reviewed_ordinary_abbreviations_preserve_non_abbreviations(source: str) -> None:
+    assert abbr2words(source, lang="de") == source
+
+
+def test_german_reviewed_ordinary_abbreviations_are_registered_once() -> None:
+    expander = get_shared_expander("de")
+    gem = expander.get_abbreviation("gem.")
+    abt = expander.get_abbreviation("Abt.")
+    absatz = expander.get_abbreviation("Abs.")
+
+    assert gem is not None
+    assert gem.expansion == "gemäß"
+    assert abt is not None
+    assert abt.expansion == "Abteilung"
+    assert absatz is not None
+    assert sum(entry.abbreviation == "gem." for entry in expander.entries.values()) == 1
+    assert sum(entry.abbreviation == "Abt." for entry in expander.entries.values()) == 1
+
+
 def test_german_st_is_guarded_by_name_context() -> None:
     assert abbr2words("St. Pauli", lang="de") == "Sankt Pauli"
     assert abbr2words("St. ist eine Abkürzung", lang="de") == "St. ist eine Abkürzung"
