@@ -8,6 +8,19 @@ The examples make two responsibilities visible:
 2. `examples/speech_numbers.py` is optional demonstration glue that composes
    abbreviation expansion with `num2words` for the supplied speech-text cases.
 
+
+## German lexical example
+
+The German registry expands reviewed lexical abbreviations while leaving numbers and
+downstream pronunciation decisions to the next stage:
+
+```text
+vgl. Abschnitt 2; i.d.R. gilt das, u.U. auch für Geräte o.ä.
+```
+
+This means `abbr2words` expands lexical abbreviations. Brand, foreign-word, and
+model-specific pronunciation remains downstream.
+
 ## Install and run
 
 The abbreviation-only English and German examples need only the package:

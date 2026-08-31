@@ -320,6 +320,41 @@ class GermanAbbreviationExpander(AbbreviationExpander):
             )
         )
 
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="vgl.",
+                expansion="vergleiche",
+                description="Compare / see",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="i.d.R.",
+                expansion="in der Regel",
+                aliases=("i. d. R.",),
+                description="As a rule / generally",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="o.ä.",
+                expansion="oder ähnliches",
+                aliases=("o. ä.",),
+                description="Or similar",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="u.U.",
+                expansion="unter Umständen",
+                aliases=("u. U.",),
+                description="Under certain circumstances",
+            )
+        )
+
         for abbreviation, expansion, description in (
             ("etc.", "et cetera", "Et cetera"),
             ("zzgl.", "zuzüglich", "Plus/additional"),
