@@ -3,9 +3,9 @@ schema_version: 2
 object_type: release
 versioning:
   schema_version: 1
-  revision: 3
+  revision: 4
 version: v0.2.13
-status: planned
+status: released
 title: null
 released_at: "2026-08-31"
 previous_version: v0.2.12

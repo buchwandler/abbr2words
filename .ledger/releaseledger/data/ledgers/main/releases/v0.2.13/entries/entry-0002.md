@@ -12,13 +12,13 @@ status: accepted
 audience: null
 scopes: []
 source_refs:
-- git:88d64dd0d9b53ce7605c7765ac31e68852fd799f
+  - git:88d64dd0d9b53ce7605c7765ac31e68852fd799f
 paths:
-- spokenform_misaki_recent_commits_review_implementation_brief.md
+  - spokenform_misaki_recent_commits_review_implementation_brief.md
 issues: []
 prs: []
 sources:
-- git:88d64dd0d9b53ce7605c7765ac31e68852fd799f
+  - git:88d64dd0d9b53ce7605c7765ac31e68852fd799f
 contributors: []
 breaking: false
 internal: true

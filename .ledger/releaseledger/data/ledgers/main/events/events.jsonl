@@ -164,3 +164,5 @@
 {"data":{"row_count":3},"event":"audit.created","event_id":"event-0164","record_revisions":{"commit_audit_sheet":1},"release_version":"v0.2.13","schema_version":2}
 {"data":{"updated_rows":3},"event":"audit.updated","event_id":"event-0165","record_revisions":{"commit_audit_sheet":2},"release_version":"v0.2.13","schema_version":2}
 {"data":{"entry_ids":["entry-0001","entry-0002","entry-0003"],"synced_audit_rows":3},"event":"entry.batch_added","event_id":"event-0166","record_revisions":{"commit_audit_sheet":3,"entry:v0.2.13/entry-0001":1,"entry:v0.2.13/entry-0002":1,"entry:v0.2.13/entry-0003":1,"release:v0.2.13":3},"release_version":"v0.2.13","schema_version":2}
+{"data":{"released_at":"2026-08-31"},"event":"release.finalized","event_id":"event-0167","record_revisions":{"release:v0.2.12":4},"release_version":"v0.2.12","schema_version":2}
+{"data":{"released_at":"2026-08-31"},"event":"release.finalized","event_id":"event-0168","record_revisions":{"release:v0.2.13":4},"release_version":"v0.2.13","schema_version":2}
