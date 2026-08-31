@@ -3,11 +3,11 @@ schema_version: 2
 object_type: release
 versioning:
   schema_version: 1
-  revision: 4
+  revision: 7
 version: v0.2.13
-status: released
+status: planned
 title: null
-released_at: "2026-08-31"
+released_at: null
 previous_version: v0.2.12
 cancel_reason: null
 superseded_by: null
@@ -15,7 +15,7 @@ changelog_file: null
 boundary_ref: null
 source_refs: []
 source_count: null
-entry_count: 3
+entry_count: 4
 artifact_count: 0
 git_base_ref: v0.2.12
 git_base_sha: dcedefb7844d4dc02912f105ee1c78c1c6947214
