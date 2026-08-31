@@ -19,6 +19,42 @@ python examples/german.py
 python examples/replacements.py
 ```
 
+## Specialist glossary example
+
+A downstream domain can compile a small typed glossary without changing the
+lexical API or introducing a profile format:
+
+```python
+from abbr2words import AbbreviationEntry, get_expander
+
+expander = get_expander("en", registered_initialism_mode="spell")
+expander.add_many(
+    (
+        AbbreviationEntry("AAR", "after-action review", origin="custom"),
+        AbbreviationEntry(
+            "AO",
+            "area of operations",
+            speech_strategy="spell_source",
+            origin="custom",
+        ),
+        AbbreviationEntry(
+            "AAA",
+            "anti-aircraft artillery",
+            speech_strategy="custom",
+            spoken_form="Triple A",
+            origin="custom",
+        ),
+    ),
+    on_conflict="error",
+)
+assert expander.expand("AAA enters the AO after the AAR.") == (
+    "Triple A enters the A O after the after-action review."
+)
+```
+
+The entries remain isolated to this expander. Profile serialization, domain
+selection, and number, date, or time normalization belong to the downstream
+speech application.
 Install the optional dependency for full speech text:
 
 ```console

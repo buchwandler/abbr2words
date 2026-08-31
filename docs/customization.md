@@ -45,6 +45,75 @@ follows that boundary. A colon is not a sentence boundary. Dotted abbreviation
 matches preserve one final period when their consumed dot is sentence-final;
 commas, semicolons, and internal dots are not added or moved.
 
+## Per-entry speech strategies
+
+Custom entries keep their semantic expansion and can choose a lexical realization independently:
+
+```python
+from abbr2words import get_expander
+
+expander = get_expander("en", registered_initialism_mode="spell")
+expander.add("AAR", "after-action review")
+expander.add(
+    "AO",
+    "area of operations",
+    speech_strategy="spell_source",
+)
+expander.add(
+    "AAA",
+    "anti-aircraft artillery",
+    speech_strategy="custom",
+    spoken_form="Triple A",
+)
+
+assert expander.expand("AAR AO AAA") == "after-action review A O Triple A"
+```
+
+`expand` uses the selected semantic expansion. `spell_source` spells the
+matched source form when `registered_initialism_mode="spell"` is enabled.
+`custom` always uses its non-empty `spoken_form`, independently of the global
+registered spelling mode. Custom spoken forms are explicit and are not
+sentence-cased; `case_policy` applies to semantic expansions only.
+
+Aliases share the entry's guards and strategy. Source spelling uses the actual
+matched alias, while custom realization uses the configured spoken form.
+`spoken_form` is required only for `custom` and is rejected for other strategies.
+
+## Bulk glossary registration
+
+Large isolated glossaries can be loaded atomically from typed entries:
+
+```python
+from abbr2words import AbbreviationEntry, get_expander
+
+entries = (
+    AbbreviationEntry("AAR", "after-action review", origin="custom"),
+    AbbreviationEntry(
+        "AAA",
+        "anti-aircraft artillery",
+        speech_strategy="custom",
+        spoken_form="Triple A",
+        origin="custom",
+    ),
+)
+result = get_expander("en").add_many(entries, on_conflict="error")
+assert result.added == 2
+```
+
+`add_many()` accepts an `Iterable[AbbreviationEntry]`. It validates the full
+batch before changing the registry. `on_conflict="error"` reports canonical
+and alias collisions through `AbbreviationConflictError.conflicts`;
+`on_conflict="replace"` preserves single-entry replacement behavior and
+reports replaced canonical entries. `get_expander()` and `Expander()` create
+isolated registries, so custom glossary entries do not affect shared or sibling
+expanders.
+
+Build and customize an isolated expander before sharing it for read-only
+expansion. Concurrent mutation of the same expander is not supported. This
+lexical API does not load profile files and does not normalize dates, times,
+numbers, URLs, or general speech text; those responsibilities belong to a
+downstream normalizer such as Spokenform.
+
 ## Ambiguous English dotted forms
 
 The English registry prefers reversible letter readings when a dotted spelling

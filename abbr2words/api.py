@@ -6,16 +6,20 @@ from collections.abc import Iterable, Iterator, Mapping, Set
 from importlib import import_module
 from re import Pattern
 from threading import RLock
-from typing import Final, Literal
+from typing import Final
 
 from .annotations import TokenAnnotation
 from .core import (
     AbbreviationContext,
     AbbreviationEntry,
     AbbreviationExpander,
+    BulkAddResult,
+    BulkConflictPolicy,
+    CasePolicy,
     ExpansionResult,
     PosConstraints,
     ProtectedSpan,
+    SpeechStrategy,
 )
 from .initialisms import (
     InitialismCase,
@@ -329,70 +333,51 @@ class Expander:
     def add(
         self,
         abbreviation: str,
-        expansion: str | dict[str, str],
+        expansion: str | Mapping[str, str],
         *,
-        context_expansions: dict[AbbreviationContext, str] | None = None,
+        context_expansions: Mapping[AbbreviationContext, str] | None = None,
         case_sensitive: bool = False,
         description: str = "",
         only_if_preceded_by: str | Pattern[str] | None = None,
         only_if_followed_by: str | Pattern[str] | None = None,
         only_if_pos: PosConstraints = None,
         not_if_pos: PosConstraints = None,
-        case_policy: Literal["fixed", "sentence"] = "fixed",
-        speech_strategy: Literal["expand", "spell_source"] = "expand",
+        case_policy: CasePolicy = "fixed",
+        speech_strategy: SpeechStrategy = "expand",
+        spoken_form: str | None = None,
         aliases: tuple[str, ...] = (),
     ) -> None:
-        """Add or replace an abbreviation, optionally constrained by POS.
-
-        A string is one POS label; collections support multiple labels. Deny
-        constraints take precedence over allow constraints.
-        """
-        if isinstance(expansion, dict):
-            if context_expansions is not None:
-                raise ValueError(
-                    "provide context expansions either in expansion or context_expansions"
-                )
-            self._impl.add_custom_abbreviation(
-                abbreviation,
-                expansion,
-                description=description,
-                case_sensitive=case_sensitive,
-                only_if_preceded_by=only_if_preceded_by,
-                only_if_followed_by=only_if_followed_by,
-                only_if_pos=only_if_pos,
-                not_if_pos=not_if_pos,
-                aliases=aliases,
-            )
-            return
-        self._impl.add_abbreviation(
-            AbbreviationEntry(
-                abbreviation=abbreviation,
-                expansion=expansion,
-                context_expansions=context_expansions,
-                case_sensitive=case_sensitive,
-                description=description,
-                only_if_preceded_by=only_if_preceded_by,
-                only_if_followed_by=only_if_followed_by,
-                only_if_pos=only_if_pos,
-                not_if_pos=not_if_pos,
-                case_policy=case_policy,
-                speech_strategy=speech_strategy,
-                aliases=aliases,
-                origin="custom",
-            )
+        """Add or replace a custom abbreviation."""
+        self._impl.add(
+            abbreviation,
+            expansion,
+            context_expansions=context_expansions,
+            case_sensitive=case_sensitive,
+            description=description,
+            only_if_preceded_by=only_if_preceded_by,
+            only_if_followed_by=only_if_followed_by,
+            only_if_pos=only_if_pos,
+            not_if_pos=not_if_pos,
+            case_policy=case_policy,
+            speech_strategy=speech_strategy,
+            spoken_form=spoken_form,
+            aliases=aliases,
         )
 
     def add_custom_abbreviation(
         self,
         abbreviation: str,
-        expansion: str | dict[str, str],
+        expansion: str | Mapping[str, str],
         description: str = "",
         case_sensitive: bool = False,
         only_if_preceded_by: str | Pattern[str] | None = None,
         only_if_followed_by: str | Pattern[str] | None = None,
         only_if_pos: PosConstraints = None,
         not_if_pos: PosConstraints = None,
-        case_policy: Literal["fixed", "sentence"] = "fixed",
+        case_policy: CasePolicy = "fixed",
+        speech_strategy: SpeechStrategy = "expand",
+        spoken_form: str | None = None,
+        aliases: tuple[str, ...] = (),
     ) -> None:
         """Register an entry using string-named context expansions."""
         self._impl.add_custom_abbreviation(
@@ -405,7 +390,19 @@ class Expander:
             only_if_pos=only_if_pos,
             not_if_pos=not_if_pos,
             case_policy=case_policy,
+            speech_strategy=speech_strategy,
+            spoken_form=spoken_form,
+            aliases=aliases,
         )
+    def add_many(
+        self,
+        entries: Iterable[AbbreviationEntry],
+        *,
+        on_conflict: BulkConflictPolicy = "error",
+    ) -> BulkAddResult:
+        """Atomically register a batch of abbreviation entries."""
+        return self._impl.add_many(entries, on_conflict=on_conflict)
+
 
     def set_unit(
         self,

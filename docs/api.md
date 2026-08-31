@@ -292,6 +292,50 @@ overlay gives unqualified `$` the Mexican-peso identity while `US$` and `USD`
 remain US dollar. These are recognition contracts for a downstream consumer,
 not amount or number grammar.
 
+## Custom glossary API
+
+`CasePolicy` and `SpeechStrategy` are public typing aliases. `CasePolicy` is
+`"fixed"` or `"sentence"`; `SpeechStrategy` is `"expand"`,
+`"spell_source"`, or `"custom"`. `AbbreviationEntry.spoken_form` stores an
+explicit non-empty lexical realization for the `custom` strategy while
+`expansion` remains the semantic form.
+
+The mutable expanders expose equivalent custom-entry builders:
+
+```python
+expander.add(
+    "AAA",
+    "anti-aircraft artillery",
+    speech_strategy="custom",
+    spoken_form="Triple A",
+    aliases=("A.A.A.",),
+)
+expander.add_custom_abbreviation(
+    "Ref.",
+    {"default": "reference", "title": "referee"},
+    speech_strategy="expand",
+ )
+```
+
+`spell_source` uses the matched source spelling only when
+`registered_initialism_mode="spell"` is selected. `custom` is independent of
+that mode and does not apply sentence casing.
+
+`Expander.add_many(entries, on_conflict=...)` accepts an iterable of
+`AbbreviationEntry` values and validates the full batch before committing it.
+The `on_conflict` values are `"error"` and `"replace"`. The result is a
+`BulkAddResult` with added and replaced counts and canonical names. The error
+case raises `AbbreviationConflictError`, whose immutable `conflicts` records
+identify the colliding key, incoming and existing abbreviations, and whether
+the conflict is a duplicate, canonical collision, or alias collision. Aliases
+participate in matching and conflict checks.
+
+The bulk operation and all custom registration methods are instance-local. Build
+and customize an isolated expander before sharing it for read-only expansion;
+concurrent mutation of one expander is not a supported synchronization model.
+This API remains lexical and does not provide profile serialization, web import,
+or date, time, number, URL, or general speech normalization.
+
 ## Core types
 
 ```{autoclass} abbr2words.TokenAnnotation

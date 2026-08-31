@@ -10,7 +10,7 @@ This module provides the infrastructure for expanding abbreviations during text 
 
 import re
 from abc import ABC, abstractmethod
-from collections.abc import Collection, Iterable, Iterator
+from collections.abc import Collection, Iterable, Iterator, Mapping
 from dataclasses import dataclass, field, replace
 from enum import Enum
 from re import Pattern
@@ -59,8 +59,10 @@ class AbbreviationContext(Enum):
 
 
 PosConstraints: TypeAlias = str | Collection[str] | None
+CasePolicy: TypeAlias = Literal["fixed", "sentence"]
+SpeechStrategy: TypeAlias = Literal["expand", "spell_source", "custom"]
+BulkConflictPolicy: TypeAlias = Literal["error", "replace"]
 ExpansionKind: TypeAlias = Literal["abbreviation", "unit"]
-
 
 def _abbreviation_pattern(value: str) -> str:
     """Escape an abbreviation while making registered horizontal spaces flexible."""
@@ -217,6 +219,40 @@ class ExpansionResult:
         )
 
 
+AbbreviationConflictKind: TypeAlias = Literal["duplicate", "canonical_collision", "alias_collision"]
+
+
+@dataclass(frozen=True, slots=True)
+class AbbreviationConflict:
+    """One canonical or alias collision found during bulk registration."""
+
+    key: str
+    incoming_abbreviation: str
+    existing_abbreviation: str | None
+    kind: AbbreviationConflictKind
+
+
+class AbbreviationConflictError(ValueError):
+    """Raised when bulk registration finds one or more conflicts."""
+
+    def __init__(self, conflicts: Iterable[AbbreviationConflict]) -> None:
+        self.conflicts = tuple(conflicts)
+        details = ", ".join(
+            f"{item.incoming_abbreviation!r} ({item.kind})" for item in self.conflicts
+        )
+        super().__init__(f"abbreviation conflicts: {details}")
+
+
+@dataclass(frozen=True, slots=True)
+class BulkAddResult:
+    """Summary of an atomic bulk registration operation."""
+
+    added: int
+    replaced: int
+    entries: tuple[str, ...]
+    replacements: tuple[str, ...]
+
+
 @dataclass
 class AbbreviationEntry:
     """A single abbreviation with its expansion(s).
@@ -255,9 +291,10 @@ class AbbreviationEntry:
     right_boundary: str | None = None
     origin: str = "bundled"
     aliases: tuple[str, ...] = ()
-    case_policy: Literal["fixed", "sentence"] = "fixed"
-    speech_strategy: Literal["expand", "spell_source"] = "expand"
+    case_policy: CasePolicy = "fixed"
+    speech_strategy: SpeechStrategy = "expand"
     preserve_sentence_final_period: bool = True
+    spoken_form: str | None = None
     _pattern: Pattern[str] = field(init=False, repr=False, compare=False)
     _patterns: tuple[Pattern[str], ...] = field(init=False, repr=False, compare=False)
     _preceding_pattern: Pattern[str] | None = field(init=False, repr=False, compare=False)
@@ -278,8 +315,15 @@ class AbbreviationEntry:
             raise TypeError("case_sensitive must be a bool")
         if self.case_policy not in {"fixed", "sentence"}:
             raise ValueError("case_policy must be 'fixed' or 'sentence'")
-        if self.speech_strategy not in {"expand", "spell_source"}:
-            raise ValueError("speech_strategy must be 'expand' or 'spell_source'")
+        if self.speech_strategy not in {"expand", "spell_source", "custom"}:
+            raise ValueError(
+                "speech_strategy must be 'expand', 'spell_source', or 'custom'"
+            )
+        if self.speech_strategy == "custom":
+            if not isinstance(self.spoken_form, str) or not self.spoken_form.strip():
+                raise ValueError("speech_strategy='custom' requires a non-empty spoken_form")
+        elif self.spoken_form is not None:
+            raise ValueError("spoken_form is only valid when speech_strategy='custom'")
         if type(self.preserve_sentence_final_period) is not bool:
             raise TypeError("preserve_sentence_final_period must be a bool")
         if self.boundary not in {"word", "custom"}:
@@ -347,6 +391,84 @@ class AbbreviationEntry:
             return self.context_expansions[context]
         return self.expansion
 
+
+def _parse_context_expansion_mapping(
+    expansion: Mapping[str, str],
+) -> tuple[str, dict[AbbreviationContext, str] | None]:
+    """Parse string-named contexts into the canonical entry representation."""
+    if not expansion:
+        raise ValueError("context expansion dictionary must not be empty")
+    default_expansion: str | None = None
+    context_expansions: dict[AbbreviationContext, str] = {}
+    for key, value in expansion.items():
+        if not isinstance(key, str):
+            raise TypeError("context expansion keys must be strings")
+        if not isinstance(value, str):
+            raise TypeError("context expansion values must be strings")
+        try:
+            context = AbbreviationContext(key.lower())
+        except ValueError:
+            raise ValueError(
+                f"Unknown context '{key}'. Valid contexts are: "
+                f"{', '.join(item.value for item in AbbreviationContext)}"
+            ) from None
+        if not value:
+            raise ValueError("context expansion values must not be empty")
+        if context is AbbreviationContext.DEFAULT:
+            default_expansion = value
+        else:
+            context_expansions[context] = value
+    if default_expansion is None:
+        default_expansion = next(iter(expansion.values()))
+    return default_expansion, context_expansions or None
+
+
+def _build_custom_abbreviation_entry(
+    abbreviation: str,
+    expansion: str | Mapping[str, str],
+    *,
+    context_expansions: Mapping[AbbreviationContext, str] | None = None,
+    case_sensitive: bool = False,
+    description: str = "",
+    only_if_preceded_by: str | Pattern[str] | None = None,
+    only_if_followed_by: str | Pattern[str] | None = None,
+    only_if_pos: PosConstraints = None,
+    not_if_pos: PosConstraints = None,
+    case_policy: CasePolicy = "fixed",
+    speech_strategy: SpeechStrategy = "expand",
+    spoken_form: str | None = None,
+    aliases: tuple[str, ...] = (),
+) -> AbbreviationEntry:
+    """Construct a validated custom entry through one canonical path."""
+    if isinstance(expansion, str):
+        default_expansion = expansion
+        parsed_context_expansions = (
+            dict(context_expansions) if context_expansions is not None else None
+        )
+    elif isinstance(expansion, Mapping):
+        if context_expansions is not None:
+            raise ValueError(
+                "provide context expansions either in expansion or context_expansions"
+            )
+        default_expansion, parsed_context_expansions = _parse_context_expansion_mapping(expansion)
+    else:
+        raise TypeError("expansion must be a string or context-expansion dictionary")
+    return AbbreviationEntry(
+        abbreviation=abbreviation,
+        expansion=default_expansion,
+        context_expansions=parsed_context_expansions,
+        case_sensitive=case_sensitive,
+        description=description,
+        only_if_preceded_by=only_if_preceded_by,
+        only_if_followed_by=only_if_followed_by,
+        only_if_pos=only_if_pos,
+        not_if_pos=not_if_pos,
+        case_policy=case_policy,
+        speech_strategy=speech_strategy,
+        spoken_form=spoken_form,
+        aliases=aliases,
+        origin="custom",
+    )
 
 def _normalize_pos_constraints(
     labels: PosConstraints,
@@ -603,12 +725,10 @@ class AbbreviationExpander(ABC):
         Subclasses must implement this to populate self.entries.
         """
 
-    def add_abbreviation(self, entry: AbbreviationEntry) -> None:
-        """Add an abbreviation entry.
-
-        Args:
-            entry: The abbreviation entry to add
-        """
+    def _prepare_entry(self, entry: AbbreviationEntry) -> AbbreviationEntry:
+        """Validate and apply unit-overlap policy without mutating the registry."""
+        if not isinstance(entry, AbbreviationEntry):
+            raise TypeError("entry must be an AbbreviationEntry")
         unit_entry = self._unit_by_symbol.get(entry.abbreviation)
         if unit_entry is not None and entry.origin == "custom":
             raise ValueError(
@@ -619,67 +739,41 @@ class AbbreviationExpander(ABC):
             and unit_entry.category != "magnitude"
             and not unit_entry.allow_lexical_overlap
         ):
-            entry = replace(
+            return replace(
                 entry,
                 case_sensitive=True,
                 only_if_preceded_by=entry.only_if_preceded_by or NUMBER_BEFORE_UNIT,
             )
-        key = normalize_entry_key(entry.abbreviation, case_sensitive=entry.case_sensitive)
-        self.entries[key] = entry
+        return entry
 
-    def add_custom_abbreviation(
+    def add_abbreviation(self, entry: AbbreviationEntry) -> None:
+        """Add or replace an abbreviation entry."""
+        prepared = self._prepare_entry(entry)
+        key = normalize_entry_key(prepared.abbreviation, case_sensitive=prepared.case_sensitive)
+        self.entries[key] = prepared
+
+    def add(
         self,
         abbreviation: str,
-        expansion: str | dict[str, str],
-        description: str = "",
+        expansion: str | Mapping[str, str],
+        *,
+        context_expansions: Mapping[AbbreviationContext, str] | None = None,
         case_sensitive: bool = False,
+        description: str = "",
         only_if_preceded_by: str | Pattern[str] | None = None,
         only_if_followed_by: str | Pattern[str] | None = None,
         only_if_pos: PosConstraints = None,
         not_if_pos: PosConstraints = None,
-        case_policy: Literal["fixed", "sentence"] = "fixed",
+        case_policy: CasePolicy = "fixed",
+        speech_strategy: SpeechStrategy = "expand",
+        spoken_form: str | None = None,
         aliases: tuple[str, ...] = (),
     ) -> None:
-        """Add or replace an entry using string context names and POS guards.
-
-        A single POS string is treated as one label, while a collection can
-        express several accepted or denied labels. Labels are normalized by
-        :class:`AbbreviationEntry`.
-        """
-        context_expansions: dict[AbbreviationContext, str] | None = None
-        default_expansion: str = expansion if isinstance(expansion, str) else ""
-        if not isinstance(expansion, (str, dict)):
-            raise TypeError("expansion must be a string or context-expansion dictionary")
-        if isinstance(expansion, dict):
-            if not expansion:
-                raise ValueError("context expansion dictionary must not be empty")
-            context_expansions = {}
-            for key, value in expansion.items():
-                if not isinstance(key, str):
-                    raise TypeError("context expansion keys must be strings")
-                if not isinstance(value, str):
-                    raise TypeError("context expansion values must be strings")
-                try:
-                    context = AbbreviationContext(key.lower())
-                except ValueError:
-                    if key.lower() == AbbreviationContext.DEFAULT.value:
-                        default_expansion = value
-                        continue
-                    raise ValueError(
-                        f"Unknown context '{key}'. Valid contexts are: "
-                        f"{', '.join(item.value for item in AbbreviationContext)}"
-                    ) from None
-                if context is AbbreviationContext.DEFAULT:
-                    default_expansion = value
-                    continue
-                context_expansions[context] = value
-            if AbbreviationContext.DEFAULT.value not in {key.lower() for key in expansion}:
-                default_expansion = next(iter(expansion.values()))
-
+        """Build and register a custom abbreviation entry."""
         self.add_abbreviation(
-            AbbreviationEntry(
-                abbreviation=abbreviation,
-                expansion=default_expansion,
+            _build_custom_abbreviation_entry(
+                abbreviation,
+                expansion,
                 context_expansions=context_expansions,
                 case_sensitive=case_sensitive,
                 description=description,
@@ -688,9 +782,82 @@ class AbbreviationExpander(ABC):
                 only_if_pos=only_if_pos,
                 not_if_pos=not_if_pos,
                 case_policy=case_policy,
+                speech_strategy=speech_strategy,
+                spoken_form=spoken_form,
                 aliases=aliases,
-                origin="custom",
             )
+        )
+
+    def add_custom_abbreviation(
+        self,
+        abbreviation: str,
+        expansion: str | Mapping[str, str],
+        description: str = "",
+        case_sensitive: bool = False,
+        only_if_preceded_by: str | Pattern[str] | None = None,
+        only_if_followed_by: str | Pattern[str] | None = None,
+        only_if_pos: PosConstraints = None,
+        not_if_pos: PosConstraints = None,
+        case_policy: CasePolicy = "fixed",
+        speech_strategy: SpeechStrategy = "expand",
+        spoken_form: str | None = None,
+        aliases: tuple[str, ...] = (),
+    ) -> None:
+        """Add or replace an entry using string-named context expansions."""
+        self.add(
+            abbreviation,
+            expansion,
+            description=description,
+            case_sensitive=case_sensitive,
+            only_if_preceded_by=only_if_preceded_by,
+            only_if_followed_by=only_if_followed_by,
+            only_if_pos=only_if_pos,
+            not_if_pos=not_if_pos,
+            case_policy=case_policy,
+            speech_strategy=speech_strategy,
+            spoken_form=spoken_form,
+            aliases=aliases,
+        )
+
+    def add_many(
+        self,
+        entries: Iterable[AbbreviationEntry],
+        *,
+        on_conflict: BulkConflictPolicy = "error",
+    ) -> BulkAddResult:
+        """Atomically register a batch of abbreviation entries."""
+        if on_conflict not in {"error", "replace"}:
+            raise ValueError("on_conflict must be 'error' or 'replace'")
+        prepared = tuple(self._prepare_entry(entry) for entry in entries)
+        conflicts = _find_bulk_conflicts(prepared, tuple(self.entries.values()))
+        if conflicts and on_conflict == "error":
+            raise AbbreviationConflictError(conflicts)
+        working = dict(self.entries)
+        working_index = _spelling_index(tuple(working.values()))
+        replaced: list[str] = []
+        incoming_names: list[str] = []
+        initial_entries = tuple(self.entries.values())
+        for entry in prepared:
+            collisions = _indexed_colliding_entries(entry, working_index)
+            for existing in collisions:
+                key = normalize_entry_key(
+                    existing.abbreviation, case_sensitive=existing.case_sensitive
+                )
+                working.pop(key, None)
+                _remove_from_spelling_index(existing, working_index)
+                if existing in initial_entries and existing.abbreviation not in replaced:
+                    replaced.append(existing.abbreviation)
+            key = normalize_entry_key(entry.abbreviation, case_sensitive=entry.case_sensitive)
+            working[key] = entry
+            _add_to_spelling_index(entry, working_index)
+            if entry.abbreviation not in incoming_names:
+                incoming_names.append(entry.abbreviation)
+        self.entries = working
+        return BulkAddResult(
+            added=len(incoming_names),
+            replaced=len(replaced),
+            entries=tuple(incoming_names),
+            replacements=tuple(replaced),
         )
 
     def set_unit(
@@ -1053,18 +1220,22 @@ class AbbreviationExpander(ABC):
                     context = self.context_detector.detect_context(match.group(), before, after)
                     expansion = entry.get_expansion(context)
 
-                expansion = _apply_case_policy(
-                    expansion,
-                    entry.case_policy,
-                    sentence_start=_is_sentence_start(text, start),
-                )
-                if (
-                    self.initialism_policy.registered_mode == "spell"
-                    and entry.speech_strategy == "spell_source"
-                ):
-                    expansion = render_initialism_source(
-                        match.group(), case=self.initialism_policy.case
+                if entry.speech_strategy == "custom":
+                    assert entry.spoken_form is not None
+                    expansion = entry.spoken_form
+                else:
+                    expansion = _apply_case_policy(
+                        expansion,
+                        entry.case_policy,
+                        sentence_start=_is_sentence_start(text, start),
                     )
+                    if (
+                        self.initialism_policy.registered_mode == "spell"
+                        and entry.speech_strategy == "spell_source"
+                    ):
+                        expansion = render_initialism_source(
+                            match.group(), case=self.initialism_policy.case
+                        )
                 if entry.preserve_sentence_final_period and should_preserve_sentence_final_period(
                     text, end, match.group(), expansion
                 ):
@@ -1093,6 +1264,122 @@ class AbbreviationExpander(ABC):
     def __repr__(self) -> str:
         """Return string representation."""
         return f"{self.__class__.__name__}(abbreviations={len(self.entries)})"
+
+def _spellings_collide(
+    left: AbbreviationEntry,
+    left_spelling: str,
+    right: AbbreviationEntry,
+    right_spelling: str,
+) -> bool:
+    if left.case_sensitive and right.case_sensitive:
+        return left_spelling == right_spelling
+    return left_spelling.casefold() == right_spelling.casefold()
+
+
+def _collision_key(
+    left: AbbreviationEntry,
+    left_spelling: str,
+    right: AbbreviationEntry,
+    right_spelling: str,
+) -> str:
+    if left.case_sensitive and right.case_sensitive:
+        return left_spelling
+    return left_spelling.casefold()
+
+
+def _entry_spellings(entry: AbbreviationEntry) -> tuple[str, ...]:
+    return (entry.abbreviation, *entry.aliases)
+
+
+def _colliding_entries(
+    incoming: AbbreviationEntry,
+    existing_entries: tuple[AbbreviationEntry, ...],
+) -> tuple[AbbreviationEntry, ...]:
+    return tuple(
+        existing
+        for existing in existing_entries
+        if any(
+            _spellings_collide(incoming, left, existing, right)
+            for left in _entry_spellings(incoming)
+            for right in _entry_spellings(existing)
+        )
+    )
+
+
+def _add_to_spelling_index(
+    entry: AbbreviationEntry,
+    index: dict[str, list[tuple[AbbreviationEntry, int, str]]],
+) -> None:
+    for spelling_index, spelling in enumerate(_entry_spellings(entry)):
+        index.setdefault(spelling.casefold(), []).append((entry, spelling_index, spelling))
+
+
+def _remove_from_spelling_index(
+    entry: AbbreviationEntry,
+    index: dict[str, list[tuple[AbbreviationEntry, int, str]]],
+) -> None:
+    for spelling in _entry_spellings(entry):
+        key = spelling.casefold()
+        index[key] = [candidate for candidate in index[key] if candidate[0] is not entry]
+        if not index[key]:
+            del index[key]
+
+
+def _indexed_colliding_entries(
+    incoming: AbbreviationEntry,
+    index: dict[str, list[tuple[AbbreviationEntry, int, str]]],
+) -> tuple[AbbreviationEntry, ...]:
+    collisions: list[AbbreviationEntry] = []
+    seen: set[int] = set()
+    for left in _entry_spellings(incoming):
+        for existing, _, right in index.get(left.casefold(), ()):
+            if id(existing) not in seen and _spellings_collide(incoming, left, existing, right):
+                seen.add(id(existing))
+                collisions.append(existing)
+    return tuple(collisions)
+
+
+def _spelling_index(
+    entries: Iterable[AbbreviationEntry],
+) -> dict[str, list[tuple[AbbreviationEntry, int, str]]]:
+    index: dict[str, list[tuple[AbbreviationEntry, int, str]]] = {}
+    for entry in entries:
+        for spelling_index, spelling in enumerate(_entry_spellings(entry)):
+            index.setdefault(spelling.casefold(), []).append((entry, spelling_index, spelling))
+    return index
+
+
+def _find_bulk_conflicts(
+    incoming_entries: tuple[AbbreviationEntry, ...],
+    existing_entries: tuple[AbbreviationEntry, ...],
+) -> tuple[AbbreviationConflict, ...]:
+    conflicts: list[AbbreviationConflict] = []
+    existing_index = _spelling_index(existing_entries)
+    previous_index: dict[str, list[tuple[AbbreviationEntry, int, str]]] = {}
+    for incoming in incoming_entries:
+        for left_index, left in enumerate(_entry_spellings(incoming)):
+            candidates = (*existing_index.get(left.casefold(), ()), *previous_index.get(left.casefold(), ()))
+            for previous, right_index, right in candidates:
+                if not _spellings_collide(incoming, left, previous, right):
+                    continue
+                canonical = left_index == 0 and right_index == 0
+                kind: AbbreviationConflictKind = "canonical_collision" if canonical else "alias_collision"
+                if previous in incoming_entries and canonical:
+                    kind = "duplicate"
+                conflicts.append(
+                    AbbreviationConflict(
+                        _collision_key(incoming, left, previous, right),
+                        incoming.abbreviation,
+                        previous.abbreviation,
+                        kind,
+                    )
+                )
+        for spelling_index, spelling in enumerate(_entry_spellings(incoming)):
+            previous_index.setdefault(spelling.casefold(), []).append(
+                (incoming, spelling_index, spelling)
+            )
+    return tuple(conflicts)
+
 
 
 def _entry_priority(entry: AbbreviationEntry) -> int:

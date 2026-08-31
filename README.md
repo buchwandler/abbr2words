@@ -148,6 +148,19 @@ expander.add("KI", "Künstliche Intelligenz", case_sensitive=True)
 print(expander("KI hilft."))
 ```
 
+A specialist glossary can choose speech realization per entry:
+
+```python
+from abbr2words import get_expander
+
+expander = get_expander("en", registered_initialism_mode="spell")
+expander.add("AAA", "anti-aircraft artillery", speech_strategy="custom", spoken_form="Triple A")
+assert expander.expand("AAA") == "Triple A"
+```
+
+Use `add_many()` for an atomic typed batch. Customization remains lexical;
+profile serialization and general date, time, and number normalization belong
+to a downstream speech application.
 Consumers that need the shared language registry can use `get_shared_expander()` and
 `reset_expanders()`. `Expander` and `get_expander()` remain isolated mutable registries.
 

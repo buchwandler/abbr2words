@@ -21,15 +21,22 @@ from .api import (
     supported_languages,
 )
 from .core import (
+    AbbreviationConflict,
+    AbbreviationConflictError,
     AbbreviationContext,
     AbbreviationEntry,
     AbbreviationExpander,
+    BulkAddResult,
+    BulkConflictPolicy,
+    CasePolicy,
     ExpansionKind,
     ExpansionMatch,
     ExpansionReplacement,
     ExpansionResult,
     ExpansionVariant,
+    PosConstraints,
     ProtectedSpan,
+    SpeechStrategy,
     abbreviation_guards_match,
 )
 from .initialisms import (
@@ -44,8 +51,13 @@ from .units import UnitAmbiguity, UnitDiagnostic, UnitEntry, UnitMatch
 
 __all__ = [
     "AbbreviationContext",
+    "AbbreviationConflict",
+    "AbbreviationConflictError",
     "AbbreviationEntry",
     "AbbreviationExpander",
+    "CasePolicy",
+    "BulkAddResult",
+    "BulkConflictPolicy",
     "ExpansionKind",
     "InitialismCase",
     "InitialismDiagnostic",
@@ -53,6 +65,8 @@ __all__ = [
     "InitialismMode",
     "InitialismPolicy",
     "RegisteredInitialismMode",
+    "PosConstraints",
+    "SpeechStrategy",
     "ExpansionVariant",
     "ExpansionMatch",
     "ExpansionReplacement",
