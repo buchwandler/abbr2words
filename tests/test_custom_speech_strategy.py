@@ -56,15 +56,24 @@ def test_spoken_form_is_rejected_for_non_custom_strategy(speech_strategy: str) -
 @pytest.mark.parametrize("spoken_form", [None, "", "   "])
 def test_custom_strategy_requires_non_empty_spoken_form(spoken_form: str | None) -> None:
     with pytest.raises(ValueError, match="requires a non-empty spoken_form"):
-        AbbreviationEntry("AAA", "anti-aircraft artillery", speech_strategy="custom", spoken_form=spoken_form)
+        AbbreviationEntry(
+            "AAA", "anti-aircraft artillery", speech_strategy="custom", spoken_form=spoken_form
+        )
 
 
 def test_aliases_use_matched_source_for_spelling_and_custom_form() -> None:
     expander = get_expander("en", registered_initialism_mode="spell")
     expander.add("AO", "area of operations", speech_strategy="spell_source", aliases=("A.O.",))
-    expander.add("AAA", "anti-aircraft artillery", speech_strategy="custom", spoken_form="Triple A", aliases=("A.A.A.",))
+    expander.add(
+        "AAA",
+        "anti-aircraft artillery",
+        speech_strategy="custom",
+        spoken_form="Triple A",
+        aliases=("A.A.A.",),
+    )
 
     assert expander.expand("AO A.O. AAA A.A.A.") == "A O A O Triple A Triple A."
+
 
 def test_context_and_case_policy_are_independent_from_realization() -> None:
     expander = get_expander("en", registered_initialism_mode="spell")
@@ -104,8 +113,16 @@ def test_guards_and_pos_apply_before_realization() -> None:
         only_if_pos="NOUN",
     )
 
-    assert expander.expand("2 AO now AAA", annotations=[TokenAnnotation(2, 4, "NOUN"), TokenAnnotation(8, 11, "NOUN")]) == "2 A O now Triple A"
-    assert expander.expand("AO now AAA", annotations=[TokenAnnotation(7, 10, "VERB")]) == "AO now AAA"
+    assert (
+        expander.expand(
+            "2 AO now AAA",
+            annotations=[TokenAnnotation(2, 4, "NOUN"), TokenAnnotation(8, 11, "NOUN")],
+        )
+        == "2 A O now Triple A"
+    )
+    assert (
+        expander.expand("AO now AAA", annotations=[TokenAnnotation(7, 10, "VERB")]) == "AO now AAA"
+    )
     assert expander.expand("2 AO now", annotations=[TokenAnnotation(2, 4, "PROPN")]) == "2 AO now"
 
 
@@ -115,7 +132,9 @@ def test_protected_spans_apply_to_all_strategies() -> None:
     expander.add("AO", "area of operations", speech_strategy="spell_source")
     expander.add("AAA", "anti-aircraft artillery", speech_strategy="custom", spoken_form="Triple A")
 
-    assert expander.expand("AAR AO AAA", protected_spans=[(4, 6)]) == "after-action review AO Triple A"
+    assert (
+        expander.expand("AAR AO AAA", protected_spans=[(4, 6)]) == "after-action review AO Triple A"
+    )
 
 
 def test_custom_spoken_form_replacement_metadata_is_source_aligned() -> None:
@@ -138,6 +157,7 @@ def test_bundled_semantic_entries_remain_semantic_in_spell_mode() -> None:
     expander.add("AO", "area of operations", speech_strategy="spell_source")
 
     assert expander.expand("Dr. AO") == "Doctor A O"
+
 
 def test_strategy_aliases_are_public_types() -> None:
     from abbr2words import CasePolicy, SpeechStrategy

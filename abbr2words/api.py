@@ -394,6 +394,7 @@ class Expander:
             spoken_form=spoken_form,
             aliases=aliases,
         )
+
     def add_many(
         self,
         entries: Iterable[AbbreviationEntry],
@@ -402,7 +403,6 @@ class Expander:
     ) -> BulkAddResult:
         """Atomically register a batch of abbreviation entries."""
         return self._impl.add_many(entries, on_conflict=on_conflict)
-
 
     def set_unit(
         self,

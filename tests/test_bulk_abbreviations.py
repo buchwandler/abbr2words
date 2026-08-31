@@ -20,7 +20,9 @@ def test_add_many_registers_entries_atomically_and_returns_summary() -> None:
         (
             entry("AAR", "after-action review"),
             entry("AO", "area of operations", speech_strategy="spell_source"),
-            entry("AAA", "anti-aircraft artillery", speech_strategy="custom", spoken_form="Triple A"),
+            entry(
+                "AAA", "anti-aircraft artillery", speech_strategy="custom", spoken_form="Triple A"
+            ),
         )
     )
 

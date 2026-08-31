@@ -64,6 +64,7 @@ SpeechStrategy: TypeAlias = Literal["expand", "spell_source", "custom"]
 BulkConflictPolicy: TypeAlias = Literal["error", "replace"]
 ExpansionKind: TypeAlias = Literal["abbreviation", "unit"]
 
+
 def _abbreviation_pattern(value: str) -> str:
     """Escape an abbreviation while making registered horizontal spaces flexible."""
 
@@ -316,9 +317,7 @@ class AbbreviationEntry:
         if self.case_policy not in {"fixed", "sentence"}:
             raise ValueError("case_policy must be 'fixed' or 'sentence'")
         if self.speech_strategy not in {"expand", "spell_source", "custom"}:
-            raise ValueError(
-                "speech_strategy must be 'expand', 'spell_source', or 'custom'"
-            )
+            raise ValueError("speech_strategy must be 'expand', 'spell_source', or 'custom'")
         if self.speech_strategy == "custom":
             if not isinstance(self.spoken_form, str) or not self.spoken_form.strip():
                 raise ValueError("speech_strategy='custom' requires a non-empty spoken_form")
@@ -447,9 +446,7 @@ def _build_custom_abbreviation_entry(
         )
     elif isinstance(expansion, Mapping):
         if context_expansions is not None:
-            raise ValueError(
-                "provide context expansions either in expansion or context_expansions"
-            )
+            raise ValueError("provide context expansions either in expansion or context_expansions")
         default_expansion, parsed_context_expansions = _parse_context_expansion_mapping(expansion)
     else:
         raise TypeError("expansion must be a string or context-expansion dictionary")
@@ -469,6 +466,7 @@ def _build_custom_abbreviation_entry(
         aliases=aliases,
         origin="custom",
     )
+
 
 def _normalize_pos_constraints(
     labels: PosConstraints,
@@ -1265,6 +1263,7 @@ class AbbreviationExpander(ABC):
         """Return string representation."""
         return f"{self.__class__.__name__}(abbreviations={len(self.entries)})"
 
+
 def _spellings_collide(
     left: AbbreviationEntry,
     left_spelling: str,
@@ -1358,12 +1357,17 @@ def _find_bulk_conflicts(
     previous_index: dict[str, list[tuple[AbbreviationEntry, int, str]]] = {}
     for incoming in incoming_entries:
         for left_index, left in enumerate(_entry_spellings(incoming)):
-            candidates = (*existing_index.get(left.casefold(), ()), *previous_index.get(left.casefold(), ()))
+            candidates = (
+                *existing_index.get(left.casefold(), ()),
+                *previous_index.get(left.casefold(), ()),
+            )
             for previous, right_index, right in candidates:
                 if not _spellings_collide(incoming, left, previous, right):
                     continue
                 canonical = left_index == 0 and right_index == 0
-                kind: AbbreviationConflictKind = "canonical_collision" if canonical else "alias_collision"
+                kind: AbbreviationConflictKind = (
+                    "canonical_collision" if canonical else "alias_collision"
+                )
                 if previous in incoming_entries and canonical:
                     kind = "duplicate"
                 conflicts.append(
@@ -1379,7 +1383,6 @@ def _find_bulk_conflicts(
                 (incoming, spelling_index, spelling)
             )
     return tuple(conflicts)
-
 
 
 def _entry_priority(entry: AbbreviationEntry) -> int:
