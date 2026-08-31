@@ -63,7 +63,6 @@ for example, `2 mA` matches but `2 ma` does not. Dotted German aliases and
 their base symbols share canonical IDs, so `h`/`Std.`, `min`/`Min.`, and
 `l`/`Ltr.` cannot acquire separate semantic identities.
 
-
 German lexical coverage includes the reviewed common forms `vgl.`, `i.d.R.`, `o.ä.`,
 and `u.U.`, including narrowly spaced-dot aliases such as `i. d. R.`. For example,
 

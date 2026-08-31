@@ -8,7 +8,6 @@ The examples make two responsibilities visible:
 2. `examples/speech_numbers.py` is optional demonstration glue that composes
    abbreviation expansion with `num2words` for the supplied speech-text cases.
 
-
 ## German lexical example
 
 The German registry expands reviewed lexical abbreviations while leaving numbers and

@@ -225,9 +225,10 @@ def test_german_missing_abbreviations_are_atomic_and_registered_once() -> None:
         entry = expander.get_abbreviation(abbreviation)
         assert entry is not None
         assert entry.expansion == expansion
-        assert sum(
-            candidate.abbreviation == abbreviation for candidate in expander.entries.values()
-        ) == 1
+        assert (
+            sum(candidate.abbreviation == abbreviation for candidate in expander.entries.values())
+            == 1
+        )
 
 
 def test_german_source_spelling_policy_remains_explicit() -> None:

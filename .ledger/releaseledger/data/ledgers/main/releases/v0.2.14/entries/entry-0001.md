@@ -7,18 +7,19 @@ versioning:
 entry_id: entry-0001
 release_version: v0.2.14
 kind: added
-summary: Added reviewed German lexical abbreviations including vgl., i.d.R., o.ä.,
+summary:
+  Added reviewed German lexical abbreviations including vgl., i.d.R., o.ä.,
   and u.U. coverage
 status: accepted
 audience: null
 scopes: []
 source_refs:
-- tl:task-0048
+  - tl:task-0048
 paths:
-- abbr2words/languages/de.py
-- tests/test_de.py
-- docs/examples.md
-- docs/languages.md
+  - abbr2words/languages/de.py
+  - tests/test_de.py
+  - docs/examples.md
+  - docs/languages.md
 issues: []
 prs: []
 sources: []

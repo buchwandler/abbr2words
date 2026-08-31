@@ -104,9 +104,7 @@
       "key": "GFDL",
       "abbreviation": "GFDL",
       "expansion": "G F D L",
-      "aliases": [
-        "gfdl"
-      ],
+      "aliases": ["gfdl"],
       "context_expansions": null,
       "case_sensitive": true,
       "case_policy": "fixed",
@@ -120,9 +118,7 @@
       "key": "GLSL",
       "abbreviation": "GLSL",
       "expansion": "G L S L",
-      "aliases": [
-        "glsl"
-      ],
+      "aliases": ["glsl"],
       "context_expansions": null,
       "case_sensitive": true,
       "case_policy": "fixed",
@@ -136,9 +132,7 @@
       "key": "GTK",
       "abbreviation": "GTK",
       "expansion": "G T K",
-      "aliases": [
-        "gtk"
-      ],
+      "aliases": ["gtk"],
       "context_expansions": null,
       "case_sensitive": true,
       "case_policy": "fixed",
@@ -166,9 +160,7 @@
       "key": "HTML",
       "abbreviation": "HTML",
       "expansion": "H T M L",
-      "aliases": [
-        "html"
-      ],
+      "aliases": ["html"],
       "context_expansions": null,
       "case_sensitive": true,
       "case_policy": "fixed",
@@ -280,9 +272,7 @@
       "key": "SQL",
       "abbreviation": "SQL",
       "expansion": "S Q L",
-      "aliases": [
-        "sql"
-      ],
+      "aliases": ["sql"],
       "context_expansions": null,
       "case_sensitive": true,
       "case_policy": "fixed",
@@ -380,9 +370,7 @@
       "key": "XHTML",
       "abbreviation": "XHTML",
       "expansion": "X H T M L",
-      "aliases": [
-        "xhtml"
-      ],
+      "aliases": ["xhtml"],
       "context_expansions": null,
       "case_sensitive": true,
       "case_policy": "fixed",
@@ -396,9 +384,7 @@
       "key": "XML",
       "abbreviation": "XML",
       "expansion": "X M L",
-      "aliases": [
-        "xml"
-      ],
+      "aliases": ["xml"],
       "context_expansions": null,
       "case_sensitive": true,
       "case_policy": "fixed",
@@ -580,9 +566,7 @@
       "key": "d.h.",
       "abbreviation": "d.h.",
       "expansion": "das heißt",
-      "aliases": [
-        "d. h."
-      ],
+      "aliases": ["d. h."],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
@@ -638,9 +622,7 @@
       "key": "dipl.-kfm.",
       "abbreviation": "Dipl.-Kfm.",
       "expansion": "Diplom-Kaufmann",
-      "aliases": [
-        "Dipl. - Kfm."
-      ],
+      "aliases": ["Dipl. - Kfm."],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
@@ -875,9 +857,7 @@
       "key": "i.d.r.",
       "abbreviation": "i.d.R.",
       "expansion": "in der Regel",
-      "aliases": [
-        "i. d. R."
-      ],
+      "aliases": ["i. d. R."],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
@@ -961,9 +941,7 @@
       "key": "lfd. nr.",
       "abbreviation": "Lfd. Nr.",
       "expansion": "laufende Nummer",
-      "aliases": [
-        "Lfd.Nr."
-      ],
+      "aliases": ["Lfd.Nr."],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
@@ -1111,9 +1089,7 @@
       "key": "o.ä.",
       "abbreviation": "o.ä.",
       "expansion": "oder ähnliches",
-      "aliases": [
-        "o. ä."
-      ],
+      "aliases": ["o. ä."],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
@@ -1283,10 +1259,7 @@
       "key": "tel. nr.",
       "abbreviation": "Tel. Nr.",
       "expansion": "Telefonnummer",
-      "aliases": [
-        "Tel.Nr.",
-        "Tel.-Nr."
-      ],
+      "aliases": ["Tel.Nr.", "Tel.-Nr."],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
@@ -1314,9 +1287,7 @@
       "key": "u.a.",
       "abbreviation": "u.a.",
       "expansion": "unter anderem",
-      "aliases": [
-        "u. a."
-      ],
+      "aliases": ["u. a."],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
@@ -1330,9 +1301,7 @@
       "key": "u.u.",
       "abbreviation": "u.U.",
       "expansion": "unter Umständen",
-      "aliases": [
-        "u. U."
-      ],
+      "aliases": ["u. U."],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
@@ -1388,11 +1357,7 @@
       "key": "z.b.",
       "abbreviation": "z.B.",
       "expansion": "zum Beispiel",
-      "aliases": [
-        "z. B.",
-        "z . b .",
-        "zB"
-      ],
+      "aliases": ["z. B.", "z . b .", "zB"],
       "context_expansions": null,
       "case_sensitive": false,
       "case_policy": "fixed",
