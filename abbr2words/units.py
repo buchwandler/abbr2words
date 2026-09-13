@@ -777,6 +777,35 @@ _STRUCTURED_CURRENCY_ENTRIES = {
             quantity_position="both",
         ),
     ),
+    "de": (
+        _entry(
+            ("€", "EUR"),
+            "Euro",
+            "Currency",
+            canonical_id="currency-euro",
+            canonical_symbol="€",
+            category="currency",
+            quantity_position="both",
+        ),
+        _entry(
+            ("$", "USD"),
+            "US-Dollar",
+            "Currency",
+            canonical_id="currency-us-dollar",
+            canonical_symbol="$",
+            category="currency",
+            quantity_position="both",
+        ),
+        _entry(
+            ("£", "GBP"),
+            "Pfund Sterling",
+            "Currency",
+            canonical_id="currency-pound-sterling",
+            canonical_symbol="£",
+            category="currency",
+            quantity_position="both",
+        ),
+    ),
     "cs": (
         _entry(
             ("Kč", "CZK"),
@@ -869,6 +898,24 @@ _STRUCTURED_CURRENCY_ENTRIES = {
             "Currency",
             canonical_id="currency-pound-sterling",
             canonical_symbol="£",
+            category="currency",
+            quantity_position="both",
+        ),
+        _entry(
+            ("₫", "VND"),
+            "dong vietnamita",
+            "Currency",
+            canonical_id="currency-vietnamese-dong",
+            canonical_symbol="₫",
+            category="currency",
+            quantity_position="both",
+        ),
+        _entry(
+            ("₮", "MNT"),
+            "tugrik mongol",
+            "Currency",
+            canonical_id="currency-mongolian-tugrik",
+            canonical_symbol="₮",
             category="currency",
             quantity_position="both",
         ),
@@ -1009,13 +1056,6 @@ _GERMAN_REQUIRED_ENTRIES = (
         canonical_id="magnitude-billion",
         category="magnitude",
         case_sensitive=False,
-    ),
-    _entry(
-        "EUR",
-        "Euro",
-        "Currency",
-        canonical_id="currency-euro",
-        category="currency",
     ),
 )
 
@@ -1660,6 +1700,7 @@ _INDIAN_GROUP = rf"{_DIGITS}{{1,3}}(?:,{_DIGITS}{{2}})+,{_DIGITS}{{3}}"
 _ARABIC_GROUP = rf"{_DIGITS}{{1,3}}(?:٬{_DIGITS}{{3}})+"
 _FLEXIBLE_GROUPED = (
     rf"(?:{_INDIAN_GROUP}(?:[.٫]{_DIGITS}+)?|"
+    rf"{_WESTERN_COMMA_GROUP}(?:[.٫]{_DIGITS}+)?|"
     rf"{_DOT_GROUP}(?:,{_DIGITS}+)?|"
     rf"{_WESTERN_SPACE_GROUP}(?:[.,٫]{_DIGITS}+)?|"
     rf"{_ARABIC_GROUP}(?:٫{_DIGITS}+)?)"
@@ -1679,6 +1720,15 @@ _VALUE = _value_expression(_ATOM)
 _EN_VALUE = _value_expression(_EN_ATOM)
 _VALUE_PATTERN = re.compile(rf"(?<![\w./,٬])(?P<value>{_VALUE})(?P<spacing>[{_HSPACE}]*)")
 _EN_VALUE_PATTERN = re.compile(rf"(?<![\w./,٬])(?P<value>{_EN_VALUE})(?P<spacing>[{_HSPACE}]*)")
+
+
+def _is_german_english_grouped_decimal(value: str, language: str) -> bool:
+    """Keep German's comma-group/dot-decimal spelling fail-closed."""
+    return language == "de" and bool(
+        re.fullmatch(rf"[+\-−]?{_WESTERN_COMMA_GROUP}\.{_DIGITS}+", value)
+    )
+
+
 _CONTINUATION = re.compile(rf"[{_HSPACE}]*([/^·⋅*×^])")
 _PREFIX_BOUNDARY = r"(?<![\w./])"
 _CLOSING_SENTENCE_CHARS = frozenset("\"'»”’)]}》」』")
@@ -1899,6 +1949,8 @@ def iter_unit_matches(
     matches: list[UnitMatch] = []
     for value_match in value_pattern.finditer(text):
         value = value_match.group("value")
+        if _is_german_english_grouped_decimal(value, language):
+            continue
         unit_start = value_match.end()
         candidates: list[tuple[str, UnitEntry]] = []
         for symbol, entry in inventory:
@@ -1961,6 +2013,9 @@ def iter_unit_matches(
             0 if entry.case_sensitive else re.IGNORECASE,
         )
         for value_match in pattern.finditer(text):
+            value = value_match.group("value")
+            if _is_german_english_grouped_decimal(value, language):
+                continue
             if entry.requires_separator and not value_match.group("spacing"):
                 continue
             start = value_match.start("symbol")

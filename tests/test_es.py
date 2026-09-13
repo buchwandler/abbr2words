@@ -60,6 +60,8 @@ def test_spanish_currency_registry_uses_reviewed_lemmas() -> None:
         "currency-indian-rupee": (("₹", "INR"), "rupia india", "₹"),
         "currency-south-korean-won": (("₩", "KRW"), "won surcoreano", "₩"),
         "currency-mexican-peso": (("MXN",), "peso mexicano", "MXN"),
+        "currency-vietnamese-dong": (("₫", "VND"), "dong vietnamita", "₫"),
+        "currency-mongolian-tugrik": (("₮", "MNT"), "tugrik mongol", "₮"),
     }
     assert all(entry.quantity_position == "both" for entry in entries.values())
 
