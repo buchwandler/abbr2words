@@ -1,0 +1,67 @@
+schema_version: 1
+object_type: commit_audit_sheet
+versioning:
+  schema_version: 1
+  revision: 3
+release_version: v0.2.14
+git_base_ref: v0.2.13
+git_base_sha: 2ea8c4e7e97588da838169e25acf689995961c6c
+git_head_ref: HEAD
+git_head_sha: c737d514bf545cf690032e4e01709ab0da4d1afa
+git_range: 2ea8c4e7e97588da838169e25acf689995961c6c..c737d514bf545cf690032e4e01709ab0da4d1afa
+commit_count: 2
+rows:
+  - sha: 70b23637da449ce4ccb6191a9c7e5f584b5b7f4b
+    source_ref: git:70b23637da449ce4ccb6191a9c7e5f584b5b7f4b
+    short_sha: 70b2363
+    changed_paths:
+      - .ledger/releaseledger/data/ledgers/main/events/events.jsonl
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.12/release.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.13/release.md
+    stats:
+      files_changed: 0
+      insertions: 8
+      deletions: 5
+    inspected: true
+    inspected_paths:
+      - .ledger/releaseledger/data/ledgers/main/events/events.jsonl
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.12/release.md
+      - .ledger/releaseledger/data/ledgers/main/releases/v0.2.13/release.md
+    observed_behavior:
+      Adjusted persisted release metadata for prior releases; no product
+      behavior or public release-note impact.
+    public_impact: internal
+    decision: internal
+    stale: false
+    evidence_subject: "chore: releaseledger"
+    target_entry_id: entry-0001
+    notes: Releaseledger bookkeeping only.
+  - sha: c737d514bf545cf690032e4e01709ab0da4d1afa
+    source_ref: git:c737d514bf545cf690032e4e01709ab0da4d1afa
+    short_sha: c737d51
+    changed_paths:
+      - abbr2words/units.py
+      - tests/test_currency_matches.py
+      - tests/test_es.py
+    stats:
+      files_changed: 0
+      insertions: 168
+      deletions: 7
+    inspected: true
+    inspected_paths:
+      - abbr2words/units.py
+      - tests/test_currency_matches.py
+      - tests/test_es.py
+    observed_behavior:
+      Extended German currency aliases and Spanish currency identities,
+      improved grouped-number parsing, and added regression coverage including malformed-grouping
+      rejection.
+    public_impact: public
+    decision: accepted
+    stale: false
+    evidence_subject: "feat: improved currencies"
+    target_entry_key: currency-and-grouped-number-parsing
+    target_entry_id: entry-0002
+    notes:
+      User-facing currency matching and parsing behavior is covered by focused
+      tests.
