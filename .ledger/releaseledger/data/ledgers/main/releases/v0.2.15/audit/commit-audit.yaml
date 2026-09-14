@@ -1,0 +1,41 @@
+schema_version: 1
+object_type: commit_audit_sheet
+versioning:
+  schema_version: 1
+  revision: 3
+release_version: v0.2.15
+git_base_ref: v0.2.14
+git_base_sha: f5e7af0c297ae9b7fa1401aa112938beef48267e
+git_head_ref: HEAD
+git_head_sha: 298168585a79041f1d1a3587542129c21b6dbfbe
+git_range: f5e7af0c297ae9b7fa1401aa112938beef48267e..298168585a79041f1d1a3587542129c21b6dbfbe
+commit_count: 1
+rows:
+- sha: 298168585a79041f1d1a3587542129c21b6dbfbe
+  source_ref: git:298168585a79041f1d1a3587542129c21b6dbfbe
+  short_sha: '2981685'
+  changed_paths:
+  - abbr2words/language_data/initialisms.py
+  - abbr2words/languages/de.py
+  - tests/data/registries/de.json
+  - tests/data/registries/index.json
+  - tests/test_de_spokenform_regressions.py
+  stats:
+    files_changed: 0
+    insertions: 183
+    deletions: 20
+  inspected: true
+  inspected_paths:
+  - abbr2words/language_data/initialisms.py
+  - abbr2words/languages/de.py
+  - tests/data/registries/de.json
+  - tests/data/registries/index.json
+  - tests/test_de_spokenform_regressions.py
+  observed_behavior: German abbreviation expansion now recognizes IP, IP-Adresse,
+    LTS, and Jh. with exact-boundary regression coverage; unrelated hyphenated forms
+    remain unchanged.
+  public_impact: public
+  decision: accepted
+  stale: false
+  evidence_subject: 'feat: improve german abbreviations'
+  target_entry_id: entry-0001
