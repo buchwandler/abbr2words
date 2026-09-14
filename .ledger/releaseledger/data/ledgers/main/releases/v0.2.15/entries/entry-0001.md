@@ -12,17 +12,17 @@ status: accepted
 audience: null
 scopes: []
 source_refs:
-- git:298168585a79041f1d1a3587542129c21b6dbfbe
+  - git:298168585a79041f1d1a3587542129c21b6dbfbe
 paths:
-- abbr2words/language_data/initialisms.py
-- abbr2words/languages/de.py
-- tests/data/registries/de.json
-- tests/data/registries/index.json
-- tests/test_de_spokenform_regressions.py
+  - abbr2words/language_data/initialisms.py
+  - abbr2words/languages/de.py
+  - tests/data/registries/de.json
+  - tests/data/registries/index.json
+  - tests/test_de_spokenform_regressions.py
 issues: []
 prs: []
 sources:
-- git:298168585a79041f1d1a3587542129c21b6dbfbe
+  - git:298168585a79041f1d1a3587542129c21b6dbfbe
 contributors: []
 breaking: false
 internal: false
