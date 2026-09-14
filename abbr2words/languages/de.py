@@ -540,6 +540,24 @@ class GermanAbbreviationExpander(AbbreviationExpander):
             )
         )
 
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="IP-Adresse",
+                expansion="I P Adresse",
+                case_sensitive=True,
+                description="Internet Protocol address with source-letter initialism",
+            )
+        )
+
+        self.add_abbreviation(
+            AbbreviationEntry(
+                abbreviation="Jh.",
+                expansion="Jahrhundert",
+                case_sensitive=True,
+                description="Century",
+            )
+        )
         # =====================================================================
         # BUSINESS/ORGANIZATIONS
         # =====================================================================

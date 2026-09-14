@@ -98,7 +98,22 @@ ENGLISH_REVIEWED_INITIALISMS = tuple(
 )
 GERMAN_REVIEWED_INITIALISMS = tuple(
     ReviewedInitialism(token, description="Common German initialism")
-    for token in ("USA", "EU", "WHO", "CDU", "SPD", "ARD", "ZDF", "BND", "DDR", "BRD", "IBM", "WM")
+    for token in (
+        "USA",
+        "EU",
+        "WHO",
+        "CDU",
+        "SPD",
+        "ARD",
+        "ZDF",
+        "BND",
+        "DDR",
+        "BRD",
+        "IBM",
+        "WM",
+        "IP",
+        "LTS",
+    )
 )
 SPANISH_REVIEWED_INITIALISMS = tuple(
     ReviewedInitialism(token, description="Common Spanish initialism")
