@@ -171,20 +171,6 @@
     },
     {
       "language": "de",
-      "key": "IBAN",
-      "abbreviation": "IBAN",
-      "expansion": "I B A N",
-      "aliases": [],
-      "context_expansions": null,
-      "case_sensitive": true,
-      "case_policy": "fixed",
-      "description": "Common German initialism",
-      "only_if_preceded_by": null,
-      "only_if_followed_by": null,
-      "variants": []
-    },
-    {
-      "language": "de",
       "key": "IBM",
       "abbreviation": "IBM",
       "expansion": "I B M",
